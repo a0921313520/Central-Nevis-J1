@@ -1,0 +1,11 @@
+@import './common.scss';
+
+
+:root {
+	--test-color: #fff;
+}
+
+//dark模式
+[data-theme='dark'] {
+	--test-color: #000;
+}
