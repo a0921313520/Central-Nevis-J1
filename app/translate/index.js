@@ -1,13 +1,10 @@
 import { getConfig } from "../config";
 
-export default function translateWrap(str = '') {
-    const { languageType } = getConfig() || {} 
-    return function translateInner() {
-        let res = str;
-
-        const translateDATA = require("./global.translate.static.json");
-        res = translateDATA[str] ? translateDATA[str][languageType] : str;
-
-        return (res || '')
-    }
+const translateWrap = (str = '') => {
+    const { language } = getConfig() || {}
+    let res = str;
+    const translateDATA = require("./global.translate.static.json");
+    res = translateDATA[str] ? translateDATA[str][language] : str;
+    return (res || '')
 }
+export default translateWrap
