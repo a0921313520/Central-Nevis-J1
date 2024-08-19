@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Dimensions } from "react-native";
-import styles from '$StyleSheets/Fingerprint'
+import styles from '$NevisStyles/Fingerprint'
 import translate from '$Nevis/translate'
 
 

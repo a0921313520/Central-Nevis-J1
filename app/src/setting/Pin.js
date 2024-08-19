@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Dimensions } from "react-native";
-import styles from '$StyleSheets/Pin'
+import styles from '$NevisStyles/Pin'
 import translate from '$Nevis/translate'
 
 

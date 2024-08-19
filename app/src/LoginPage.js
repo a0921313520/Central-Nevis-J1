@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text } from "react-native";
-import styles from '$StyleSheets/LoginPage'
+import styles from '$NevisStyles/LoginPage'
 import translate from '$Nevis/translate'
 import Touch from 'react-native-touch-once';
 import Verify from './verify/index'

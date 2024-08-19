@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Dimensions } from "react-native";
 import Touch from 'react-native-touch-once';
 import { Actions } from "react-native-router-flux";
-import styles from '$StyleSheets/index'
+import styles from '$NevisStyles/main'
 import translate from '$Nevis/translate'
 import Face from './Face'
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Modal } from "react-native";
-import styles from '$StyleSheets/NevisModal'
+import styles from '$NevisStyles/NevisModal'
 import translate from '$Nevis/translate'
 
 //全部提示Modal，用window方法调用
