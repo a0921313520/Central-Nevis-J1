@@ -1,6 +1,6 @@
 import React from 'react'
 import translate from '$Nevis/translate'
-import { ApiPort } from './Api'
+import { ApiLink } from './Api'
 import { getConfig } from '$Nevis/config'
 
 
@@ -23,7 +23,7 @@ class Nevis extends React.Component {
     //是否开启nevis qrcode
     getNevisConfigurations = () => {
         const { get, onEnabled } = getConfig()
-        get(ApiPort.NevisConfigurations)
+        get(ApiLink.NevisConfigurations)
             .then((res) => {
                 onEnabled(res?.result || {})
             })

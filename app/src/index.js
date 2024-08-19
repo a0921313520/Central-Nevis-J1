@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Image } from "react-native";
 import Touch from 'react-native-touch-once';
-import { ApiPort } from './Api'
+import { ApiLink } from './Api'
 import styles from '$NevisStyles/main'
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 import translate from '$Nevis/translate'
@@ -29,7 +29,7 @@ class Nevis extends React.Component {
     //是否开启无密码登录。以及设置提示时间
     getNevisConfigurations = () => {
         const { get } = getConfig()
-        get(ApiPort.NevisConfigurations)
+        get(ApiLink.NevisConfigurations)
             .then((res) => {
                 if (res?.isSuccess) {
 
@@ -48,7 +48,7 @@ class Nevis extends React.Component {
     getMemberAuthenticators = () => {
         const { get } = getConfig()
         if (!ApiPort.UserLogin) { return }
-        get(ApiPort.MemberAuthenticators)
+        get(ApiLink.MemberAuthenticators)
             .then((res) => {
                 if (res?.isSuccess && res?.result) {
                     this.setState({ authenticators: res.result.authenticators || {} })

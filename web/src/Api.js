@@ -1,3 +1,3 @@
-export const ApiPort = ({
+export const ApiLink = ({
     'NevisConfigurations': '/api/Setting/NevisConfigurations?',
 })
