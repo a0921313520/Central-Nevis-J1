@@ -28,6 +28,7 @@ class Nevis extends React.Component {
     }
     //是否开启无密码登录。以及设置提示时间
     getNevisConfigurations = () => {
+        const { get } = getConfig()
         get(ApiPort.NevisConfigurations)
             .then((res) => {
                 if (res?.isSuccess) {
