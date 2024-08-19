@@ -46,8 +46,8 @@ class Nevis extends React.Component {
 
     //未设置无密码登录，call这只api，有authenticatorId表示已经设置过,这个手机不能再设置
     getMemberAuthenticators = () => {
-        const { get, isLogin } = getConfig()
-        if (!isLogin) { return }
+        const { get } = getConfig()
+        if (!ApiPort.UserLogin) { return }
         get(ApiPort.MemberAuthenticators)
             .then((res) => {
                 if (res?.isSuccess && res?.result) {
