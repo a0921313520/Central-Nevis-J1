@@ -1,3 +1,4 @@
 export const ApiPort = ({
-    'MemberAuthenticators': '/api/Member/PasswordlessAuthentication/MemberAuthenticators',
+    'MemberAuthenticators': '/api/Member/PasswordlessAuthentication/MemberAuthenticators?',
+    'NevisConfigurations': '/api/Setting/NevisConfigurations?',
 })

@@ -1,12 +1,11 @@
 import React from "react";
 import { View, Text, Modal } from "react-native";
-import styles from '$StyleSheets/TipsModal'
+import styles from '$StyleSheets/NevisModal'
 import translate from '$Nevis/translate'
 
-//3种未设置免密码登录提示
-//其他手机已经设置了免密码登录提示
+//全部提示Modal，用window方法调用
 
-class TipsModal extends React.Component {
+class NevisModal extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -24,6 +23,8 @@ class TipsModal extends React.Component {
 
 
     render() {
+
+        window.onModal = () => {}
 		
         return (
             <View>
@@ -35,4 +36,4 @@ class TipsModal extends React.Component {
 
 
 
-export default TipsModal
+export default NevisModal

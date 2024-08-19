@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text } from "react-native";
-import styles from '$StyleSheets/Face'
 import translate from '$Nevis/translate'
 
 
