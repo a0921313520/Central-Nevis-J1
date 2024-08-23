@@ -116,6 +116,11 @@ const styles = StyleSheet.create({
         fontSize: 21,
         color: 'rgb(0,122,255)',
     },
+    camera: {
+        height: 250,
+        width: width * 0.8,
+        marginTop: 20,
+    },
     
 })
 

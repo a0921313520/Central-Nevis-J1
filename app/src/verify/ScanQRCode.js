@@ -1,25 +1,52 @@
 import React from "react";
-import { Platform, View, Text, Dimensions, Image, TouchableOpacity } from "react-native";
+import { Platform, View, Text, PermissionsAndroid, Image, TouchableOpacity } from "react-native";
 import styles from '$NevisStyles/ScanQRCode'
 import translate from '$Nevis/translate'
 import Verify from './index'
 import ImgIcon from '$NevisStyles/imgs/ImgIcon';
 import ImagePicker from "react-native-image-picker";
 import { launchImageLibrary } from 'react-native-image-picker';
-// import QRCodeScanner from 'react-native-qrcode-scanner';
-// import { RNCamera } from 'react-native-camera';
+import QRCodeScanner from 'react-native-qrcode-scanner';
+import { Camera, useCameraDevices } from 'react-native-vision-camera';
 
+// const devices = useCameraDevices();
+// const device = devices.back;
 //扫码二维码
 class ScanQRCode extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            isScanning: true, // 點擊圖示後開啟 QR code 掃描器
+            hasPermission: null,
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        // 在页面加载时检查相机权限状态
+        const cameraPermissionStatus = await Camera.getCameraPermissionStatus();
+        
+        if (cameraPermissionStatus === 'authorized') { //已经授权
+          //是否登入
+            if(!ApiPort.UserLogin){
+                //未登入，則引導用戶先進行pwl登入
+                
+            }else{
+                //登入，則啟用相機掃描QR code
+                this.setState({ hasPermission: true })
+            }
 
+        } else if (cameraPermissionStatus === 'denied') {
+          // 如果权限被拒绝
+          console.log('Permission Denied', 'Camera access is required to scan QR codes. Please enable it in settings.');
+          this.setState({ hasPermission: false });
+        } else {
+          // 無授权，則请求权限
+          const newPermissionStatus = await Camera.requestCameraPermission();
+          if (newPermissionStatus === 'authorized') {
+            this.setState({ hasPermission: true });
+          } else {
+            this.setState({ hasPermission: false });
+          }
+        }
     }
 
     componentWillUnmount() {
@@ -28,9 +55,6 @@ class ScanQRCode extends React.Component {
 
     // 后端支持的文件类型=".jpg,.jpeg,.gif,.bmp,.png,.doc,.docx,.pdf"
 	selectPhotoTapped() {
-        this.setState({
-            isScanning: false
-        })
 		if (Platform.OS == "ios") {
 			const options = {
 				// title: '选择图片', //TODO:CN-DONE 选择图片
@@ -155,17 +179,26 @@ class ScanQRCode extends React.Component {
 
     render() {
         const { modeType } = this.props
+        const { hasPermission } = this.state;
+
+        // 如果尚未获取权限状态
+        if (hasPermission === null)  { return }
+  
+        // 如果权限被拒绝
+        if (!hasPermission) { return }
+  
+        // 如果有权限，显示二维码扫描页面
         return (
             <View style={{ flex: 1, backgroundColor: "#000000" }}>
                 <View style={styles.faceBG}>    
                     <View style={styles.user}>
                         <View>
-                            {/* <QRCodeScanner
+                            <QRCodeScanner
                                 onRead={this.onSuccess}
-                                flashMode={RNCamera.Constants.FlashMode.auto} // 自動閃光燈
+                                //flashMode={RNCamera.Constants.FlashMode.auto} // 自動閃光燈
                                 topContent={<Text style={styles.nameStyle}>{translate("请扫描竞博网页上所显示的二维码")}</Text>}
                                 bottomContent={
-                                    <TouchableOpacity onPress={() => { this.selectPhotoTapped() }}>
+                                    <TouchableOpacity onPress={this.selectPhotoTapped}>
                                         <View style={styles.guestViewMode}>
                                             <Image
                                                 resizeMode="stretch"
@@ -178,21 +211,10 @@ class ScanQRCode extends React.Component {
                                         </View>
                                     </TouchableOpacity> 
                                 }
-                            /> */}
+                                cameraStyle={styles.camera}
+                            />
                         </View>
                     </View>          
-                    {/* <TouchableOpacity style={styles.bottomButton} onPress={() => { this.selectPhotoTapped() }}>
-                        <View style={styles.guestViewMode}>
-                            <Image
-                                resizeMode="stretch"
-                                source={ImgIcon['photoAlbum']}
-                                style={{ width: 30, height: 27 }}
-                            />
-                            <Text style={{ color: '#CCCCCC', fontSize: 14, marginTop: 5 }}>
-                                {translate('相簿')}
-                            </Text>
-                        </View>
-                    </TouchableOpacity>                */}
                 </View>
                 {
                     modeType != '' &&
