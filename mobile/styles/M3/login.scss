@@ -1,0 +1,482 @@
+.loginButtonA {
+    margin-top: 0.6rem;
+}
+
+.loginButtonA .am-button-primary {
+    border: none !important;
+    margin: 0 0.3rem;
+    color: #CCCCCC!important;
+    background-color: #666666!important;
+    border-radius: 5px;
+}
+
+.loginButtonB{
+    width: 92%;
+    text-align: center;
+    border: 0.02rem solid #1aff00;
+    margin: 5% auto 0;
+    border-radius:0.12rem; 
+    height: .92rem;
+    line-height: .92rem;
+}
+.loginButtonB .am-button-primary {
+    border: none !important;
+    color: #fff;
+    background-color: transparent!important;
+    margin: auto;
+    font-size: 0.32rem;
+    display: inline-block;
+    box-sizing: border-box;
+    
+}
+
+.videoTextNevis .icon.iconfont {
+    color: #fff;
+    font-size: .456rem;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0.3rem;
+    line-height: 0.88rem;
+}
+
+.videoTextNevis .icon.iconfont.icon-icon_lib_hide {
+    color: #6c6c6c;
+}
+
+.videoTextNevis .icon.iconfont.icon-icon_lib_show, .videoTextNevis .username.success .icon.iconfont {
+    color: #1aff00;
+}
+
+.loginButtonB .am-button-primary {
+    border: none !important;
+    width: 3.8rem;
+    color: #fff;
+    background-color: #0C7F00;
+    margin: auto;
+    font-size: 0.33rem;
+    display: inline-block;
+    text-indent: -0.4rem;
+}
+
+.firstsee {
+    background: url(/vn/mobile/assets/images/login/fisrtsee.png) center no-repeat !important;
+    background-size: 100% !important;
+}
+
+.goregistered {
+    /* background: url(/vn/mobile/assets/images/login/Register_Icon.png) right center no-repeat !important;
+    background-size: auto 50% !important; */
+}
+
+.am-button-primary.login-adopt, .am-button-primary.login-adopt.am-button-active {
+    color: #fff!important;
+    background-color: #0C7F00!important;
+}
+
+.loginButtonA .am-button-primary.login-adopt.am-button-active {
+    background-color: #0a6b00!important;
+}
+
+.videoTextNevis .am-list-body {
+    background-color: transparent !important;
+}
+
+.videoTextNevis .am-list-item.am-input-item {
+    position: relative;
+    line-height: 0.88rem;
+    /* background: #00000082 !important; */
+}
+
+.videoTextNevis .am-checkbox-agree .am-checkbox-agree-label {
+    color: #fff !important;
+    font-size: 0.28rem;
+    margin-top: 0.06rem !important;
+}
+
+.videoTextNevis .am-list-body {
+    border: none !important;
+}
+
+.videoTextNevis .am-list-item.am-input-item:after {
+    display: none;
+}
+
+.videoTextNevis .am-list-item.am-input-item {
+    margin: 0.3rem !important;
+    margin-bottom: 0.3rem;
+    padding: 0 0.2rem;
+    border: 1px solid #757575;
+    border-radius: 5px;
+}
+
+.videoTextNevis .am-input-error {
+    color: #a8293e;
+    margin: 0 0.3rem;
+    margin-top: -0.1rem;
+    margin-bottom: 0.3rem;
+}
+
+.videoTextNevis .am-list-item.am-input-item.success {
+    border-color: #5bce4d;
+}
+
+.videoTextNevis .am-list-item.am-input-item.error {
+    border-color: #a8293e;
+}
+
+.videoTextNevis .am-list-body:after {
+    border-bottom: none !important;
+}
+
+.videoTextNevis .am-list-item .am-input-control input {
+    color: #fff !important;
+    background-color: transparent;;
+}
+
+.videoTextNevis .am-flexbox .am-flexbox-item {
+    color: #fff !important;
+    margin-left: 0px !important;
+    min-width: 0px !important;
+    font-size: 0.28rem;
+}
+
+.chagfdsfsdfe {
+    background: transparent;
+}
+
+.videoTextNevis .am-checkbox-inner {
+    border: 0.03rem solid #fff !important;
+    border-radius: 20%!important;
+}
+
+.videoTextNevis .am-checkbox.am-checkbox-checked .am-checkbox-inner {
+    border: 0.03rem solid #00805a !important;
+}
+
+.videoTextNevis .am-checkbox.am-checkbox-checked .am-checkbox-inner:after {
+    border-color: #00805a !important;
+}
+
+.videoTextNevis .am-list-item .am-input-label {
+    color: #fff !important;
+}
+
+.Lgoin-video {
+    width: calc(100vh / 0.562)!important;
+    height: 100%;
+    object-fit: cover;
+    margin-top: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.videoTextNevis {
+    position: absolute;
+    width: 100%;
+    top: 28%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.LoginSetNevis {
+    overflow: scroll;
+    height: 100%;
+    background: url(/vn/mobile/assets/images/registered/M3LoginBG.png) center no-repeat;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* z-index: -10; */
+    zoom: 1;
+    background-color: #0e0e0e;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-position: center -0.65rem;
+    /* padding: 0 5%; */
+    /* box-sizing: border-box; */
+}
+
+.BIMIframecs {
+    top: 0.32rem;
+}
+
+.LoginlogoNevis {
+    text-align: center;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 13%;
+    width: 3.2rem;
+    height: 1.6rem;
+}
+
+.Loginlogo img {
+    width: 100%;
+    height: 100%;
+}
+
+@media screen and (max-height:626px) {
+    .Loginlogo {
+        top: 10%;
+    }
+}
+
+.videoTextNevis .code_wrap {
+    display: flex;
+    justify-content: space-between;
+    margin-right: .3rem;
+    color: #fff;
+}
+
+.videoTextNevis .code_wrap .am-list-item.am-input-item {
+    width: 30%!important;
+}
+
+.videoTextNevis .code_wrap .text_wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .3rem;
+}
+
+.videoTextNevis .code_wrap .text_wrap img {
+    height: 0.88rem;
+    margin-right: 8px;
+    width: 1.7rem;
+}
+.videoTextNevis .code_wrap .text_wrap span{
+    font-size: 14px;
+}
+
+.videoTextNevis .eyeOpen {
+    display: inline-block;
+    background: url(/vn/mobile/assets/images/forget/open.png) 0 no-repeat;
+    background-size:19px 12px;
+    width: 19px;
+    height: 12px; 
+}
+.videoTextNevis .eyeClose {
+    display: inline-block;
+    background: url(/vn/mobile/assets/images/forget/close.png) 0 no-repeat;
+    background-size:19px 12px;
+    width: 19px;
+    height: 12px;
+}
+
+.LoginEye .eyeOpen {
+    display: inline-block;
+    background: url(/vn/mobile/assets/images/forget/open.png) 0 no-repeat;
+    background-size:40px 26px !important;
+    width: 40px !important;
+    height: 26px !important; 
+}
+.LoginEye .eyeClose {
+    display: inline-block;
+    background: url(/vn/mobile/assets/images/forget/close.png) 0 no-repeat;
+    background-size:40px 26px !important;
+    width: 40px !important;
+    height: 26px !important;
+}
+
+/* 新版改版 */
+.LoginSet .registered-header{
+    width: 100%;
+    height: 1.2rem;
+    margin: auto;
+    padding: 0 5%;
+    box-sizing: border-box;
+}
+.registered-header .goLogin{
+    width: .5rem;
+    height: .5rem;
+    display: flex;
+    justify-content: flex-start;
+}
+.goLogin img{
+    width: .5rem;
+    height: .5rem;
+}
+.registered-header .title{
+    color: #fff;
+    font-size: 0.4rem;
+    text-align: center;
+}
+.registered-header .goCustomerServiceNevis{
+    width: .9rem;
+    height: .7rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.goCustomerServiceNevis img{
+    width: 0.44rem;
+    height: 0.44rem;
+    padding-right: 0.1rem;
+}
+.videoTextNevis .forgetBtn{
+    color:#1aff00!important;
+    line-height: 0.6rem;
+    /* margin-right: .2rem; */
+}
+
+
+/* 多语言 */
+.LoginSet .language-wrapNevis {
+	position: relative;
+	left: 0.03rem;
+	right: 0;
+	top: 0.6rem;
+	margin: auto;
+	text-align: center;
+	white-space: nowrap;
+	height: 36px;
+	line-height: 36px;
+	z-index: 100;
+    margin-left: -3%;
+}
+.LoginSet .language-wrapNevis .language-box {
+    /* padding-bottom: 30px; */
+    display: flex;
+    /* margin-top: 0.3rem; */
+    padding: 0 10px;
+    font-size: 0.24rem;
+    padding-left: 0.38rem;
+}
+.LoginSet .language-wrapNevis .language-box > a {
+	display: inline-block;
+    padding: 0.22rem 0.2rem 0.1rem 0.2rem;
+    width: 1.8rem;
+    text-align: center;
+    margin: 0 0.1rem;
+    color: #999999;
+    background-color: #1A1A1A;
+    opacity: .9;
+    border-radius: 0.08rem;
+    height: 0.55rem;
+
+}
+.LoginSet .language-wrapNevis .language-box > a.curr:active {
+    transform: scale(1.1);
+    background-color: #1A1A1A;
+    opacity: 1;
+    transition: all .1s;
+}
+.LoginSet .language-wrapNevis i {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-right: 0.1rem;
+    /* background-image: url('/vn/mobile/assets/images/login/language.webp'); */
+    background-repeat: no-repeat;
+    background-position: 0 center;
+    background-size: 100% auto;
+    vertical-align: middle;
+}
+.asdsklklklkl{
+    color:#F00;
+    font-size: 14px;
+}
+.LoginSet .language-wrapNevis i.VND {
+	/* background-position: right center; */
+    background-image: url('/vn/mobile/assets/images/login/vnflag.png');
+    border-radius: 0.2rem;
+}
+.LoginSet .language-wrapNevis i.CNY {
+	/* background-position: right center; */
+    background-image: url('/vn/mobile/assets/images/login/cnflag.png');
+}
+.LoginSet .language-wrapNevis .language-line {
+    position: relative;
+    margin-bottom: 10px;
+    padding: 0.15rem 15px;
+    color: #666666;
+    display: inline-block;
+}
+.LoginSet .language-wrapNevis .language-line:before, .LoginSet .language-wrapNevis .language-line:after {
+    content: "";
+    position: absolute;
+    top: 0.34rem;
+    height: 0.03rem;
+    width: 80%;
+}
+.LoginSet .language-wrapNevis .language-line:before {
+    left: -80%;
+    background-color: #999999;
+    opacity: 0.7;
+}
+.LoginSet .language-wrapNevis .language-line:after {
+    right: -80%;
+    background-color: #999999;
+    opacity: 0.7;
+}
+
+.am-list-item .am-input-label.am-input-label-5{
+    width: .5rem !important;
+    padding-left: 0 !important;
+}
+.videoTextNevis .warnWording{
+    display: inline-flex;
+    margin: 0.3rem;
+    background: #FFFFFF3D;
+    padding: 0.3rem;
+    color: #CCCCCC;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.LoginSet .language-wrapNevis .language-box > a.jboth{
+    display: block;
+    /* margin: 10px auto; */
+}
+
+.LoginSet .language-wrapNevis i.TH{
+	display: inline-block;
+	width: 0.5rem;
+	height: 0.5rem;
+	margin-right: 0.1rem;
+    background-image: url("/vn/mobile/assets/images/login/thflag.png");
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+	vertical-align: middle;
+    border-radius: 2rem;
+}
+
+.videoTextNevis .NevisTxtF{
+    color: #CCCCCC;
+    /* width: 78%; */
+    text-align: center;
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+    font-size: 14px;
+    font-size: 0.28rem;
+}
+
+.videoTextNevis .DownloadQrCode{
+    color: #cccccc;
+    border: 1px solid #cccccc;
+    padding: 0.05rem 0.18rem;
+    border-radius: 0.08rem;
+    font-size: 0.28rem;
+}
+
+.videoTextNevis .DownloadAppTxt{
+    margin-top: 0.7rem;
+    color: #cccccc;
+    font-size: 0.28rem;
+    padding: 0 0.6rem;
+}
+
+.videoTextNevis .GreenTxt{
+    color: #00E62E;
+}
+
+.videoTextNevis .GreenTxtSecond{
+    color: #00E62E;
+    font-size: 0.32rem;
+    margin-top: 0.85rem;
+}
