@@ -60,7 +60,7 @@
 }
 
 .firstsee {
-    background: url(/vn/mobile/assets/images/login/fisrtsee.png) center no-repeat !important;
+    background: url(/cn/mobile/assets/images/login/fisrtsee.png) center no-repeat !important;
     background-size: 100% !important;
 }
 
@@ -184,7 +184,7 @@
 .LoginSetNevis {
     overflow: scroll;
     height: 100%;
-    background: url(/vn/mobile/assets/images/registered/M3LoginBG.png) center no-repeat;
+    background: url("/cn/mobile/assets/images/login/login-background.jpg") center no-repeat;
     position: fixed;
     top: 0;
     left: 0;
@@ -255,14 +255,14 @@
 
 .videoTextNevis .eyeOpen {
     display: inline-block;
-    background: url(/vn/mobile/assets/images/forget/open.png) 0 no-repeat;
+    background: url(/cn/mobile/assets/images/forget/open.png) 0 no-repeat;
     background-size:19px 12px;
     width: 19px;
     height: 12px; 
 }
 .videoTextNevis .eyeClose {
     display: inline-block;
-    background: url(/vn/mobile/assets/images/forget/close.png) 0 no-repeat;
+    background: url(/cn/mobile/assets/images/forget/close.png) 0 no-repeat;
     background-size:19px 12px;
     width: 19px;
     height: 12px;
@@ -270,21 +270,21 @@
 
 .LoginEye .eyeOpen {
     display: inline-block;
-    background: url(/vn/mobile/assets/images/forget/open.png) 0 no-repeat;
+    background: url(/cn/mobile/assets/images/forget/open.png) 0 no-repeat;
     background-size:40px 26px !important;
     width: 40px !important;
     height: 26px !important; 
 }
 .LoginEye .eyeClose {
     display: inline-block;
-    background: url(/vn/mobile/assets/images/forget/close.png) 0 no-repeat;
+    background: url(/cn/mobile/assets/images/forget/close.png) 0 no-repeat;
     background-size:40px 26px !important;
     width: 40px !important;
     height: 26px !important;
 }
 
 /* 新版改版 */
-.LoginSet .registered-header{
+.LoginSetNevis .registered-header{
     width: 100%;
     height: 1.2rem;
     margin: auto;
@@ -326,7 +326,7 @@
 
 
 /* 多语言 */
-.LoginSet .language-wrapNevis {
+.LoginSetNevis .language-wrapNevis {
 	position: relative;
 	left: 0.03rem;
 	right: 0;
@@ -339,7 +339,7 @@
 	z-index: 100;
     margin-left: -3%;
 }
-.LoginSet .language-wrapNevis .language-box {
+.LoginSetNevis .language-wrapNevis .language-box {
     /* padding-bottom: 30px; */
     display: flex;
     /* margin-top: 0.3rem; */
@@ -347,7 +347,7 @@
     font-size: 0.24rem;
     padding-left: 0.38rem;
 }
-.LoginSet .language-wrapNevis .language-box > a {
+.LoginSetNevis .language-wrapNevis .language-box > a {
 	display: inline-block;
     padding: 0.22rem 0.2rem 0.1rem 0.2rem;
     width: 1.8rem;
@@ -360,13 +360,13 @@
     height: 0.55rem;
 
 }
-.LoginSet .language-wrapNevis .language-box > a.curr:active {
+.LoginSetNevis .language-wrapNevis .language-box > a.curr:active {
     transform: scale(1.1);
     background-color: #1A1A1A;
     opacity: 1;
     transition: all .1s;
 }
-.LoginSet .language-wrapNevis i {
+.LoginSetNevis .language-wrapNevis i {
     display: inline-block;
     width: 0.5rem;
     height: 0.5rem;
@@ -381,35 +381,35 @@
     color:#F00;
     font-size: 14px;
 }
-.LoginSet .language-wrapNevis i.VND {
+.LoginSetNevis .language-wrapNevis i.VND {
 	/* background-position: right center; */
-    background-image: url('/vn/mobile/assets/images/login/vnflag.png');
+    background-image: url('/cn/mobile/assets/images/login/vnflag.png');
     border-radius: 0.2rem;
 }
-.LoginSet .language-wrapNevis i.CNY {
+.LoginSetNevis .language-wrapNevis i.CNY {
 	/* background-position: right center; */
-    background-image: url('/vn/mobile/assets/images/login/cnflag.png');
+    background-image: url('/cn/mobile/assets/images/login/cnflag.png');
 }
-.LoginSet .language-wrapNevis .language-line {
+.LoginSetNevis .language-wrapNevis .language-line {
     position: relative;
     margin-bottom: 10px;
     padding: 0.15rem 15px;
     color: #666666;
     display: inline-block;
 }
-.LoginSet .language-wrapNevis .language-line:before, .LoginSet .language-wrapNevis .language-line:after {
+.LoginSetNevis .language-wrapNevis .language-line:before, .LoginSetNevis .language-wrapNevis .language-line:after {
     content: "";
     position: absolute;
     top: 0.34rem;
     height: 0.03rem;
     width: 80%;
 }
-.LoginSet .language-wrapNevis .language-line:before {
+.LoginSetNevis .language-wrapNevis .language-line:before {
     left: -80%;
     background-color: #999999;
     opacity: 0.7;
 }
-.LoginSet .language-wrapNevis .language-line:after {
+.LoginSetNevis .language-wrapNevis .language-line:after {
     right: -80%;
     background-color: #999999;
     opacity: 0.7;
@@ -429,17 +429,17 @@
     line-height: 1.4;
 }
 
-.LoginSet .language-wrapNevis .language-box > a.jboth{
+.LoginSetNevis .language-wrapNevis .language-box > a.jboth{
     display: block;
     /* margin: 10px auto; */
 }
 
-.LoginSet .language-wrapNevis i.TH{
+.LoginSetNevis .language-wrapNevis i.TH{
 	display: inline-block;
 	width: 0.5rem;
 	height: 0.5rem;
 	margin-right: 0.1rem;
-    background-image: url("/vn/mobile/assets/images/login/thflag.png");
+    background-image: url("/cn/mobile/assets/images/login/thflag.png");
     background-repeat: no-repeat;
     background-size: 100% auto;
 	vertical-align: middle;

@@ -25,7 +25,7 @@ class _NevisLogin extends Component {
         };
 
         this.config = getConfig();
-        const { languageType, language, onSuccess } = getConfig();
+        const { languageType, language, onSuccess,get,post,patch,put  } = getConfig();
 
         const privateParams = {
             platformType: 'J1',
@@ -38,10 +38,10 @@ class _NevisLogin extends Component {
             onRegister: (res = {}) => {},
             onDownload: (res = {}) => {},
             onBack: (res = {}) => {},
-            get: (api) => fetchRequest(api, 'GET', '', true),
-            post: (api, data) => fetchRequest(api, 'POST', data, true),
-            patch: (api, data) => fetchRequest(api, 'PATCH', data, true),
-            put: (api, data) => fetchRequest(api, 'PUT', data, true),
+            get: get,
+            post: post,
+            patch: patch,
+            put: put,
         };
         setConfig(privateParams);
     }

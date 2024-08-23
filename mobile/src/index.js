@@ -47,7 +47,6 @@ class Nevis extends React.Component {
                 Toast.hide();
                 onEnabled(res?.result || {});
                 const isEnabled = res?.result?.isNevisEnabled;
-
                 this.setState({ enabledNevis: isEnabled });
                 if (isEnabled) {
                     this.getNevisQRCode();
