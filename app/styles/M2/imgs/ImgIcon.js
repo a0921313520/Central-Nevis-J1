@@ -1,4 +1,23 @@
 const ImgIcon = {
     'testIcon': require('./test-icon.png'),
+    'scanIcon': require('./QRCodeScanner.png'),
+    'faceIcon': require('./faceIcon.png'),
+    'fingerIcon': require('./fingerIcon.png'),
+    'pinIcon': require('./pinIcon.png'),
+    'userIcon': require('./userIcon.png'),
+    'successIcon': require('./successIcon.png'),
+    'fingerPrintIcon': require('./fingerPrintIcon.png'),
+    'usrPinIcon': require('./usrPinIcon.png'),
+    'checkIcon': require('./checkIcon.png'),
+    'uncheckIcon': require('./uncheckIcon.png'),
+    'newWelcome': require('./newWelcome.png'),
+    'csIcon': require('./csIcon.png'),
+    'newBG': require('./newBG.png'),
+    'LoginFace': require('./LoginFace.png'),
+    'LoginFinger': require('./LoginFinger.png'),
+    'LoginPin': require('./LoginPin.png'),
+    'pwlClose': require('./pwlClose.png'),
+    'photoAlbum': require('./photoAlbum.png'),
+    'icon-check-g': require('./icon-check-g.png'),
 }
 export default ImgIcon
