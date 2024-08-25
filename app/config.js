@@ -1,7 +1,7 @@
 let config = {
 	platformType: 'J1',
-	languageType: 'M3',
-	language: 'VN',
+	languageType: 'M1',
+	language: 'CN',
 	get: () => {},
 	post: () => {},
 	patch: () => {},
