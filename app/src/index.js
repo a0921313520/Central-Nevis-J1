@@ -49,6 +49,16 @@ const fakelimit = {
     },
     "isSuccess": true
   }
+const testa = {
+    "isSuccess": true,
+    "result": {
+      "accessToken": "b2d9632b-9470-4bc0-8d60-08301a76e740",
+      "expiresIn": 21599,
+      "tokenType": "bearer",
+      "refreshToken": "899a4b6a-36ae-4e29-ba6b-750c32b856b3",
+      "skynetUpdate": false
+    }
+}
 
 window.WinModeType = ''//以设置mode，setting那边使用
 window.scanIconValue = undefined;  // 定义全局变量
@@ -58,25 +68,132 @@ class Nevis extends React.Component {
         this.state = {
             authenticators: {},
             modeType: '',//Face/Pin/Fingerprint
-            NevisConfigurations: {}
+            NevisConfigurations: {},
+            accessToken:'',
+            expiresIn:'',
+            refreshToken:'',
+            skynetUpdate:'',
+            isTokenValid: false,
+            tokenStatus:'',
+            tokenCreatedAt:'',
+            tokenUpdatedAt:'',
+            qrCode: {},
+            appLink:'',
+            statusToken:'',
+            appLinkUri:''
+
         }
         this.config = getConfig()
     }
 
     componentDidMount() {
         this.getNevisConfigurations()
+        // this.GETInitLoginSession() 
+        // this.POSTVerifyLoginSession()
+        // this.GETEnroll() 
+        // this.PUTEnroll()
+        // this.POSTVerifyEnrollToken()
     }
 
     componentWillUnmount() {
 
     }
+    POSTVerifyLoginSession = () => {
+        const { post } = getConfig()
+        let data = {
+            statusToken: '8325fd35-5eeb-43bd-bc9d-68e503932ea0'
+        }
+        post(ApiLink.POSTVerifyLoginSession + 'statusToken=' + data.statusToken + '&' )
+            .then((res) => {
+                if (res?.isSuccess) {
+                    this.setState({
+                        accessToken: res.accessToken,
+                        expiresIn: res.expiresIn,
+                        refreshToken: res.refreshToken,
+                        skynetUpdate: res.skynetUpdate
+                    })
+                }
+            })
+            .catch((error) => {
+                console.error('VerifyLoginSession API请求失败:', error);
+            })
+    }
+    PUTEnroll = () => {
+        const { put } = getConfig()
+        let data = {
+            authenticatorId: '4aa572dc-0a7b-4b72-b7f3-2c1c50b0a707'
+        }
+        put(ApiLink.PUTEnroll + 'authenticatorId=' + data.authenticatorId + '&')
+            .then((res) => {
+                if (res?.isSuccess) {
+                    console.log('Successfully Remove Authenticator')
+                }
+            })
+            .catch((error) => {
+                console.error('NevisConfigurations API请求失败:', error);
+            })
+    }
+    POSTVerifyEnrollToken = () => {
+        const { post } = getConfig()
+        let data = {
+            authenticatorId: '4aa572dc-0a7b-4b72-b7f3-2c1c50b0a707',
+            statusToken: '8325fd35-5eeb-43bd-bc9d-68e503932ea0'
+        }
+        post(ApiLink.POSTVerifyEnrollToken + 'statusToken=' + data.statusToken + '&' + 'authenticatorId=' + data.authenticatorId + '&')
+            .then((res) => {
+                if(res?.isSuccess){
+                    this.setState({
+                        isTokenValid: res.isTokenValid,
+                        tokenStatus: res.tokenStatus,
+                        tokenCreatedAt: res.tokenCreatedAt,
+                        tokenUpdatedAt: res.tokenUpdatedAt,
+                    })
+                }
+            })
+            .catch((error) => {
+                console.error('NevisConfigurations API请求失败:', error);
+            })
+    }
+    GETInitLoginSession = () => {
+        const { get } = getConfig()
+       
+        get(ApiLink.GETInitLoginSession)
+            .then((res) => {
+                if(res?.isSuccess){
+                    this.setState({
+                        qrCode: res.qrCode,    
+                        appLink: res.appLink ,
+                        statusToken: res.statusToken,
+                    })
+                }
+            })
+            .catch((error) => {
+                console.error('NevisConfigurations API请求失败:', error);
+            })
+    }
+    GETEnroll = () => {
+        const { get } = getConfig()
+      
+        get(ApiLink.GETEnroll)
+            .then((res) => {
+                if(res?.isSuccess){
+                    this.setState({
+                        qrCode: res.qrCode,    
+                        appLinkUri: res.appLinkUri ,
+                        statusToken: res.statusToken,
+                    })
+                }
+            })
+            .catch((error) => {
+                console.error('NevisConfigurations API请求失败:', error);
+            })
+    }
+
     //是否开启无密码登录。以及设置提示时间
     getNevisConfigurations = () => {
         const { get } = getConfig()
-        //let res = fakelimit
         get(ApiLink.NevisConfigurations)
             .then((res) => {
-            //.then((fakedata) => {
                 if (res?.isSuccess) {
                     this.setState({
                         NevisConfigurations: res.result
@@ -90,10 +207,6 @@ class Nevis extends React.Component {
     //检查当前是否设置无密码登录，如果有设置过，找到modeType='Face/Pin/Fingerprint'
     getModeType = () => {
         window.WinModeType = 'Face'
-        //window.WinModeType = key
-        // this.setState({
-        //     modeType: window.WinModeType
-        // })
     }
 
     //未设置无密码登录，call这只api，有authenticatorId表示已经设置过,这个手机不能再设置
@@ -103,10 +216,8 @@ class Nevis extends React.Component {
         //     window.scanIconValue = false;  // 未登录时设置全局变量
         //     return;
         // }
-        //let res = fake
         get(ApiLink.MemberAuthenticators)
             .then((res) => {
-            //.then((fakedata) => {
                 if (res?.isSuccess && res?.result) {
                     console.log('设置过=====')//如authenticatorId不同則要彈彈窗;相同或返回[]則不用彈彈窗;
                     this.setState({ authenticators: res.result.authenticators || {} })
