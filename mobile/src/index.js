@@ -112,30 +112,37 @@ class Nevis extends React.Component {
     };
 
     saveQRCodeShowSuccess = (qrCodeImg) => {
-        const {languageType } = getConfig();
-
-         // Trigger image download
-         const link = document.createElement('a');
-         link.href = qrCodeImg; // The data URL of the QR code image
-         link.download = 'QRCode.png'; // Default name for the downloaded image
-         document.body.appendChild(link);
-         link.click();
-         document.body.removeChild(link); // Remove the link after the download
-
+        const { languageType } = getConfig();
+    
+        // Inject custom styles for the Toast
+        const customStyles = `
+            .am-toast-notice-content .am-toast-text {
+                border: none !important;
+                box-shadow: none !important;
+                background-color: white !important;
+                border-radius: 0rem !important;
+                min-width: 2.2rem !important;
+                line-height: normal !important;
+                max-height: 1rem !important;
+                color: black !important;
+                font-size: 13px !important;
+            }
+        `;
+        const styleTag = document.createElement('style');
+        styleTag.id = 'custom-toast-styles'; 
+        styleTag.innerHTML = customStyles;
+        document.head.appendChild(styleTag);
+    
+        // Trigger image download
+        const link = document.createElement('a');
+        link.href = qrCodeImg;
+        link.download = 'QRCode.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    
         const alert = () => (
-            <div
-                style={{
-                    borderRadius: '3px',
-                    fontSize: '13px',
-                    color: 'black',
-                    backgroundColor: 'white',
-                    width: '100%',
-                    paddingTop: '0.1rem',
-                    paddingBottom: '0.2rem',
-                    paddingLeft: '0.1rem',
-                    paddingRight: '0.1rem',
-                }}
-            >
+            <div>
                 <p>
                     <img
                         style={{ bottom: '-5px', position: 'relative', paddingRight: '10px' }}
@@ -146,8 +153,19 @@ class Nevis extends React.Component {
                 </p>
             </div>
         );
-        Toast.info(alert(), 3);
+        
+        const duration = 3;
+        Toast.info(alert(), duration);
+    
+        // Cleanup the injected styles after the Toast duration
+        setTimeout(() => {
+            const existingStyleTag = document.getElementById('custom-toast-styles');
+            if (existingStyleTag) {
+                existingStyleTag.remove();
+            }
+        }, duration * 1000); 
     };
+    
 
     verifyLoginSession = (statusToken) => {
         const { isExpired } = this.state;
