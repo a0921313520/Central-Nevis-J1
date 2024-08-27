@@ -111,8 +111,17 @@ class Nevis extends React.Component {
         }
     };
 
-    saveQRCodeShowSuccess = () => {
+    saveQRCodeShowSuccess = (qrCodeImg) => {
         const {languageType } = getConfig();
+
+         // Trigger image download
+         const link = document.createElement('a');
+         link.href = qrCodeImg; // The data URL of the QR code image
+         link.download = 'QRCode.png'; // Default name for the downloaded image
+         document.body.appendChild(link);
+         link.click();
+         document.body.removeChild(link); // Remove the link after the download
+
         const alert = () => (
             <div
                 style={{

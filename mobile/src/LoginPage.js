@@ -242,7 +242,9 @@ class _NevisLogin extends Component {
                         </div>
 
                         <div>
-                            <span className="DownloadQrCode" onClick={isExpired ? this.refreshQRCode : saveQRCode}>
+                            <span className="DownloadQrCode" onClick={isExpired ? this.refreshQRCode : ()=>{
+                              saveQRCode(qrCodeImg)
+                            }}>
                                 {isExpired ? translate('刷新') : translate('保存')}
                             </span>
                         </div>
