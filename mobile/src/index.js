@@ -121,11 +121,13 @@ class Nevis extends React.Component {
                 box-shadow: none !important;
                 background-color: white !important;
                 border-radius: 0rem !important;
-                min-width: 2.2rem !important;
+                min-width: ${languageType === 'M3' ? '2.7rem !important':'2.2rem !important'}
                 line-height: normal !important;
-                max-height: 1rem !important;
+                max-height: ${languageType === 'M2' ? '1rem !important':'3rem !important'};
                 color: black !important;
+                height: 0.65rem !important;
                 font-size: 13px !important;
+                padding-top: 0.05rem;
             }
         `;
         const styleTag = document.createElement('style');
