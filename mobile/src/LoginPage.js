@@ -15,6 +15,7 @@ import JBOIconCN from '$Nevis/styles/M1/imgs/JBOLogoCN.png';
 import JBOIconTH from '$Nevis/styles/M2/imgs/JBOLogoTH.png';
 import JBOIconVN from '$Nevis/styles/M3/imgs/JBOLogoVN.png';
 import refreshQR from '$Nevis/styles/M3/imgs/refreshQR.png';
+import dummyQRCode from '$Nevis/styles/M1/imgs/QRTesting.png';
 import { checkAffQueryString, Cookie } from '$DATA/Helper';
 
 class _NevisLogin extends Component {
@@ -22,6 +23,7 @@ class _NevisLogin extends Component {
         super(props);
         this.state = {
             openstatus: false,
+            defaultQRCodeImg:dummyQRCode,
         };
 
         this.config = getConfig();
@@ -184,6 +186,7 @@ class _NevisLogin extends Component {
 
     render() {
         const { saveQRCode, qrCodeImg, isExpired, backToNormalLogin } = this.props;
+        const {defaultQRCodeImg} = this.state;
         const { languageType } = getConfig();
 
         return (
@@ -215,7 +218,7 @@ class _NevisLogin extends Component {
                         <div className="NevisTxtF">{translate('请使用竞博 APP 登录页面或是“我的”页面中的二维码扫描器来扫描二维码。')}</div>
 
                         <div style={{ position: 'relative', marginTop: '0.7rem', marginBottom: '0.3rem' }}>
-                            <img style={{ width: '3.2rem', height: '3.2rem', filter: isExpired ? 'grayscale(100%)' : 'none' }} src={qrCodeImg} />
+                            <img style={{ width: '3.2rem', height: '3.2rem', filter: isExpired ? 'grayscale(100%)' : 'none' }} src={qrCodeImg || defaultQRCodeImg} />
                             {isExpired && (
                                 <div
                                     style={{
