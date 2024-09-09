@@ -1,6 +1,6 @@
 import React from 'react';
 import translate from '$Nevis/translate';
-import { ApiPort } from './Api';
+import { ApiLink } from './Api';
 import { getConfig } from '$Nevis/config';
 import LoginPage from './LoginPage';
 import { Toast, Modal } from 'antd-mobile-v2';
@@ -42,7 +42,7 @@ class Nevis extends React.Component {
         const { get, onEnabled } = getConfig();
         Toast.loading('', 200);
 
-        get(ApiPort.NevisConfigurations)
+        get(ApiLink.NevisConfigurations)
             .then((res) => {
                 Toast.hide();
                 onEnabled(res?.result || {});
@@ -68,7 +68,7 @@ class Nevis extends React.Component {
         const { get, onGetQRCode, onSuccess } = getConfig();
         Toast.loading('', 200);
 
-        get(ApiPort.NevisQRCode)
+        get(ApiLink.NevisQRCode)
             .then((res) => {
                 Toast.hide();
                 if (res?.result?.statusToken) {
@@ -173,7 +173,7 @@ class Nevis extends React.Component {
         const { isExpired } = this.state;
         const { post } = getConfig();
 
-        post(ApiPort.VerifyLoginSession + `statusToken=${statusToken}&`)
+        post(ApiLink.VerifyLoginSession + `statusToken=${statusToken}&`)
             .then((res) => {
                 if (res?.isSuccess) {
                     const data = res.result;
@@ -181,7 +181,7 @@ class Nevis extends React.Component {
                     localStorage.setItem('memberToken', JSON.stringify(data.tokenType + ' ' + data.accessToken));
                     localStorage.setItem('refreshToken', JSON.stringify(data.refreshToken));
 
-                    fetchRequest(ApiPort.Member, 'GET', '', false)
+                    fetchRequest(ApiLink.Member, 'GET', '', false)
                         .then((memberData) => {
                             localStorage.setItem('memberInfo', JSON.stringify(memberData.result));
                             Router.push('/');
