@@ -170,33 +170,49 @@ class Nevis extends React.Component {
     
 
     verifyLoginSession = (statusToken) => {
-        const { isExpired } = this.state;
         const { post } = getConfig();
-
-        post(ApiLink.VerifyLoginSession + `statusToken=${statusToken}&`)
-            .then((res) => {
-                if (res?.isSuccess) {
-                    const data = res.result;
-
-                    localStorage.setItem('memberToken', JSON.stringify(data.tokenType + ' ' + data.accessToken));
-                    localStorage.setItem('refreshToken', JSON.stringify(data.refreshToken));
-
-                    fetchRequest(ApiLink.Member, 'GET', '', false)
-                        .then((memberData) => {
-                            localStorage.setItem('memberInfo', JSON.stringify(memberData.result));
-                            Router.push('/');
-                        })
-                        .catch((error) => {
-                            console.log('Error fetching member info:', error);
-                        });
-                } else {
-                    if (!isExpired) this.verifyLoginSession(statusToken);
-                }
-            })
-            .catch((error) => {
-                console.log('Error verifying login session:', error);
-            });
+        
+        const interval = setInterval(() => {
+            const { isExpired } = this.state;  // Get the isExpired state
+    
+            // Stop if session is expired
+            if (isExpired) {
+                clearInterval(interval);
+                console.log('Session expired, stopping verification.');
+                return;
+            }
+    
+            post(ApiLink.VerifyLoginSession + `statusToken=${statusToken}&`)
+                .then((res) => {
+                    if (res?.isSuccess) {
+                        const data = res.result;
+    
+                        // Store tokens and member info on success
+                        localStorage.setItem('memberToken', JSON.stringify(data.tokenType + ' ' + data.accessToken));
+                        localStorage.setItem('refreshToken', JSON.stringify(data.refreshToken));
+    
+                        fetchRequest(ApiLink.Member, 'GET', '', false)
+                            .then((memberData) => {
+                                localStorage.setItem('memberInfo', JSON.stringify(memberData.result));
+                                Router.push('/');
+                                clearInterval(interval);  // Clear the interval after successful login
+                            })
+                            .catch((error) => {
+                                console.log('Error fetching member info:', error);
+                                clearInterval(interval);  // Stop the interval in case of error
+                            });
+                    } else {
+                        console.log('Login session verification failed, retrying...');
+                        // Continue retrying until `isExpired` becomes true or session is successful
+                    }
+                })
+                .catch((error) => {
+                    console.log('Error verifying login session:', error);
+                    clearInterval(interval);  // Clear interval in case of a request error
+                });
+        }, 3000);  // Call the API every 3 seconds
     };
+    
 
     backToLogin = () => {
         const { backToNormalLogin } = this.props;
