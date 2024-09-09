@@ -1,4 +1,4 @@
-export const ApiPort = ({
+export const ApiLink = ({
     'NevisConfigurations': '/api/Setting/NevisConfigurations?',
     'NevisQRCode': '/api/Auth/PasswordlessAuthentication/InitLoginSession?',
     'VerifyLoginSession':'/api/Auth/PasswordlessAuthentication/VerifyLoginSession?',

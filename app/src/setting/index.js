@@ -29,7 +29,6 @@ class Setting extends React.Component {
     openMode = (key = '') => {
         this.setState({ openMode: key })
         Actions[key]({
-            openClose: 'open',
             onSuccess: this.onSuccess,
             onError: this.onError,
         })
@@ -37,31 +36,33 @@ class Setting extends React.Component {
 
     closeMode = (key = '') => {
         this.setState({ closeMode: key })
-        Actions[key]({
-            openClose: 'open',
-            onSuccess: this.onSuccess,
-            onError: this.onError,
-        })
+
     }
 
     //设置成功
     onSuccess = (res) => {
         const setMode = this.state.openMode
-        this.setState({ setMode, openMode: '', closeMode: '' })
+        this.setState({ setMode, openMode: '' })
         window.GetModeType()
     }
     //设置失败
     onError = (res) => {
-        this.setState({ openMode: '', closeMode: '' })
+        this.setState({ openMode: '' })
     }
 
-
+    //关闭成功
+    onCloseSuccess = () => {
+        this.setState({ closeMode: '', setMode: '' })
+    }
+    //关闭失败
+    onCloseError = () => {
+        this.setState({ closeMode: '' })
+    }
 
     render() {
 
         const {
             setMode,
-            openMode,
             closeMode,
         } = this.state
 
@@ -106,31 +107,14 @@ class Setting extends React.Component {
                 }
 
 
-                <View>
-                    {
-                        openMode == 'Face' &&
-                        <Face
-                            openClose={openMode}
-                            onSuccess={() => { this.onSuccess() }}
-                            onError={() => { this.onError() }}
-                        />
-                    }
-                    {
-                        openMode == 'Fingerprint' &&
-                        <Face
-                            onSuccess={() => { }}
-                            onError={() => { }}
-                        />
-                    }
-                    {
-                        openMode == 'Pin' &&
-                        <Face
-                            onSuccess={() => { }}
-                            onError={() => { }}
-                        />
-                    }
-
-                </View>
+                {
+                    closeMode &&
+                    <Verify
+                        modeType={closeMode}
+                        onSuccess={() => { this.onCloseSuccess() }}//验证/添加成功
+                        onError={() => { this.onCloseError() }}//验证/添加失败
+                    />
+                }
             </View>
         )
     }

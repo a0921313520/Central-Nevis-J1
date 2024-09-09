@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Image } from "react-native";
 import Touch from 'react-native-touch-once';
-import { ApiPort } from './Api'
+import { ApiLink } from './Api'
 import styles from '$NevisStyles/main'
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 import translate from '$Nevis/translate'
@@ -28,7 +28,8 @@ class Nevis extends React.Component {
     }
     //是否开启无密码登录。以及设置提示时间
     getNevisConfigurations = () => {
-        get(ApiPort.NevisConfigurations)
+        const { get } = getConfig()
+        get(ApiLink.NevisConfigurations)
             .then((res) => {
                 if (res?.isSuccess) {
 
@@ -45,9 +46,9 @@ class Nevis extends React.Component {
 
     //未设置无密码登录，call这只api，有authenticatorId表示已经设置过,这个手机不能再设置
     getMemberAuthenticators = () => {
-        const { get, isLogin } = getConfig()
-        if (!isLogin) { return }
-        get(ApiPort.MemberAuthenticators)
+        const { get } = getConfig()
+        if (!ApiPort.UserLogin) { return }
+        get(ApiLink.MemberAuthenticators)
             .then((res) => {
                 if (res?.isSuccess && res?.result) {
                     this.setState({ authenticators: res.result.authenticators || {} })
