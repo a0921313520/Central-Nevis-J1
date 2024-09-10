@@ -3,6 +3,7 @@ let config = {
 	languageType: 'M3',
 	language: 'VN',
 	onEnabled: (res = {}) => {},//是否启用
+	onGetQRCode: (res = {}) => { },//QRCODE
 	onError: (res = {}) => {},//错误
 	onSuccess: (res = {}) => {},//成功,返回res.statusToken
 	onRegister: (res = {}) => {},//去注册
