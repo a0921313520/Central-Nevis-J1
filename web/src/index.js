@@ -22,6 +22,7 @@ class Nevis extends React.Component {
 
     componentWillUnmount() {
         clearInterval(this.timerInterval);
+        clearInterval(this.refresh);
     }
     //是否开启nevis qrcode
     getNevisConfigurations = () => {
@@ -65,24 +66,31 @@ class Nevis extends React.Component {
 
     verifyLoginSession = (token) => {
         const { post } = getConfig()
-        post(ApiLink.VerifyLoginSession + `statusToken=${token}`)
-        .then((res) => {
-            if(res.isSuccess) {
-                localStorage.setItem('access_token',JSON.stringify(res.result?.tokenType + ' ' + res.result?.accessToken));
-                localStorage.setItem('refresh_token', JSON.stringify(res.result?.refreshToken));
-                sessionStorage.setItem('isLogin', true);
-                this.props.setLoginStatus();
-                // this.props.Memberlist();
-                this.setState({
-                    loginVerified: true
-                })
-                window.location.reload();
-
+        this.refresh = setInterval(() => { 
+            if (this.state.loginVerified || this.state.countdown == 0) {
+                clearInterval(this.refresh);
             }
-        })
-        .catch(() => {
+            post(ApiLink.VerifyLoginSession + `statusToken=${token}`)
+            .then((res) => {
+                if(res.isSuccess) {
+                    localStorage.setItem('access_token',JSON.stringify(res.result?.tokenType + ' ' + res.result?.accessToken));
+                    localStorage.setItem('refresh_token', JSON.stringify(res.result?.refreshToken));
+                    sessionStorage.setItem('isLogin', true);
+                    this.props.setLoginStatus();
+                    // this.props.Memberlist();
+                    this.setState({
+                        loginVerified: true
+                    })
+                    clearInterval(this.refresh);
+                    window.location.reload();
+                }
+            })
+            .catch(() => {
+    
+            })
 
-        })
+        }, 3000);
+
     }
 
     startCountdown = () => {
@@ -91,9 +99,6 @@ class Nevis extends React.Component {
                 if (prevState.countdown <= 1) {
                     clearInterval(this.timerInterval);
                     return { countdown: 0 };
-                }
-                if (!this.state.loginVerified) {
-                    this.verifyLoginSession(this.state.statusToken);
                 }
                 return { countdown: prevState.countdown - 1 };
             });
@@ -135,7 +140,7 @@ class Nevis extends React.Component {
                     //登入
                     visible={showLoginQR}
                     // onOk={this.handleOk}
-                    onCancel={()=> {clearInterval(this.timerInterval); this.setState({showLoginQR: false})}}
+                    onCancel={()=> {clearInterval(this.timerInterval); clearInterval(this.refresh); this.setState({showLoginQR: false})}}
                     footer={false}
                     width={'520px'}
                     zIndex={2000}
@@ -144,7 +149,7 @@ class Nevis extends React.Component {
                     keyboard={false}
                 >
                     <>
-                        <div className='nevis' onClick={() => {this.setState({showLoginQR: false}); clearInterval(this.timerInterval); this.props.openNormalLogin();}}>
+                        <div className='nevis' onClick={() => {this.setState({showLoginQR: false}); clearInterval(this.refresh); clearInterval(this.timerInterval); this.props.openNormalLogin();}}>
                             <div className='loginNormal'></div>
                         </div>
                         <div className='loginQRContent'>
