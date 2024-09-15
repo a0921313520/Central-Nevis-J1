@@ -22,11 +22,12 @@ class SwitchIcon extends Component {
 
   render() {
     const { isActive } = this.state;
+    const { value, onValueChange = () => {} } = this.props
 
     return (
-      <TouchableOpacity onPress={this.toggleSwitch} style={styles.switchContainer}>
-        <View style={[styles.switchTrack, isActive ? styles.activeTrack : styles.inactiveTrack]}>
-          <View style={[styles.switchThumb, isActive ? styles.activeThumb : styles.inactiveThumb]} />
+      <TouchableOpacity onPress={onValueChange} style={styles.switchContainer}>
+        <View style={[styles.switchTrack, value ? styles.activeTrack : styles.inactiveTrack]}>
+          <View style={[styles.switchThumb, value ? styles.activeThumb : styles.inactiveThumb]} />
         </View>
       </TouchableOpacity>
     );

@@ -19,5 +19,6 @@ const ImgIcon = {
     'pwlClose': require('./pwlClose.png'),
     'photoAlbum': require('./photoAlbum.png'),
     'icon-check-g': require('./icon-check-g.png'),
+    'icon-back': require('./icon-back.png'),
 }
 export default ImgIcon

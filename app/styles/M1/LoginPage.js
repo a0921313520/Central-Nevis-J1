@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
-       marginBottom: 40
+       marginBottom: 25
     },
     guestViewMode: {
         position: 'absolute', // 這裡使用了絕對定位

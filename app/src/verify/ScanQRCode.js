@@ -1,234 +1,205 @@
-// import React from "react";
-// import { Platform, View, Text, PermissionsAndroid, Image, TouchableOpacity } from "react-native";
-// import styles from '$NevisStyles/ScanQRCode'
-// import translate from '$Nevis/translate'
-// import Verify from './index'
-// import ImgIcon from '$NevisStyles/imgs/ImgIcon';
-// import ImagePicker from "react-native-image-picker";
-// import { launchImageLibrary } from 'react-native-image-picker';
-// import QRCodeScanner from 'react-native-qrcode-scanner';
-// import { Camera, useCameraDevices } from 'react-native-vision-camera';
+import React, { useEffect, useState } from 'react';
+import { Platform, Image, StyleSheet, Text, View, Alert } from 'react-native';
+import {
+    check as checkPermission,
+    PERMISSIONS,
+    request as requestPermission,
+    RESULTS,
+} from 'react-native-permissions';
+import Touch from 'react-native-touch-once';
+import ImgIcon from '$NevisStyles/imgs/ImgIcon'
+import translate from '$Nevis/translate'
+import Modals from '$Nevis/src/Modals'
+import { RNCamera } from 'react-native-camera'
+import { Actions } from "react-native-router-flux";
+// import jsQR from 'jsqr';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { Camera, useCameraDevices, useCodeScanner, useCameraDevice } from 'react-native-vision-camera';
 
-// // const devices = useCameraDevices();
-// // const device = devices.back;
-// //扫码二维码
-// class ScanQRCode extends React.Component {
-//     constructor(props) {
-//         super(props)
-//         this.state = {
-//             hasPermission: null,
-//         }
-//     }
+const ReadQrCodeScreen = () => {
+    const [errorMessage, setErrorMessage] = useState('');
+    const [qrCodeDate, setQrCodeDate] = useState('');
+    const [QrcodeInvalid, setQrcodeInvalid] = useState(false);
+    const [hasCameraPermission, setHasCameraPermission] = useState(false);
+    const [validCodeModal, setValidCodeModal] = useState(false);
 
-//     async componentDidMount() {
-//         // 在页面加载时检查相机权限状态
-//         const cameraPermissionStatus = await Camera.getCameraPermissionStatus();
-        
-//         if (cameraPermissionStatus === 'authorized') { //已经授权
-//           //是否登入
-//             if(!ApiPort.UserLogin){
-//                 //未登入，則引導用戶先進行pwl登入
-                
-//             }else{
-//                 //登入，則啟用相機掃描QR code
-//                 this.setState({ hasPermission: true })
-//             }
+    const isIos = Platform.OS === 'ios'
+    const device = isIos && useCameraDevice('back') || false
+    const cameraPermission = isIos ? PERMISSIONS.IOS.CAMERA : PERMISSIONS.ANDROID.CAMERA;
 
-//         } else if (cameraPermissionStatus === 'denied') {
-//           // 如果权限被拒绝
-//           console.log('Permission Denied', 'Camera access is required to scan QR codes. Please enable it in settings.');
-//           this.setState({ hasPermission: false });
-//         } else {
-//           // 無授权，則请求权限
-//           const newPermissionStatus = await Camera.requestCameraPermission();
-//           if (newPermissionStatus === 'authorized') {
-//             this.setState({ hasPermission: true });
-//           } else {
-//             this.setState({ hasPermission: false });
-//           }
-//         }
-//     }
+    // 在组件挂载时检查权限
+    useEffect(() => {
+        const checkAndRequestPermission = async () => {
+            const result = await checkPermission(cameraPermission);
+            switch (result) {
+                case RESULTS.UNAVAILABLE:
+                    setErrorMessage(translate('相机在此设备上不可用'));
+                    break;
+                case RESULTS.DENIED:
+                    requestCameraPermission();
+                    break;
+                case RESULTS.GRANTED:
+                    setHasCameraPermission(true);
+                    break;
+                case RESULTS.BLOCKED:
+                    setErrorMessage(translate('摄像头被拒绝访问'));
+                    break;
+            }
+        };
+        const requestCameraPermission = async () => {
+            const result = await requestPermission(cameraPermission);
+            if (result === RESULTS.GRANTED) {
+                setHasCameraPermission(true);
+            } else if (result === RESULTS.BLOCKED) {
+                setErrorMessage(translate('摄像头被拒绝访问'));
+            } else {
+                setErrorMessage(translate('拒绝使用摄像头'));
+            }
+        };
 
-//     componentWillUnmount() {
+        checkAndRequestPermission();
+    }, [cameraPermission]);
 
-//     }
+    const codeScannerIos = isIos && useCodeScanner({
+        codeTypes: ['qr'],
+        onCodeScanned: (codes) => {
+            const value = codes[0]?.value;
+            scanChange(value)
+        },
+    }) || false
 
-//     // 后端支持的文件类型=".jpg,.jpeg,.gif,.bmp,.png,.doc,.docx,.pdf"
-// 	selectPhotoTapped() {
-// 		if (Platform.OS == "ios") {
-// 			const options = {
-// 				// title: '选择图片', //TODO:CN-DONE 选择图片
-// 				// cancelButtonTitle: '取消', //TODO:CN-DONE 取消
-// 				// takePhotoButtonTitle: '拍照', //拍照
-// 				// chooseFromLibraryButtonTitle: '选择照片',  //從相簿拿圖
-// 				cameraType: "back",
-// 				mediaType: "mixed",
-// 				videoQuality: "high",
-// 				durationLimit: 10,
-// 				maxWidth: 3000,
-// 				maxHeight: 3000,
-// 				quality: 1,
-// 				angle: 0,
-// 				allowsEditing: false,
-// 				noData: false,
-// 				storageOptions: {
-// 					skipBackup: true,
-// 					cameraRoll: true,
-// 					waitUntilSaved: Platform.OS == "ios" ? true : false,
-// 				},
-// 				includeBase64: true,
-// 				// saveToPhotos: true,
-// 			};
-// 			if (ImagePicker && typeof ImagePicker.showImagePicker === 'function'){
-				
-// 				ImagePicker.launchImageLibrary(options, (response) => {
-// 					//后缀要求小写
-//                     if (response.didCancel) {
-//                     }else{
-//                         if (response.data) {
-//                             const names = response.fileName || (response.uri && response.uri.split('/').slice(-1)[0])
-//                             let idx = names.lastIndexOf(".");
-//                             let newfileName = names.substring(0, idx) + names.substring(idx).toLowerCase();
-//                             let uploadProgress = response.fileSize;
-//                             this.setState({
-//                                 uploadModalVisible: false,
-//                                 avatarName: newfileName,
-//                                 avatarSize: response.fileSize,
-//                                 avatarSource: response.data,
-//                                 uploadSpeed: uploadProgress,
-//                             });
-//                         }
-//                     }
-// 				});
+    const scanChange = (value) => {
+        if (value && qrCodeDate == '') {
+            setQrCodeDate(value)
+            if (ApiPort.UserLogin) {
+                //已登录需要提示
+                setValidCodeModal(true)
+            } else {
+                loginVerify(value)
+            }
 
-// 			}else{
-//                 launchImageLibrary(options, (response) => {
-//                     console.log('MMLB response>>>',response)
-//                     if (response.didCancel) {} else{
-//                     //后缀要求小写
-//                     if (response.assets[0]) {
-//                         const names = response.assets[0].fileName || (response.assets[0].uri && response.assets[0].uri.split('/').slice(-1)[0])
-//                         let idx = names.lastIndexOf(".");
-//                         let newfileName = names.substring(0, idx) + names.substring(idx).toLowerCase();
-//                         let uploadProgress = response.assets[0].fileSize;
-//                         this.setState({
-//                             uploadModalVisible: false,
-//                             avatarName: newfileName,
-//                             avatarSize: response.assets[0].fileSize,
-//                             avatarSource: response.assets[0].data,
-//                             uploadSpeed: uploadProgress,
-//                         });
-//                     }
-//                     }
-//                 });
-                
-// 			}
+        }
+    }
+    const loginVerify = (data = '') => {
+        const value = data || qrCodeDate
+        window.NevisLoginVerify(value, (res = {}) => {
+            if (res.isSuccess) {
+                window.navigateToSceneGlobe()
+            } else {
+                //验证失败
+                setQrcodeInvalid(true)
+            }
+        })
+    }
+    const imageLibrary = () => {
+        launchImageLibrary({
+            mediaType: isIos ? 'photo' : 'mixed',
+            includeBase64: true
+        }, res => {
+            if (res.didCancel) {
+                setQrcodeInvalid(true)
+                return
+            }
+            let assets = res.assets || []
+            if (assets.length > 0) {
+                setQrcodeInvalid(true)
+            }
+        })
+    }
 
-// 		} else {
-// 			DocumentPicker.pick({
-// 				type: ['image/jpeg', 'image/png', 'image/gif', 'public.heic', 'public.heif', 'public.jpeg', 'public.png', 'com.compuserve.gif', DocumentPicker.types.pdf,],
-// 			})
-// 				.then(res => {
-// 					if (res.name != null) {
-// 						//獲取base64 
-// 						RNFS.readFile(res.uri, 'base64').then(data => {
-// 							let idx = res.name.lastIndexOf('.');
-// 							let newfileName = res.name.substring(0, idx) + res.name.substring(idx).toLowerCase();
-// 							let uploadProgress = res.size
-// 							this.setState({
-// 								uploadModalVisible: false,
-// 								avatarName: newfileName,
-// 								avatarSize: res.size,
-// 								avatarSource: data,
-// 								uploadSpeed: uploadProgress,
-// 							});
+    if (!hasCameraPermission) {
+        return <View style={styles.container}>
+            <Text style={styles.errorText}>{errorMessage}</Text>
+        </View>
+    }
 
-// 						})
+    return (
+        <View style={styles.container}>
+            <Modals
+                modalVisible={QrcodeInvalid}
+                onlyOkBtn={true}
+                title={translate('二维码无效')}
+                msg={translate('此二维码无效或已失效。请刷新竞博网页上的二维码并重新扫描。')}
+                confirm={translate('确认')}
+                onConfirm={() => {
+                    setQrcodeInvalid(false)
+                    setQrCodeDate('')
+                }}
+            />
+            <Modals
+                modalVisible={validCodeModal}
+                title={translate('检测到重复登录')}
+                msg={translate('您已在竞博 APP 上登录，是否确认要登录竞博网页？竞博 APP 将会自动登出。')}
+                cancel={'取消'}
+                onCancel={() => { Actions.pop() }}
+                confirm={'确认'}
+                onConfirm={() => { loginVerify() }}
+            />
+            <Text style={styles.cameraText}>{translate('请扫描竞博网页上所显示的二维码')}</Text>
+            {
+                isIos ? <Camera
+                    style={StyleSheet.absoluteFill}
+                    device={device}
+                    codeScanner={codeScannerIos}
+                    isActive={true}
+                />
+                    : <RNCamera
+                        style={{ flex: 1, width: '95%' }}
+                        onBarCodeRead={(res) => { scanChange(res?.data || '') }}
+                    />
+            }
+            <Touch onPress={() => { imageLibrary() }} style={styles.photoView}>
+                <Image
+                    resizeMode="stretch"
+                    source={ImgIcon['photoAlbum']}
+                    style={styles.photo}
+                />
+                <Text style={styles.photoItem}>{translate('相簿')}</Text>
+            </Touch>
+        </View>
+    );
+};
 
-// 					}
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        display: 'flex',
+        backgroundColor: '#000',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+    },
+    photoItem: {
+        paddingTop: 10,
+        color: '#ccc',
+        textAlign: 'center',
+    },
+    photo: {
+        width: 42,
+        height: 42,
+        marginTop: 25,
+    },
+    cameraText: {
+        color: '#fff',
+        paddingBottom: 40,
+        paddingTop: 100,
+        textAlign: 'center',
+    },
+    photoView: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    cameraView: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 250,
+        height: 250
+    },
+    errorText: {
+        color: 'white',
+        fontSize: 18,
+    },
+});
 
-// 				});
-// 		}
-// 	}
-
-//     onSuccess = (e) => {
-//         // This function handles the success when a QR code is scanned.
-//         try {
-//             // 檢查掃描結果是否有效
-//             if (e && e.data) {
-//                 console.log('顯示掃描到的 QR code 數據---->',e);// 顯示成功掃描到的 QR Code
-//                 this.setState({
-//                     isScanning: false, // 掃描成功後關閉掃描界面
-//                 }) 
-//                 window.validCode();
-//             } else {
-//                 window.invalidCode();
-//                 throw new Error('無效的 QR Code，請重新掃描');
-//             }
-//           } catch (error) {
-//             console.log('error',error)
-//             this.handleError();
-//           }
-//     };
-
-//     handleError = () => {
-//         // 錯誤處理：提示用戶
-//         window.invalidCode()
-//     };
-
-
-//     render() {
-//         const { modeType } = this.props
-//         const { hasPermission } = this.state;
-
-//         // 如果尚未获取权限状态
-//         if (hasPermission === null)  { return }
-  
-//         // 如果权限被拒绝
-//         if (!hasPermission) { return }
-  
-//         // 如果有权限，显示二维码扫描页面
-//         return (
-//             <View style={{ flex: 1, backgroundColor: "#000000" }}>
-//                 <View style={styles.faceBG}>    
-//                     <View style={styles.user}>
-//                         <View>
-//                             <QRCodeScanner
-//                                 onRead={this.onSuccess}
-//                                 //flashMode={RNCamera.Constants.FlashMode.auto} // 自動閃光燈
-//                                 topContent={<Text style={styles.nameStyle}>{translate("请扫描竞博网页上所显示的二维码")}</Text>}
-//                                 bottomContent={
-//                                     <TouchableOpacity onPress={this.selectPhotoTapped}>
-//                                         <View style={styles.guestViewMode}>
-//                                             <Image
-//                                                 resizeMode="stretch"
-//                                                 source={ImgIcon['photoAlbum']}
-//                                                 style={{ width: 30, height: 27 }}
-//                                             />
-//                                             <Text style={{ color: '#CCCCCC', fontSize: 14, marginTop: 5 }}>
-//                                                 {translate('相簿')}
-//                                             </Text>
-//                                         </View>
-//                                     </TouchableOpacity> 
-//                                 }
-//                                 cameraStyle={styles.camera}
-//                             />
-//                         </View>
-//                     </View>          
-//                 </View>
-//                 {
-//                     modeType != '' &&
-//                     <Verify
-//                         modeType={modeType}
-//                         onSuccess={() => { }}//验证/添加成功
-//                         onError={() => { }}//验证/添加失败
-//                     />
-//                 }
-//             </View>
-//         )
-//     }
-// }
-
-
-
-// export default ScanQRCode
+export default ReadQrCodeScreen;

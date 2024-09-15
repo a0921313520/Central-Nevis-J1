@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View, Keyboard } from "react-native";
 import PropTypes from 'prop-types';
 
 
@@ -13,6 +13,15 @@ export default class VerificationCodeInput extends Component {
             isFocused: true,
             isFocusedIndex: 0,
             textString: ''
+        }
+        this.dismiss = true//防止Keyboard.dismiss重复
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevProps.refresh != this.props.refresh) {
+            this.setState({textString: ''}, () => {
+                this.dismiss = true
+            })
         }
     }
 
@@ -34,8 +43,6 @@ export default class VerificationCodeInput extends Component {
      * @returns {Array}
      */
     renderText(callback) {
-        console.log(this.state)
-
         let inputs = [];
         for (let i = 0; i < this.props.inputSize; i++) {
             inputs.push(
@@ -65,12 +72,17 @@ export default class VerificationCodeInput extends Component {
                     <TextInput
                         value={this.state.textString}
                         style={styles.intextInputStyle}
-                        onChangeText={(text) => {
-                            let value = text.replace(/[^0-9]/g, "");
+                        onChangeText={(text = '') => {
+                            // let value = text.replace(/[^0-9]/g, "");
+                            let value = text
                             this.setState({
                                 textString: value,
                             });
-                            this.props.TextInputChange(value)
+                            if(value.length == 6 && this.dismiss) {
+                                this.dismiss = false
+                                this.props.TextInputChange(value)
+                                Keyboard.dismiss()
+                            }
                         }}
                         underlineColorAndroid="transparent"
                         maxLength={this.props.inputSize}

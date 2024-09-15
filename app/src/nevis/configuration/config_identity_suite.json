@@ -1,0 +1,13 @@
+{
+	"loginRequestURL": "https://ogauth-852eea.mauth.nevis.cloud/auth/pwd",
+	"sdk": {
+		"baseUrl": "https://ogauth-852eea.mauth.nevis.cloud",
+		"facetId": "android:apk-key-hash:8GcYqq9Oxmrx46dciU4iimoCRzhd9HXfu8AK3+ZVX9k",
+		"registrationRequestPath": "/nevisfido/uaf/1.1/request/registration/",
+		"registrationResponsePath": "/nevisfido/uaf/1.1/registration/",
+		"authenticationRequestPath": "/auth/fidouaf",
+		"authenticationResponsePath": "/auth/fidouaf/authenticationresponse/",
+		"deregistrationRequestPath": "/nevisfido/uaf/1.1/request/deregistration/",
+		"dispatchTargetResourcePath": "/nevisfido/token/dispatch/targets/"
+	}
+}

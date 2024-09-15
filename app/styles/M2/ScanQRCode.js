@@ -3,6 +3,7 @@ import {
     StyleSheet,
     Dimensions,
 } from "react-native";
+import { color } from 'react-native-reanimated';
 const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
@@ -121,39 +122,11 @@ const styles = StyleSheet.create({
         width: width * 0.8,
         marginTop: 20,
     },
-
-    permissionText: {
-        fontSize: 18,
-        textAlign: 'center',
-        margin: 20,
+    errorText: {
+        paddingTop: 150,
+        color: '#fff',
+        textAlign: 'center'
     },
-    qrCodeText: {
-        fontSize: 16,
-        color: 'white',
-        backgroundColor: 'black',
-        padding: 10,
-        position: 'absolute',
-        bottom: 20,
-    },
-    footer: {
-        position: 'absolute',
-        bottom: 50,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    button: {
-        alignItems: 'center',
-        padding: 10,
-        backgroundColor: '#fff',
-        borderRadius: 5,
-        flexDirection: 'row',
-    },
-    buttonIcon: {
-        width: 24,
-        height: 24,
-        marginRight: 8,
-    },
-    
 })
 
 export default styles
