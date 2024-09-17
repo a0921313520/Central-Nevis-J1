@@ -68,6 +68,7 @@ class LoginPage extends React.Component {
     }
     postVerifyLoginSession = () => {
         const { post } = getConfig()
+        const { userName } = this.state
         NToast.loading(translate('Loading...'), 200)
         post(ApiLink.POSTVerifyLoginSession + 'statusToken=' + this.state.statusToken + '&')
             .then((res) => {
@@ -79,7 +80,7 @@ class LoginPage extends React.Component {
                     ApiPort.LogoutTokey = refreshToken
                     ApiPort.access_token = accessToken
                     ApiPort.UserLogin = true
-                    // this.getMember()
+                    window.userNameDB = userName
                     window.LoginRefresh()
                 } else {
                     const errMessage = res?.errors[0]?.description || res?.errors[0]?.message

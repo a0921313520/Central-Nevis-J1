@@ -2,6 +2,7 @@ let config = {
 	platformType: 'J1',
 	languageType: 'M1',
 	language: 'CN',
+	NevisOtp: () => {},
 	get: () => {},
 	post: () => {},
 	patch: () => {},

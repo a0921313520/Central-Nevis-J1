@@ -32,9 +32,8 @@ class Pin extends React.Component {
     }
 
     componentWillUnmount() {
-        // const { mode, handler } = this.props
+        window.PinIsSet = false
         window.ActivePin = true
-        // usePinCancel(mode, handler)
     }
     refresh = () => {
         const { refresh } = this.state

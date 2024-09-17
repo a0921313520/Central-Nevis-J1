@@ -27,7 +27,6 @@ class NevisModal extends React.Component {
             isEnabled: false,
             checkBox: false,
             repeatSet: false,
-            otherPhoneSetId: '',
             modeType: window.NevisModeType,
         }
     }
@@ -44,12 +43,13 @@ class NevisModal extends React.Component {
     getMemberAuthenticators = () => {
         const { isNevisEnabled } = this.props.nevisConfigurations
         const { get } = getConfig()
-        if (!ApiPort.UserLogin || window.NevisModeType) { return }
-        get(ApiLink.MemberAuthenticators)
+        if (!ApiPort.UserLogin) { return }
+        window.AuthenticatorId = ''
+        get(ApiLink.MemberAuthenticators + 'username=' + window.userNameDB + '&')
             .then((res) => {
-                const otherPhoneSetId = res?.result?.authenticators?.authenticatorId || false
-                if (res?.isSuccess && res?.result?.authenticators?.authenticatorId) {
-                    this.setState({ otherPhoneSetId })
+                const otherPhoneSetId = res?.result?.authenticators[0]?.authenticatorId || false
+                if (res?.isSuccess && otherPhoneSetId) {
+                    window.AuthenticatorId = otherPhoneSetId
                 } else {
                     //没有设置过，提醒可以去设置
                     if (isNevisEnabled && !this.state.modeType) {
@@ -88,7 +88,6 @@ class NevisModal extends React.Component {
             noMoreTimes,
             repeatSet,
             homeSetModal,
-            otherPhoneSetId,
             checkBox,
             modeType,
             isEnabled,
@@ -101,19 +100,23 @@ class NevisModal extends React.Component {
         }
 
         window.AccountSetModal = () => {
-            if (otherPhoneSetId) {
-                //重复设置提示
+            //本机其他账户已经设置了
+            const isOtherName = window.NevisUsername && window.NevisUsername != window.userNameDB
+            //这个账户在其他手机上设置过了
+            const isOtherPhone = window.AuthenticatorId && !window.NevisModeType
+            if (isOtherName || isOtherPhone) {
+                //重复设置提示,1.登录名和已设置的不同，2.当前手机未设置,其他手机已设置了
                 this.setState({ repeatSet: true })
             } else if(isNevisEnabled) {
-                //已开启
+                //计入nevis设置
                 Actions.NevisSetting()
             } else {
                 //未开启nevis
                 this.setState({isEnabled: true})
             }
         }
-        //home页面7天内不提醒设置
-        window.NevisHomeSetModal = () => {
+        //获取设置信息
+        window.NevisAuthenticators = () => {
             this.getMemberAuthenticators()
         }
 

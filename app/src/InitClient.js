@@ -71,11 +71,11 @@ const InitClient = ({ init }) => {
             })
     }
 
-    //删除前验证
-    window.NevisRemovelVerify = (callback = () => { }) => {
+    //本地验证
+    window.NevisVerify = (callback = () => { }) => {
         localAccountsVerify(callback)
     }
-    //验证成功后删除
+    //删除
     window.NevisRemoveNevis = (callback = () => { }) => {
         deleteLocalAuthenticators(callback)
     }
@@ -112,8 +112,9 @@ export const GetInitModeType = (res) => {
 //检查当前是否设置无密码登录，如果有设置过，找到modeType='Face/Pin/Fingerprint'
 export const GetModeType = (res) => {
     //是否已经添加
-    actives = res.find((v) => { return (v.registration?.registeredAccounts?.length > 0) }) || false
+    const actives = res.find((v) => { return (v.registration?.registeredAccounts?.length > 0) }) || false
     window.NevisModeType = actives && allTypeId[actives.aaid] || ''
+    window.RegisteredUserName = actives?.registration?.registeredAccounts[0]?.username || ''
     if (window.NevisModeType) {
         //没有无密码登录不显示NevisUsername
         global.storage.load({

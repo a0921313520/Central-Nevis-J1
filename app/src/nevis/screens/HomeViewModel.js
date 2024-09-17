@@ -63,11 +63,6 @@ const useHomeViewModel = () => {
 					return console.log('There are no registered accounts.');
 				}
 
-				console.log('Registered accounts:');
-				registeredAccounts.forEach((account) => {
-					console.log(`${JSON.stringify(account, null, ' ')}`);
-				});
-
 				setNumberOfAccounts(registeredAccounts.length);
 				console.log('registeredAccounts',registeredAccounts)
 				setLocalAccounts(registeredAccounts);
@@ -84,11 +79,8 @@ const useHomeViewModel = () => {
 					return console.log('There are no available authenticators.');
 				}
 
-				console.log('Available authenticators:');
-				authenticators.forEach((authenticator) => {
-					console.log(`   ${JSON.stringify(authenticator, null, ' ')}`);
-				});
-				alert('可使用===>' + JSON.stringify(authenticators))
+				console.log('authenticatorsauthenticators', authenticators)
+				// alert('可使用===>' + JSON.stringify(authenticators))
 				setLocalAuthenticators(authenticators);
 				GetInitModeType && GetInitModeType(authenticators)
 			})
@@ -103,10 +95,7 @@ const useHomeViewModel = () => {
 				if (!deviceInformation) {
 					return console.log('There is no available device info.');
 				}
-
-				console.log(
-					`Available device info: ${JSON.stringify(deviceInformation, null, ' ')}`
-				);
+				console.log('deviceInformationdeviceInformation', deviceInformation)
 			})
 			.catch((err) => { console.log('getDeviceInformationerr', err) });
 	}
@@ -142,33 +131,12 @@ const useHomeViewModel = () => {
 	//删除
 	async function deleteLocalAuthenticators(callback = () => {}) {
 		const client = ClientProvider.getInstance().client;
-		if (localAccounts.length === 0) {
-			return 'There are no registered accounts'
-		}
-
-		return localAccounts
-			.reduce(
-				(previous, account) =>
-					previous.then(startLocalAuthenticatorDeletion.bind(null, account)),
-				Promise.resolve()
-			)
-			.then(() => {
-				//删除成功
-				console.log('删除成功') 
-				callback()
-			})
-			.catch((err) => {
-				console.log('删除失败err', err) 
-			});
-
-		async function startLocalAuthenticatorDeletion(account) {
-			return new Promise((resolve, reject) => {
-				console.log(
-					`Executing deregistration for account: ${JSON.stringify(account, null, ' ')}`
-				);
-				client?.localData.deleteAuthenticator(account.username).then(resolve).catch(reject);
-			});
-		}
+		client?.localData.deleteAuthenticator(window.RegisteredUserName).then(() => {
+			callback()
+			console.log('删除成功')
+		}).catch((err) => {
+			console.log('deleteLocalAuthenticatorserr', err)
+		})
 	}
 
 	return {

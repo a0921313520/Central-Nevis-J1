@@ -17,6 +17,8 @@ window.ApiLink = ApiLink
 window.NevisSelectAaid = ''//选中要开启的类型, Face/Pin/Fingerprint
 window.NevisUsername = ''//nevis缓存姓名
 window.NToast = ''
+window.AuthenticatorId = ''//已设置的id，
+window.RegisteredUserName = ''//registeredAccounts里面的username，用于删除使用
 class Nevis extends React.Component {
     constructor(props) {
         super(props)
@@ -42,7 +44,6 @@ class Nevis extends React.Component {
 
     componentDidMount() {
         this.getNevisConfigurations()
-        // this.POSTVerifyEnrollToken()
     }
 
     componentWillUnmount() {
@@ -62,28 +63,6 @@ class Nevis extends React.Component {
                 }
             })
             .catch((error) => { })
-    }
-
-    POSTVerifyEnrollToken = () => {
-        const { post } = getConfig()
-        let data = {
-            authenticatorId: '4aa572dc-0a7b-4b72-b7f3-2c1c50b0a707',
-            statusToken: '8325fd35-5eeb-43bd-bc9d-68e503932ea0'
-        }
-        post(ApiLink.POSTVerifyEnrollToken + 'statusToken=' + data.statusToken + '&' + 'authenticatorId=' + data.authenticatorId + '&')
-            .then((res) => {
-                if (res?.isSuccess) {
-                    this.setState({
-                        isTokenValid: res.isTokenValid,
-                        tokenStatus: res.tokenStatus,
-                        tokenCreatedAt: res.tokenCreatedAt,
-                        tokenUpdatedAt: res.tokenUpdatedAt,
-                    })
-                }
-            })
-            .catch((error) => {
-                
-            })
     }
 
 

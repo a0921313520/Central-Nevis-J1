@@ -41,6 +41,9 @@ class Setting extends React.Component {
             onSuccess: false,
             userName: window.userNameDB || 'userName',
             enableUse: this.props.enableUse || false,
+            changModal: false,
+            changMode: '',
+            selectModeAaid: '',
         }
     }
 
@@ -52,14 +55,17 @@ class Setting extends React.Component {
 
     }
     //api获取appLinkUri，去注册开启nevis
-    getEnroll = () => {
+    getEnroll = (isChange = false) => {
         const { get } = getConfig()
         NToast.loading(translate('Loading...'), 200)
         get(ApiLink.GETEnroll)
             .then((res) => {
                 NToast.removeAll()
                 if (res?.isSuccess && res?.result?.appLinkUri) {
-                    window.NevisRegistration(res.result.appLinkUri, this.onRegistration)
+                    window.NevisRegistration(res.result.appLinkUri, (res) => {
+                        isChange && this.onChangeRegistration(res)
+                        !isChange && this.onRegistration(res)
+                    })
                 } else {
                     const errMessage = res?.errors[0]?.description || res?.errors[0]?.message
                     NToast.fail(errMessage)
@@ -69,24 +75,24 @@ class Setting extends React.Component {
 
             })
     }
+    //删除后call api
     PUTEnroll = () => {
         const { put } = getConfig()
-        let data = {
-            authenticatorId: '4aa572dc-0a7b-4b72-b7f3-2c1c50b0a707'
-        }
-        put(ApiLink.PUTEnroll + 'authenticatorId=' + data.authenticatorId + '&')
+        put(ApiLink.PUTEnroll + 'authenticatorId=' + window.AuthenticatorId + '&')
             .then((res) => {
-
+                window.NevisAuthenticators()
             })
             .catch((error) => {
 
             })
     }
+    //首次开启
     onRegistration = (res = {}) => {
         const { selectMode } = this.state
         if (res.isSuccess) {
             //开启成功
             window.NevisInitClient()
+            window.NevisAuthenticators()
             this.setState({ activeOpen: selectMode, onSuccess: true })
             global.storage.save({
                 key: 'NevisUsername',
@@ -98,30 +104,47 @@ class Setting extends React.Component {
             alert(res.description)
         }
     }
-
+    //更改开启新的，
+    onChangeRegistration = (res = {}) => {
+        const { changMode} = this.state
+        if (res.isSuccess) {
+            //开启新的成功，删除旧的
+            this.setState({activeOpen: changMode, changMode: ''})
+            window.NevisRemoveNevis(() => {
+                this.PUTEnroll()
+                window.NevisInitClient()
+            })
+        } else {
+            alert(res.description)
+        }
+    }
     changeMode = (mode = '', aaid) => {
+        const { NevisOtp } = getConfig()
         const { activeOpen, enableUse } = this.state
         if (activeOpen == mode) {
             // 已开启，点击后提示关闭
             this.setState({ removeModal: mode })
-            window.PinIsSet = false
+            mode == 'Pin' && (window.PinIsSet = false)//Pin验证只需要一次输入
         } else if (activeOpen) {
             // 已开启，点击更换
-
+            this.setState({changModal: true, changMode: mode})
+            window.NevisSelectAaid = aaid
+            mode == 'Pin' && (window.PinIsSet = true)//Pin设置需要两次输入
         } else {
             // 未开启，点击打开
             if(enableUse) { return }//其他手机已绑定设置
-            this.setState({ selectMode: mode })
-            window.NevisSelectAaid = aaid
-            window.PinIsSet = true
+            //去验证otp
+            NevisOtp()
+            this.setState({selectModeAaid: (mode + 'mode__aaid' + aaid)})
+            mode == 'Pin' && (window.PinIsSet = true)//Pin设置需要两次输入
         }
     }
-    //删除验证,验证成功后才能删除
+    //本地验证,验证成功后才能删除
     removeVerify = () => {
         this.setState({ removeModal: '' })
-        window.NevisRemovelVerify(this.removeVerifySuccess)
+        window.NevisVerify(this.removeVerifySuccess)
     }
-    //删除验证成功
+    //删除成功
     removeVerifySuccess = (res = {}) => {
         if(res.isSuccess) {
             window.NevisRemoveNevis(this.removeNevis)
@@ -144,7 +167,22 @@ class Setting extends React.Component {
 
     //成功点击返回
     onSuccessBack = () => {
-        this.setState({ selectMode: '', onSuccess: false })
+        this.setState({ selectMode: '', onSuccess: false, selectModeAaid: '' })
+    }
+    //更换验证成功
+    changeVerifySuccess = (res = {}) => {
+        if(res.isSuccess) {
+            //成功后去添加新的，新的添加成功后删除旧的
+            this.getEnroll(true)
+        } else {
+            alert(res.description)
+        }
+    }
+    //更换验证
+    changeVerify = () => {
+        this.setState({changModal: false}, () => {
+            window.NevisVerify(this.changeVerifySuccess)
+        })
     }
 
     render() {
@@ -156,8 +194,16 @@ class Setting extends React.Component {
             onSuccess,
             userName,
             language,
+            changModal,
+            changMode,
+            selectModeAaid,
         } = this.state
 
+        window.NevisSetMode = () => {
+            const modeAaid = selectModeAaid?.split('mode__aaid')
+            this.setState({ selectMode: modeAaid[0] })
+            window.NevisSelectAaid = modeAaid[1]
+        }
 
         return (
             <View style={styles.SettingBG}>
@@ -170,6 +216,16 @@ class Setting extends React.Component {
                     onCancel={() => { this.setState({ removeModal: '' }) }}
                     confirm={'确认'}
                     onConfirm={() => { this.removeVerify() }}
+                />
+                <Modals
+                    // 改nevis提示
+                    modalVisible={changModal}
+                    title={translate('已启用其他验证方式')}
+                    msg={translate('启用{X}将会自动关闭{Y}。若您之后要再次启用{X}，需要重新设置。 是否确定要启用{Y}？', {X: translate(NevisListData[activeOpen]?.name), Y: translate(NevisListData[changMode]?.name)})}
+                    cancel={'取消'}
+                    onCancel={() => { this.setState({ changModal: false }) }}
+                    confirm={'确认'}
+                    onConfirm={() => { this.changeVerify() }}
                 />
 
                 <Text style={styles.SettingWord}>{translate("启用验证方式")}</Text>
