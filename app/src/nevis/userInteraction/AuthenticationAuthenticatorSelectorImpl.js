@@ -35,7 +35,7 @@ export class AuthenticationAuthenticatorSelectorImpl extends AuthenticatorSelect
 			);
 		}
 		setTimeout(async () => {
-			await handler?.aaid(items[0].authenticator.aaid).catch((err) => {console.log('err1d1d1d', err)});
-		}, 500);
+			await handler?.aaid(window.NevisSelectAaid).catch((err) => {console.log('err1d1d1d', err)});
+		}, 200);
 	}
 }

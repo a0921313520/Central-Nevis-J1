@@ -28,6 +28,8 @@ class NevisModal extends React.Component {
             checkBox: false,
             repeatSet: false,
             modeType: window.NevisModeType,
+            faceEnabled: false,
+            fingerprintEnabled: false,
         }
     }
 
@@ -91,6 +93,8 @@ class NevisModal extends React.Component {
             checkBox,
             modeType,
             isEnabled,
+            faceEnabled,
+            fingerprintEnabled,
         } = this.state
 
         const { nevisSetupReminderDays = 7, isNevisEnabled = false } = this.props.nevisConfigurations || {}
@@ -138,6 +142,22 @@ class NevisModal extends React.Component {
                     msg={translate('即将启用，请耐心等待')}
                     confirm={translate('我知道了')}
                     onConfirm={() => { this.setState({ isEnabled: false }) }}
+                />
+                <Modals
+                    modalVisible={faceEnabled}
+                    onlyOkBtn={true}
+                    title={translate('尚未开通人脸识别权限')}
+                    msg={translate('请先开通此装置的人脸识别权限')}
+                    confirm={translate('我知道了')}
+                    onConfirm={() => { this.setState({ faceEnabled: false }) }}
+                />
+                <Modals
+                    modalVisible={fingerprintEnabled}
+                    onlyOkBtn={true}
+                    title={translate('尚未开通指纹识别权限')}
+                    msg={translate('请先开通此装置的指纹识别权限')}
+                    confirm={translate('我知道了')}
+                    onConfirm={() => { this.setState({ fingerprintEnabled: false }) }}
                 />
                 <Modals
                     // 关闭nevis提示

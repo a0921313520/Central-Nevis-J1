@@ -5,7 +5,7 @@ import { Actions } from "react-native-router-flux";
 import styles from '$NevisStyles/Setting'
 import { getConfig } from '$Nevis/config'
 import translate from '$Nevis/translate'
-import { allTypeId, NevisListData } from '../InitClient'
+import { allTypeId, NevisListData, SetNevisSuccess } from '../InitClient'
 import Pin from './Pin'
 import Face from './Face'
 import Fingerprint from './Fingerprint'
@@ -52,20 +52,17 @@ class Setting extends React.Component {
     }
 
     componentWillUnmount() {
-
+        window.ChangeNevisSelectAaid = ''
     }
     //api获取appLinkUri，去注册开启nevis
-    getEnroll = (isChange = false) => {
+    getEnroll = () => {
         const { get } = getConfig()
         NToast.loading(translate('Loading...'), 200)
         get(ApiLink.GETEnroll)
             .then((res) => {
                 NToast.removeAll()
                 if (res?.isSuccess && res?.result?.appLinkUri) {
-                    window.NevisRegistration(res.result.appLinkUri, (res) => {
-                        isChange && this.onChangeRegistration(res)
-                        !isChange && this.onRegistration(res)
-                    })
+                    window.NevisRegistration(res.result.appLinkUri, this.onRegistration)
                 } else {
                     const errMessage = res?.errors[0]?.description || res?.errors[0]?.message
                     NToast.fail(errMessage)
@@ -86,36 +83,29 @@ class Setting extends React.Component {
 
             })
     }
-    //首次开启
+    //注册错误
+    registrationErr = (res = {}) => {
+        const { type, description } = res.errorCode || {}
+        if(type == 'USER_NOT_ENROLLED') {
+            //指纹/脸部辨识未开启
+            const mode = this.state.selectModeAaid?.split('mode__aaid')
+            window.onModal(mode? 'faceEnabled': 'fingerprintEnabled', true)
+        } else {
+            //其他错误处理
+            alert(description + '==>type=' + type)
+        }
+    }
+    //开启成功
     onRegistration = (res = {}) => {
-        const { selectMode } = this.state
+        const { selectMode, changMode } = this.state
         if (res.isSuccess) {
             //开启成功
             window.NevisInitClient()
             window.NevisAuthenticators()
-            this.setState({ activeOpen: selectMode, onSuccess: true })
-            global.storage.save({
-                key: 'NevisUsername',
-                id: 'NevisUsername',
-                data: this.state.userName,
-                expires: null
-            });
+            this.setState({ activeOpen: selectMode || changMode, onSuccess: true, changMode: '' })
+            SetNevisSuccess()
         } else {
-            alert(res.description)
-        }
-    }
-    //更改开启新的，
-    onChangeRegistration = (res = {}) => {
-        const { changMode} = this.state
-        if (res.isSuccess) {
-            //开启新的成功，删除旧的
-            this.setState({activeOpen: changMode, changMode: ''})
-            window.NevisRemoveNevis(() => {
-                this.PUTEnroll()
-                window.NevisInitClient()
-            })
-        } else {
-            alert(res.description)
+            this.registrationErr(res)
         }
     }
     changeMode = (mode = '', aaid) => {
@@ -128,7 +118,7 @@ class Setting extends React.Component {
         } else if (activeOpen) {
             // 已开启，点击更换
             this.setState({changModal: true, changMode: mode})
-            window.NevisSelectAaid = aaid
+            window.ChangeNevisSelectAaid = aaid
             mode == 'Pin' && (window.PinIsSet = true)//Pin设置需要两次输入
         } else {
             // 未开启，点击打开

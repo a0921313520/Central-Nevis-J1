@@ -42,7 +42,7 @@ async function handleAuthentication(authentication, callback) {
 		})
 		.onError((err) => {
 			callback(err)
-			console.log('登录验证失败')
+			console.log('登录验证失败err', err)
 		})
 		.execute();
 }

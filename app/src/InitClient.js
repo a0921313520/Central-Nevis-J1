@@ -109,7 +109,28 @@ export const GetInitModeType = (res) => {
     GetModeType(res)
 }
 
-//检查当前是否设置无密码登录，如果有设置过，找到modeType='Face/Pin/Fingerprint'
+export const SetNevisSuccess = () => {
+    //设置成功, 添加缓存信息
+    global.storage.save({
+        key: 'NevisUsername',
+        id: 'NevisUsername',
+        data: window.userNameDB,
+        expires: null
+    });
+    if(window.ChangeNevisSelectAaid) {
+        //如果是更改，重新设置NevisSelectAaid
+        window.NevisSelectAaid = window.ChangeNevisSelectAaid
+        window.ChangeNevisSelectAaid = ''
+    }
+    global.storage.save({
+        key: 'NevisSelectAaid',
+        id: 'NevisSelectAaid',
+        data: window.NevisSelectAaid,
+        expires: null
+    });
+}
+
+//检查当前是否设置无密码登录，如果有设置过，找本地缓存确定是哪个aaid，可能有多个aaid，只使用缓存中的aaid
 export const GetModeType = (res) => {
     //是否已经添加
     const actives = res.find((v) => { return (v.registration?.registeredAccounts?.length > 0) }) || false
@@ -122,6 +143,30 @@ export const GetModeType = (res) => {
             id: 'NevisUsername'
         }).then(res => {
             window.NevisUsername = res
+        }).catch(err => { })
+    }
+    window.NevisSelectAaid = actives.aaid
+
+
+    //上面的暂时使用，1周后可删除,09/20
+    if (actives) {
+        //无密码登录aaid
+        global.storage.load({
+            key: 'NevisSelectAaid',
+            id: 'NevisSelectAaid'
+        }).then(res => {
+            window.NevisSelectAaid = res || ''
+            window.NevisModeType = allTypeId[res] || ''
+            window.RegisteredUserName = actives?.registration?.registeredAccounts[0]?.username || ''
+
+            //无密码登录NevisUsername
+            global.storage.load({
+                key: 'NevisUsername',
+                id: 'NevisUsername'
+            }).then(res => {
+                window.NevisUsername = res
+            }).catch(err => { })
+
         }).catch(err => { })
     }
 }

@@ -6,7 +6,7 @@ import styles from '$NevisStyles/LoginComponent'
 import { Actions } from "react-native-router-flux";
 import { NevisListData } from '../InitClient'
 
-export const ScanIcon = ({ backClick = () => { } }) => {
+export const ScanIcon = ({backIcon = false, backClick = () => { }}) => {
     useEffect(() => {
 
     }, []);
@@ -20,7 +20,7 @@ export const ScanIcon = ({ backClick = () => { } }) => {
                     style={styles.scanIcon}
                 />
             </Touch>
-            :
+            : backIcon?
             <Touch onPress={backClick}>
                 <Image
                     resizeMode="stretch"
@@ -28,6 +28,7 @@ export const ScanIcon = ({ backClick = () => { } }) => {
                     style={styles.scanIcon}
                 />
             </Touch>
+            :<View />
     )
 };
 

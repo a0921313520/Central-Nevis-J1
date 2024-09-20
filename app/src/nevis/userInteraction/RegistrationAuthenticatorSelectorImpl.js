@@ -39,10 +39,11 @@ export class RegistrationAuthenticatorSelectorImpl extends AuthenticatorSelector
 				)
 			);
 		}
-		
+		//首次注册window.ChangeNevisSelectAaid=‘’，更改时候window.ChangeNevisSelectAaid不为空
+		const aaid = window.ChangeNevisSelectAaid || window.NevisSelectAaid
 		setTimeout(async () => {
-			await handler?.aaid(window.NevisSelectAaid).catch((err) => {console.log('err1d1d1d', err)});
-		}, 500);
+			await handler?.aaid(aaid).catch((err) => {console.log('err1d1d1d', err)});
+		}, 200);
 	}
 
 	async mustDisplayForRegistration(
