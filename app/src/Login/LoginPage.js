@@ -6,7 +6,7 @@ import Touch from 'react-native-touch-once';
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 import { Actions } from 'react-native-router-flux';
 import { getConfig } from '$Nevis/config'
-import { NevisListData } from '../InitClient'
+import { NevisListData, NevisErrs } from '../InitClient'
 
 const {
     width, height
@@ -63,7 +63,7 @@ class LoginPage extends React.Component {
             this.postVerifyLoginSession()
         } else {
             //验证失败
-            alert(res.description)
+            NevisErrs(res, window.NevisModeType)
         }
     }
     postVerifyLoginSession = () => {
@@ -98,7 +98,7 @@ class LoginPage extends React.Component {
 
 
     render() {
-
+        const { LiveChat } = getConfig()
         const { userName, modeType } = this.state
 
         return (
@@ -108,7 +108,7 @@ class LoginPage extends React.Component {
                     source={ImgIcon['newBG']}
                     style={{ width: width, height: height, flex: 1 }}
                 >
-                    <View style={[{ height: Platform.OS === 'ios' ? 75 : 45, zIndex: 200 }, styles.headerTop]}>
+                    <View style={[styles.headerTop]}>
                         <TouchableOpacity
                             onPress={() => {
                                 Actions.ScanQRCode()
@@ -122,7 +122,7 @@ class LoginPage extends React.Component {
                             />
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => { }} >
+                        <TouchableOpacity onPress={() => { LiveChat() }} >
                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                 <View style={{ left: 2 }}>
                                     <Image

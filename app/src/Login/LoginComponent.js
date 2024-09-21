@@ -6,25 +6,19 @@ import styles from '$NevisStyles/LoginComponent'
 import { Actions } from "react-native-router-flux";
 import { NevisListData } from '../InitClient'
 
-export const ScanIcon = ({backIcon = false, backClick = () => { }}) => {
+export const ScanIcon = () => {
     useEffect(() => {
 
     }, []);
 
     return (
         window.NevisModeType ?
-            <Touch onPress={() => { Actions.ScanQRCode() }}>
+            <Touch onPress={() => {
+                ApiPort.UserLogin && Actions.ScanQRCode()
+            }}>
                 <Image
                     resizeMode="stretch"
                     source={ImgIcon['scanIcon']}
-                    style={styles.scanIcon}
-                />
-            </Touch>
-            : backIcon?
-            <Touch onPress={backClick}>
-                <Image
-                    resizeMode="stretch"
-                    source={ImgIcon['icon-back']}
                     style={styles.scanIcon}
                 />
             </Touch>

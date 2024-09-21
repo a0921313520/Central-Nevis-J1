@@ -12,9 +12,11 @@ import translate from '$Nevis/translate'
 import Modals from '$Nevis/src/Modals'
 import { RNCamera } from 'react-native-camera'
 import { Actions } from "react-native-router-flux";
-// import jsQR from 'jsqr';
+import { WebView } from 'react-native-webview';
+import ReadImageQrCode from './ReadImageQrCode'
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { Camera, useCameraDevices, useCodeScanner, useCameraDevice } from 'react-native-vision-camera';
+import { NevisErrs } from '../InitClient'
 
 const ReadQrCodeScreen = () => {
     const [errorMessage, setErrorMessage] = useState('');
@@ -22,6 +24,7 @@ const ReadQrCodeScreen = () => {
     const [QrcodeInvalid, setQrcodeInvalid] = useState(false);
     const [hasCameraPermission, setHasCameraPermission] = useState(false);
     const [validCodeModal, setValidCodeModal] = useState(false);
+    const [base64Image, setBase64Image] = useState('');  
 
     const isIos = Platform.OS === 'ios'
     const device = isIos && useCameraDevice('back') || false
@@ -87,7 +90,7 @@ const ReadQrCodeScreen = () => {
                 window.navigateToSceneGlobe()
             } else {
                 //验证失败
-                setQrcodeInvalid(true)
+                NevisErrs(res, window.NevisModeType)
             }
         })
     }
@@ -102,7 +105,8 @@ const ReadQrCodeScreen = () => {
             }
             let assets = res.assets || []
             if (assets.length > 0) {
-                setQrcodeInvalid(true)
+                let fileBytes = assets[0].base64 || ''
+                setBase64Image(fileBytes)
             }
         })
     }
@@ -156,6 +160,31 @@ const ReadQrCodeScreen = () => {
                 />
                 <Text style={styles.photoItem}>{translate('相簿')}</Text>
             </Touch>
+            {
+                !!base64Image &&
+                <View style={{width: 2, height: 2}}>
+                    <WebView
+                         style={{width: 2, height: 2}}
+                        ref={() => {}}
+                        originWhitelist={['*']}
+                        source={{ html: ReadImageQrCode(base64Image) }}
+                        onMessage={(event) => {
+                            event.persist();
+                            const qrCodeData= event?.nativeEvent?.data || ''
+                            if(qrCodeData.includes('error_found')) {
+                                //图片不是二维码
+                                alert(translate('没有找到二维码'))
+                            } else if(qrCodeData.includes('error_qr')) {
+                                //无法读取二维码
+                                setQrcodeInvalid(true)
+                            } else {
+                                //读取相册二维码成功
+                                scanChange(qrCodeData)
+                            }
+                        }}
+                    />
+                </View>
+            }
         </View>
     );
 };

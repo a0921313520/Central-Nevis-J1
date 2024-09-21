@@ -2,6 +2,8 @@ let config = {
 	platformType: 'J1',
 	languageType: 'M1',
 	language: 'CN',
+	UserTerms: () => {},
+	LiveChat: () => {},
 	NevisOtp: () => {},
 	get: () => {},
 	post: () => {},

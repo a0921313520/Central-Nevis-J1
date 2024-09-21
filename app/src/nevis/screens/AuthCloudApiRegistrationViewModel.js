@@ -8,6 +8,7 @@ import { PinEnrollerImpl } from '../userInteraction/PinEnrollerImpl';
 import { RegistrationAuthenticatorSelectorImpl } from '../userInteraction/RegistrationAuthenticatorSelectorImpl';
 import { ClientProvider } from '../utility/ClientProvider';
 import { DeviceInformationUtils } from '../utility/DeviceInformationUtils';
+import { Actions } from 'react-native-router-flux';
 
 
 const useAuthCloudApiRegistrationViewModel = () => {
@@ -25,8 +26,12 @@ const useAuthCloudApiRegistrationViewModel = () => {
 			.devicePasscodeUserVerifier(new DevicePasscodeUserVerifierImpl())
 			.fingerprintUserVerifier(new FingerprintUserVerifierImpl())
 			.onSuccess(() => {
-				console.log('Auth Cloud API registration succeeded.');
+				console.log('注册成功');
 				// alert('注册成功')
+				if(window.ActivePin) {
+					//关闭Pin输入框
+					Actions.pop()
+				}
 				callback({isSuccess: true})
 			})
 			.onError((err) => {

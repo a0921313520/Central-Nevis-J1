@@ -22,11 +22,10 @@ export class PinUserVerifierImpl extends PinUserVerifier {
 				? 'PIN user verification failed. Please try again.'
 				: 'Please start PIN user verification.'
 		);
-		if(window.ActivePin == false && context.lastRecoverableError) {
+		if(window.ActivePin && context.lastRecoverableError) {
 			Actions.refresh({ lastRecoverableError: context.lastRecoverableError })
 		}
-		if(window.ActivePin) {
-			window.ActivePin = false
+		if(!window.ActivePin) {
 			Actions.PinCode({
 				mode: PinMode.verification,
 				handler: handler,

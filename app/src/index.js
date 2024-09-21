@@ -12,7 +12,7 @@ import { Actions } from "react-native-router-flux";
 
 window.NevisModeType = ''//已设置mode，setting那边使用, Face/Pin/Fingerprint
 window.NevisAllModeType = []
-window.ActivePin = true//防止重复进入PIN
+window.ActivePin = false//防止重复进入PIN
 window.ApiLink = ApiLink
 window.NevisSelectAaid = ''//已开启的aaid
 window.ChangeNevisSelectAaid = ''//更改时候选中的aaid

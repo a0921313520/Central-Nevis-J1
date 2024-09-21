@@ -9,6 +9,7 @@ import * as OutOfBandOperationHandler from '../userInteraction/OutOfBandOperatio
 import { ClientProvider } from '../utility/ClientProvider';
 import { GetInitModeType } from '../../InitClient'
 import LocalAuthenticate from './SelectAccountViewModel';
+import { Actions } from 'react-native-router-flux';
 
 const useHomeViewModel = () => {
 

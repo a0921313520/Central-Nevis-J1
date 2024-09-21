@@ -19,6 +19,11 @@ const styles = StyleSheet.create({
         color: '#F5F5F5',
         textAlign: 'center',
     },
+    backBtn: {
+        color: '#00E62E',
+        textAlign: 'center',
+        paddingTop: 70,
+    },
 })
 
 export default styles

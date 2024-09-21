@@ -5,6 +5,7 @@ import styles from '$NevisStyles/PinCode'
 import VerificationCodeInput from "./VerificationCodeInput";
 import { usePinView, usePinCancel } from '../nevis/screens/PinViewModel'
 import { Actions } from "react-native-router-flux";
+import Touch from 'react-native-touch-once';
 
 
 class Pin extends React.Component {
@@ -22,7 +23,7 @@ class Pin extends React.Component {
     }
 
     componentDidMount() {
-        
+        window.ActivePin = true
     }
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.lastRecoverableError != this.props.lastRecoverableError) {
@@ -32,8 +33,12 @@ class Pin extends React.Component {
     }
 
     componentWillUnmount() {
+        const { mode, handler } = this.props
+        setTimeout(() => {
+            usePinCancel(mode, handler)
+        }, 1000);
         window.PinIsSet = false
-        window.ActivePin = true
+        window.ActivePin = false
     }
     refresh = () => {
         const { refresh } = this.state
@@ -50,7 +55,7 @@ class Pin extends React.Component {
         })
         if(errTimes <= 0) {
             Actions.pop()
-            window.onModal('noMoreTimes', true)
+            window.onModal('noLoginMoreTimes', true)
         }
     }
     checked(code) {
@@ -68,20 +73,17 @@ class Pin extends React.Component {
                     this.refresh()
                 } else {
                     usePinView(code, mode, handler)
-                    Actions.pop()
                 }
             }
         } else {
             //验证pin
             usePinView(code, mode, handler)
-            Actions.pop()
         }
 
     }
 
     render() {
         const { errCode, pinCode, refresh, pinMessage } = this.state;
-
         return (
             <View style={styles.pinCode}>
                 <View style={styles.pinTips}>
@@ -95,6 +97,12 @@ class Pin extends React.Component {
                         this.checked(value);
                     }}
                 />
+                {
+                    !ApiPort.UserLogin &&
+                    <Touch onPress={() => { Actions.pop() }}>
+                        <Text style={styles.backBtn}>{translate('账号密码登录')}</Text>
+                    </Touch>
+                }
             </View>
         )
     }

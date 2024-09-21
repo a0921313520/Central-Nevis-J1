@@ -21,13 +21,15 @@ class NevisModal extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            noMoreTimes: '',
+            noMoreTimes: false,
+            noLoginMoreTimes: false,
             homeSetModal: false,
             nevisConfigurations: {},
             isEnabled: false,
             checkBox: false,
             repeatSet: false,
-            modeType: window.NevisModeType,
+            homeModeType: '',
+            homeModeAaid: '',
             faceEnabled: false,
             fingerprintEnabled: false,
         }
@@ -42,7 +44,7 @@ class NevisModal extends React.Component {
     }
 
     //未设置无密码登录，call这只api，有authenticatorId表示已经设置过,这个手机不能再设置
-    getMemberAuthenticators = () => {
+    getMemberAuthenticators = (isHome) => {
         const { isNevisEnabled } = this.props.nevisConfigurations
         const { get } = getConfig()
         if (!ApiPort.UserLogin) { return }
@@ -54,12 +56,15 @@ class NevisModal extends React.Component {
                     window.AuthenticatorId = otherPhoneSetId
                 } else {
                     //没有设置过，提醒可以去设置
-                    if (isNevisEnabled && !this.state.modeType) {
+                    if (isNevisEnabled && !this.state.homeModeType && isHome) {
                         global.storage.load({
                             key: 'NevisToSetting',
                             id: 'NevisToSetting'
-                        }).then(res => { }).catch(err => {
-                            this.setState({ homeSetModal: true })
+                        }).then(res => { 
+
+                        }).catch(err => {
+                            const { mode, aaid } = window.NevisAllModeType[0]
+                            this.setState({ homeSetModal: true, homeModeType: mode, homeModeAaid: aaid  })
                         })
                     }
                 }
@@ -70,9 +75,11 @@ class NevisModal extends React.Component {
     }
 
     homeSetModal = (confirm = false) => {
-        this.setState({ homeSetModal: false }, () => {
+        const homeModeAaid = this.state.homeModeAaid
+        const homeModeType = this.state.homeModeType
+        this.setState({ homeSetModal: false, homeModeAaid: '', homeModeType: '' }, () => {
             if (confirm) {
-                Actions.NevisSetting()
+                Actions.NevisSetting({ homeModeType, homeModeAaid })
             }
         })
         if (this.state.checkBox) {
@@ -88,10 +95,11 @@ class NevisModal extends React.Component {
     render() {
         const {
             noMoreTimes,
+            noLoginMoreTimes,
             repeatSet,
             homeSetModal,
             checkBox,
-            modeType,
+            homeModeType,
             isEnabled,
             faceEnabled,
             fingerprintEnabled,
@@ -120,18 +128,26 @@ class NevisModal extends React.Component {
             }
         }
         //获取设置信息
-        window.NevisAuthenticators = () => {
-            this.getMemberAuthenticators()
+        window.NevisAuthenticators = (isHome = false) => {
+            this.getMemberAuthenticators(isHome)
         }
 
 
         return (
             <>
                 <Modals
-                    modalVisible={noMoreTimes}
+                    modalVisible={noLoginMoreTimes}
                     onlyOkBtn={true}
                     title={translate('已达验证次数上限')}
                     msg={translate('验证失败次数已达上限，请使用账号与密码进行登录。')}
+                    confirm={translate('我知道了')}
+                    onConfirm={() => { this.setState({ noLoginMoreTimes: false }) }}
+                />
+                <Modals
+                    modalVisible={noMoreTimes}
+                    onlyOkBtn={true}
+                    title={translate('已达验证次数上限')}
+                    msg={translate('验证失败次数已达上限，请稍后再尝试或使用其他验证方式。')}
                     confirm={translate('我知道了')}
                     onConfirm={() => { this.setState({ noMoreTimes: false }) }}
                 />
@@ -185,9 +201,9 @@ class NevisModal extends React.Component {
                                     <Image
                                         resizeMode="stretch"
                                         source={
-                                            modeType == 'Face' ?
+                                            homeModeType == 'Face' ?
                                                 ImgIcon['userIcon'] :
-                                                modeType == 'Fingerprint' ?
+                                                homeModeType == 'Fingerprint' ?
                                                     ImgIcon['fingerPrintIcon'] :
                                                     ImgIcon['usrPinIcon']
                                         }
@@ -196,9 +212,9 @@ class NevisModal extends React.Component {
                                 </View>
 
                                 {
-                                    modeType == 'Face' ?
+                                    homeModeType == 'Face' ?
                                         <Text style={[styles.modalMsg]}>{translate('在“我的”页面中完成人脸识别设置，以提升账号验证的便捷性与安全性。')}</Text> :
-                                        modeType == 'Fingerprint' ?
+                                        homeModeType == 'Fingerprint' ?
                                             <Text style={[styles.modalMsg]}>{translate('在“我的”页面中完成指纹识别设置，以提升账号验证的便捷性与安全性。')}</Text> :
                                             <Text style={[styles.modalMsg]}>{translate('在“我的”页面中完成 PIN 码识别设置，以提升账号验证的便捷性与安全性。')}</Text>
                                 }

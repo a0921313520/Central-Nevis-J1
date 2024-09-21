@@ -300,7 +300,7 @@
     },
     "启用{X}将会自动关闭{Y}。若您之后要再次启用{X}，需要重新设置。 是否确定要启用{Y}？":{
         "CN": "启用{X}将会自动关闭{Y}。若您之后要再次启用{X}，需要重新设置。 是否确定要启用{Y}？",
-        "VN": "Kích hoạt {Y} sẽ vô hiệu hóa {X}. Bạn sẽ cần thực hiện lại quá trình thiết lập nếu muốn kích hoạt {Y} trong tương lai. Bạn có chắc chắn muốn tiếp tục không?",
+        "VN": "Kích hoạt {Y} sẽ vô hiệu hóa {X}. Bạn sẽ cần thực hiện lại quá trình thiết lập nếu muốn kích hoạt {X} trong tương lai. Bạn có chắc chắn muốn tiếp tục không?",
         "TH": "การเปิดใช้งาน {Y} จะทำให้ {X} ถูกปิดการใช้งาน คุณจะต้องตั้งค่าใหม่อีกครั้งหากต้องการเปิดใช้งาน {Y} ในอนาคต คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?"
     },
     "账户信息验证":{
@@ -385,6 +385,10 @@
     "即将启用，请耐心等待": {
         "VN": "Sẽ được kích hoạt, hãy kiên nhẫn",
         "TH": "กำลังจะเปิดใช้งานโปรดอดทน"
+    },
+    "没有找到二维码": {
+        "VN": "Không tìm thấy mã qr",
+        "TH": "ไม่พบคำถาม qr"
     },
     "两次Pin不同": {
         "VN": "Hai Pin khác nhau",

@@ -92,7 +92,24 @@ const InitClient = ({ init }) => {
 };
 export default InitClient
 
-
+//
+export const NevisErrs = (res, mode) => {
+    const { type, description } = res.errorCode || {}
+    if(type == 'USER_LOCKOUT') {
+        //次数上限，锁定
+        window.onModal('noMoreTimes', true)
+    } else if(type == 'USER_CANCELED') {
+        //用户取消了
+        
+    } else if(type == 'USER_NOT_ENROLLED') {
+        //指纹/脸部辨识未开启
+        window.onModal(mode == 'Face'? 'faceEnabled': 'fingerprintEnabled', true)
+    } else {
+        //其他错误处理
+        alert(description + '==>type=' + type)
+    }
+    window.ChangeNevisSelectAaid = ''
+}
 
 //获取全部能用的无密码登录方式。符合条件
 export const GetInitModeType = (res) => {
@@ -104,8 +121,12 @@ export const GetInitModeType = (res) => {
             aaid: v.aaid,
         })
     })
-
-    window.NevisAllModeType = allModeType
+    //排序Face>Fingerprint>Pin
+    const sortOrder = ['Face', 'Fingerprint', 'Pin'];
+    const newAllMode = allModeType.sort((a, b) => {
+        return sortOrder.indexOf(a.mode) - sortOrder.indexOf(b.mode);
+    });
+    window.NevisAllModeType = newAllMode
     GetModeType(res)
 }
 

@@ -2,6 +2,7 @@ import React from 'react'
 import {
     StyleSheet,
     Dimensions,
+    Platform,
 } from "react-native";
 const { width, height } = Dimensions.get("window");
 
@@ -22,8 +23,6 @@ const styles = StyleSheet.create({
 		zIndex: 20,
 		padding: 15,
     	paddingTop: 55,
-		// paddingTop: Platform.OS == "android" ? 0 : 30,
-		// paddingRight: 10,
 	},
     logo: {
 		justifyContent: "center",

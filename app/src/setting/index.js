@@ -5,7 +5,7 @@ import { Actions } from "react-native-router-flux";
 import styles from '$NevisStyles/Setting'
 import { getConfig } from '$Nevis/config'
 import translate from '$Nevis/translate'
-import { allTypeId, NevisListData, SetNevisSuccess } from '../InitClient'
+import { allTypeId, NevisListData, SetNevisSuccess, NevisErrs } from '../InitClient'
 import Pin from './Pin'
 import Face from './Face'
 import Fingerprint from './Fingerprint'
@@ -48,7 +48,15 @@ class Setting extends React.Component {
     }
 
     componentDidMount() {
-
+        const { homeModeType, homeModeAaid } = this.props
+        const { NevisOtp } = getConfig()
+        //home弹窗跳过来直接去设置
+        if(homeModeType && homeModeAaid ) {
+            this.setState({selectModeAaid: homeModeType + 'mode__aaid' + homeModeAaid}, () => {
+                NevisOtp()
+                homeModeType == 'Pin' && (window.PinIsSet = true)//Pin设置需要两次输入
+            })
+        }
     }
 
     componentWillUnmount() {
@@ -83,29 +91,20 @@ class Setting extends React.Component {
 
             })
     }
-    //注册错误
-    registrationErr = (res = {}) => {
-        const { type, description } = res.errorCode || {}
-        if(type == 'USER_NOT_ENROLLED') {
-            //指纹/脸部辨识未开启
-            const mode = this.state.selectModeAaid?.split('mode__aaid')
-            window.onModal(mode? 'faceEnabled': 'fingerprintEnabled', true)
-        } else {
-            //其他错误处理
-            alert(description + '==>type=' + type)
-        }
-    }
     //开启成功
     onRegistration = (res = {}) => {
         const { selectMode, changMode } = this.state
+        const activeOpen = selectMode || changMode
         if (res.isSuccess) {
             //开启成功
             window.NevisInitClient()
             window.NevisAuthenticators()
-            this.setState({ activeOpen: selectMode || changMode, onSuccess: true, changMode: '' })
+            this.setState({ activeOpen, onSuccess: true, changMode: '' })
             SetNevisSuccess()
+            Actions.refresh({ onSuccess: true })
         } else {
-            this.registrationErr(res)
+            const mode = this.state.selectModeAaid?.split('mode__aaid')[0]
+            NevisErrs(res, activeOpen)
         }
     }
     changeMode = (mode = '', aaid) => {
@@ -125,6 +124,9 @@ class Setting extends React.Component {
             if(enableUse) { return }//其他手机已绑定设置
             //去验证otp
             NevisOtp()
+            // setTimeout(() => {
+            //     window.NevisSetMode()
+            // }, 1000);
             this.setState({selectModeAaid: (mode + 'mode__aaid' + aaid)})
             mode == 'Pin' && (window.PinIsSet = true)//Pin设置需要两次输入
         }
@@ -134,12 +136,13 @@ class Setting extends React.Component {
         this.setState({ removeModal: '' })
         window.NevisVerify(this.removeVerifySuccess)
     }
-    //删除成功
+    //本地验证成功
     removeVerifySuccess = (res = {}) => {
+        const mode = this.state.activeOpen
         if(res.isSuccess) {
             window.NevisRemoveNevis(this.removeNevis)
         } else {
-            alert(res.description)
+            NevisErrs(res, mode)
         }
     }
 
@@ -148,6 +151,7 @@ class Setting extends React.Component {
             //删除验证成功
             this.setState({ activeOpen: '' })
             window.NevisModeType = ''
+            window.NevisUsername = ''
             window.NevisInitClient()
             this.PUTEnroll()
         } else {
@@ -158,12 +162,13 @@ class Setting extends React.Component {
     //成功点击返回
     onSuccessBack = () => {
         this.setState({ selectMode: '', onSuccess: false, selectModeAaid: '' })
+        Actions.pop()
     }
     //更换验证成功
     changeVerifySuccess = (res = {}) => {
         if(res.isSuccess) {
             //成功后去添加新的，新的添加成功后删除旧的
-            this.getEnroll(true)
+            this.getEnroll()
         } else {
             alert(res.description)
         }
@@ -174,6 +179,8 @@ class Setting extends React.Component {
             window.NevisVerify(this.changeVerifySuccess)
         })
     }
+
+
 
     render() {
         const {
@@ -191,8 +198,15 @@ class Setting extends React.Component {
 
         window.NevisSetMode = () => {
             const modeAaid = selectModeAaid?.split('mode__aaid')
-            this.setState({ selectMode: modeAaid[0] })
+            this.setState({ selectMode: modeAaid[0], onSuccess: false })
             window.NevisSelectAaid = modeAaid[1]
+            //进入设置
+            Actions.NevisSettingModal({
+                selectMode: modeAaid[0],
+                getEnroll: this.getEnroll,
+                onSuccess: onSuccess,
+                onSuccessBack: this.onSuccessBack,
+            })
         }
 
         return (
@@ -239,73 +253,35 @@ class Setting extends React.Component {
                         )
                     })
                 }
-                {
-                    selectMode == 'Pin' &&
-                    <View style={styles.viewModal}>
-                        <Pin
-                            getEnroll={this.getEnroll}
-                            onSuccess={onSuccess}
-                            onSuccessBack={this.onSuccessBack}
-                            userName={userName}
-                            language={language}
-                        />
-                    </View>
-                }
-
-                {
-                    selectMode == 'Face' &&
-                    <View style={styles.viewModal}>
-                        <Face
-                            getEnroll={this.getEnroll}
-                            onSuccess={onSuccess}
-                            onSuccessBack={this.onSuccessBack}
-                            userName={userName}
-                            language={language}
-                        />
-                    </View>
-                }
-
-                {
-                    selectMode == 'Fingerprint' &&
-                    <View style={styles.viewModal}>
-                        <Fingerprint
-                            getEnroll={this.getEnroll}
-                            onSuccess={onSuccess}
-                            onSuccessBack={this.onSuccessBack}
-                            userName={userName}
-                            language={language}
-                        />
-                    </View>
-                }
             </View>
         )
     }
 }
 
 export const UserTerms = () => {
-    const language = getConfig().language
+    const { UserTerms, language } = getConfig()
     return (
         <>
             {
-                language == 'CN' && <View>
+                language == 'CN' && <Touch onPress={() => { UserTerms() }}>
                     <Text style={[styles.modalMsg]}>
-                        点击“启用”即表示您同意竞博规则与条款<Text style={{ color: '#00E62E' }} onPress={() => { Actions.UserTerms({ TermsType: "user" }) }}>规则与条款</Text>
+                        点击“启用”即表示您同意竞博规则与条款<Text style={{ color: '#00E62E' }}>规则与条款</Text>
                     </Text>
-                </View>
+                </Touch>
             }
             {
-                language == 'TH' && <View>
-                    <Text style={[styles.modalMsg]}>
-                    เปิดใช้งานและยอมรับ<Text style={{ color: '#00E62E' }} onPress={() => { Actions.UserTerms({ TermsType: "user" }) }}>ข้อกำหนด</Text>ของ JBO
+                language == 'TH' && <Touch>
+                    <Text style={[styles.modalMsg]} onPress={() => { UserTerms() }}>
+                    เปิดใช้งานและยอมรับ<Text style={{ color: '#00E62E' }}>ข้อกำหนด</Text>ของ JBO
                     </Text>
-                </View>
+                </Touch>
             }
             {
-                language == 'VN' && <View>
-                    <Text style={[styles.modalMsg]}>
-                        Kích hoạt và chấp nhận các <Text style={{ color: '#00E62E' }} onPress={() => { Actions.UserTerms({ TermsType: "user" }) }}>điều khoản điều kiện</Text> của JBO
+                language == 'VN' && <Touch>
+                    <Text style={[styles.modalMsg]} onPress={() => { UserTerms() }}>
+                        Kích hoạt và chấp nhận các <Text style={{ color: '#00E62E' }}>điều khoản điều kiện</Text> của JBO
                     </Text>
-                </View>
+                </Touch>
             }
 
         </>

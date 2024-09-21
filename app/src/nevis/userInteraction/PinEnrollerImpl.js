@@ -18,8 +18,7 @@ export class PinEnrollerImpl extends PinEnroller {
 				? 'PIN enrollment failed. Please try again.'
 				: 'Please start PIN enrollment.'
 		);
-		if(window.ActivePin) {
-			window.ActivePin = false
+		if(!window.ActivePin) {
 			Actions.PinCode({
 				mode: PinMode.enrollment,
 				handler: handler,

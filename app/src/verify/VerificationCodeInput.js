@@ -73,8 +73,7 @@ export default class VerificationCodeInput extends Component {
                         value={this.state.textString}
                         style={styles.intextInputStyle}
                         onChangeText={(text = '') => {
-                            // let value = text.replace(/[^0-9]/g, "");
-                            let value = text
+                            let value = text.replace(/[^0-9]/g, "");
                             this.setState({
                                 textString: value,
                             });

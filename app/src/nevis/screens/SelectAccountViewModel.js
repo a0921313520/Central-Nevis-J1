@@ -1,4 +1,5 @@
 
+import { Actions } from 'react-native-router-flux';
 import { AuthenticationAuthenticatorSelectorImpl } from '../userInteraction/AuthenticationAuthenticatorSelectorImpl';
 import { BiometricUserVerifierImpl } from '../userInteraction/BiometricUserVerifierImpl';
 import { DevicePasscodeUserVerifierImpl } from '../userInteraction/DevicePasscodeUserVerifierImpl';
@@ -19,7 +20,11 @@ export default function LocalAuthenticate(username, callback = () => { }) {
 		.fingerprintUserVerifier(new FingerprintUserVerifierImpl())
 		.onSuccess(async (authorizationProvider) => {
 			AuthorizationUtils.printAuthorizationInfo(authorizationProvider);
-			//本地验证成功
+			console.log('本地验证成功')
+			if(window.ActivePin) {
+				//关闭Pin输入框
+				Actions.pop()
+			}
 			callback({isSuccess: true})
 		})
 		.onError((error) => {
