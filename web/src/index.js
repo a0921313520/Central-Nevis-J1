@@ -122,7 +122,7 @@ class Nevis extends React.Component {
                 return Router.push('/Download')
             case 'M2':
                 return Router.push('/Download')
-            case 'M1':
+            case 'M3':
                 return Router.push('/ung-dung')
         }
     }
@@ -163,7 +163,7 @@ class Nevis extends React.Component {
                                 <img className="refreshIcon" onClick={() => {this.getLoginQR()}} src={refreshIcon.src}/>
                             }
                             {countdown <= 0 ?
-                                <div className='saveBtn' onClick={()=> this.getLoginQR()}>
+                                <div className='refreshBtn' onClick={()=> this.getLoginQR()}>
                                     {translate('刷新')}
                                 </div>
                             : 

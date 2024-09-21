@@ -35,7 +35,18 @@
 		.saveBtn {
 			border: 0.01rem solid #CCCCCC;
 			border-radius: 0.2rem;
-			width: 5rem;
+			width: 56px;
+			height: 26px;
+			line-height: 24px;
+			margin: 1rem auto 2rem auto;
+			cursor: pointer;
+		}
+		.refreshBtn {
+			border: 0.01rem solid #CCCCCC;
+			border-radius: 0.2rem;
+			width: 56px;
+			height: 26px;
+			line-height: 24px;
 			margin: 1rem auto 2rem auto;
 			cursor: pointer;
 		}
