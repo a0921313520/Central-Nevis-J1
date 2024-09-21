@@ -57,7 +57,6 @@ class Nevis extends React.Component {
         get(ApiLink.NevisConfigurations)
             .then((res) => {
                 if (res?.isSuccess && res?.result?.isNevisEnabled) {
-                    window.NevisInitClient()
                     this.setState({
                         nevisConfigurations: res.result
                     })
