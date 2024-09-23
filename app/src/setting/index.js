@@ -5,7 +5,7 @@ import { Actions } from "react-native-router-flux";
 import styles from '$NevisStyles/Setting'
 import { getConfig } from '$Nevis/config'
 import translate from '$Nevis/translate'
-import { allTypeId, NevisListData, SetNevisSuccess, NevisErrs } from '../InitClient'
+import { allTypeId, NevisListData, SetNevisSuccess, NevisErrs, NevisRemove } from '../InitClient'
 import Pin from './Pin'
 import Face from './Face'
 import Fingerprint from './Fingerprint'
@@ -80,17 +80,6 @@ class Setting extends React.Component {
 
             })
     }
-    //删除后call api
-    PUTEnroll = () => {
-        const { put } = getConfig()
-        put(ApiLink.PUTEnroll + 'authenticatorId=' + window.AuthenticatorId + '&')
-            .then((res) => {
-                window.NevisAuthenticators()
-            })
-            .catch((error) => {
-
-            })
-    }
     //开启成功
     onRegistration = (res = {}) => {
         const { selectMode, changMode } = this.state
@@ -150,10 +139,7 @@ class Setting extends React.Component {
         if (status == true) {
             //删除验证成功
             this.setState({ activeOpen: '' })
-            window.NevisModeType = ''
-            window.NevisUsername = ''
-            window.NevisInitClient()
-            this.PUTEnroll()
+            NevisRemove()
         } else {
             alert(translate('关闭失败，请重试'))
         }

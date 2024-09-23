@@ -66,6 +66,7 @@ async function handleOutOfBandPayload(
 			});
 		})
 		.onError((err) => {
+			callback(err)
 			console.log('errerrerr-outOfBandOperation', err)
 		})
 		.execute()
@@ -88,6 +89,9 @@ export async function decodePayload(base64UrlEncoded, callback) {
 			console.log('Out-of-Band payload decode succeeded.');
 			await handleOutOfBandPayload(payload, client, callback);
 		})
-		.onError((onError) => { console.log('decodePayloadonError', onError)})
+		.onError((onError) => {
+			callback(onError)
+			console.log('decodePayloadonError', onError)
+		})
 		.execute();
 }

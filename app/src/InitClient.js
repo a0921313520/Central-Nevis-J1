@@ -3,6 +3,7 @@ import { View, Text } from "react-native";
 import { decodePayload } from './nevis/userInteraction/OutOfBandOperationHandler';
 import useAuthCloudApiRegistrationViewModel from './nevis/screens/AuthCloudApiRegistrationViewModel'
 import HomeViewModel from './nevis/screens/HomeViewModel'
+import { getConfig } from '$Nevis/config'
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 
 export const allTypeId = {
@@ -100,7 +101,10 @@ export const NevisErrs = (res, mode) => {
         window.onModal('noMoreTimes', true)
     } else if(type == 'USER_CANCELED') {
         //用户取消了
-        
+    } else if(type == 'AUTHENTICATOR_ACCESS_DENIED' || type == 'AUTHENTICATOR_ACCESS_DENIED') {
+        //卸载后重新安装，无法使用，删除nevis，再重新创建注册
+        window.onModal('uninstall', true, {mode: mode})
+        NevisRemove()
     } else if(type == 'USER_NOT_ENROLLED') {
         //指纹/脸部辨识未开启
         window.onModal(mode == 'Face'? 'faceEnabled': 'fingerprintEnabled', true)
@@ -155,22 +159,9 @@ export const SetNevisSuccess = () => {
 export const GetModeType = (res) => {
     //是否已经添加
     const actives = res.find((v) => { return (v.registration?.registeredAccounts?.length > 0) }) || false
-    window.NevisModeType = actives && allTypeId[actives.aaid] || ''
-    window.RegisteredUserName = actives?.registration?.registeredAccounts[0]?.username || ''
-    if (window.NevisModeType) {
-        //没有无密码登录不显示NevisUsername
-        global.storage.load({
-            key: 'NevisUsername',
-            id: 'NevisUsername'
-        }).then(res => {
-            window.NevisUsername = res
-        }).catch(err => { })
-    }
-    window.NevisSelectAaid = actives.aaid
 
-
-    //上面的暂时使用，1周后可删除,09/20
     if (actives) {
+        window.RegisteredUserName = actives?.registration?.registeredAccounts[0]?.username || ''
         //无密码登录aaid
         global.storage.load({
             key: 'NevisSelectAaid',
@@ -178,7 +169,6 @@ export const GetModeType = (res) => {
         }).then(res => {
             window.NevisSelectAaid = res || ''
             window.NevisModeType = allTypeId[res] || ''
-            window.RegisteredUserName = actives?.registration?.registeredAccounts[0]?.username || ''
 
             //无密码登录NevisUsername
             global.storage.load({
@@ -188,6 +178,35 @@ export const GetModeType = (res) => {
                 window.NevisUsername = res
             }).catch(err => { })
 
-        }).catch(err => { })
+        }).catch(err => {
+            //本地有nevis，但是没有缓存，表示卸载后重新安装，需要移除
+        })
     }
+}
+
+//删除后清楚数据
+export const NevisRemove = () => {
+    const { put } = getConfig()
+    put(ApiLink.PUTEnroll + 'authenticatorId=' + window.AuthenticatorId + '&')
+        .then((res) => {
+        })
+        .catch((error) => {
+
+        })
+        window.NevisInitClient()
+        window.NevisModeType = ''
+        window.NevisUsername = ''
+        window.NevisSelectAaid = ''
+        global.storage.remove({
+            key: 'NevisSelectAaid',
+            id: 'NevisSelectAaid'
+        })
+        global.storage.remove({
+            key: 'NevisUsername',
+            id: 'NevisUsername'
+        })
+        global.storage.remove({
+            key: 'NevisSelectAaid',
+            id: 'NevisSelectAaid'
+        })
 }

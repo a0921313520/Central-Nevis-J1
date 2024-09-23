@@ -64,15 +64,8 @@ const ReadImageQrCode = (base64 = '') => {
 		}
 
 		function postWebView(action) {
-			var us = navigator.userAgent;
-			var isAndroid = us.indexOf('Android') > -1 || us.indexOf('Adr') > -1;
-			if (isAndroid) {
-				window.postMessage && window.postMessage(action)
-			} else {
-				window.ReactNativeWebView && window.ReactNativeWebView.postMessage(action)
-			}
+			window.ReactNativeWebView && window.ReactNativeWebView.postMessage(action)
 		}
-
 		parseQRCode()
 	</script>
 

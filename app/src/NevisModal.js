@@ -9,6 +9,7 @@ import { Actions } from 'react-native-router-flux';
 import Modals from '$Nevis/src/Modals'
 import ImgIcon from '$NevisStyles/imgs/ImgIcon';
 import CheckBox from 'react-native-check-box'
+import { NevisRemove } from './InitClient'
 
 
 const homeModalConfig = {
@@ -30,6 +31,7 @@ class NevisModal extends React.Component {
             repeatSet: false,
             homeModeType: '',
             homeModeAaid: '',
+            uninstall: false,
             faceEnabled: false,
             fingerprintEnabled: false,
         }
@@ -54,6 +56,10 @@ class NevisModal extends React.Component {
                 const otherPhoneSetId = res?.result?.authenticators[0]?.authenticatorId || false
                 if (res?.isSuccess && otherPhoneSetId) {
                     window.AuthenticatorId = otherPhoneSetId
+                    if(!window.NevisModeType && window.RegisteredUserName) {
+                        //如果有authenticatorId，还有手机设置了nevis，并且本地没缓存，应该是卸载重新安装用户，要删除nevis重新设置
+                        NevisRemove()
+                    }
                 } else {
                     //没有设置过，提醒可以去设置
                     if (isNevisEnabled && !this.state.homeModeType && isHome) {
@@ -63,8 +69,10 @@ class NevisModal extends React.Component {
                         }).then(res => { 
 
                         }).catch(err => {
-                            const { mode, aaid } = window.NevisAllModeType[0]
-                            this.setState({ homeSetModal: true, homeModeType: mode, homeModeAaid: aaid  })
+                            if(!window.NevisModeType) {
+                                const { mode, aaid } = window.NevisAllModeType[0]
+                                this.setState({ homeSetModal: true, homeModeType: mode, homeModeAaid: aaid })
+                            }
                         })
                     }
                 }
@@ -101,14 +109,20 @@ class NevisModal extends React.Component {
             checkBox,
             homeModeType,
             isEnabled,
+            uninstall,
             faceEnabled,
             fingerprintEnabled,
         } = this.state
+
+        let uninstallMode = ''
 
         const { nevisSetupReminderDays = 7, isNevisEnabled = false } = this.props.nevisConfigurations || {}
 
         window.onModal = (key, status, data = {}, callback = () => { }) => {
             this.setState({ [key]: status })
+            if(key == 'uninstall') {
+                uninstallMode = data.mode || ''
+            }
         }
 
         window.AccountSetModal = () => {
@@ -142,6 +156,16 @@ class NevisModal extends React.Component {
                     msg={translate('验证失败次数已达上限，请使用账号与密码进行登录。')}
                     confirm={translate('我知道了')}
                     onConfirm={() => { this.setState({ noLoginMoreTimes: false }) }}
+                />
+                <Modals
+                    modalVisible={uninstall}
+                    onlyOkBtn={true}
+                    title={translate('请重新设置')}
+                    msg={
+                        translate('{X}已失效，请重新设置', {X: uninstallMode == 'Face'?translate('人脸识别'): uninstallMode == 'Pin'? translate('PIN 码识别'): translate('指纹识别')})
+                    }
+                    confirm={translate('我知道了')}
+                    onConfirm={() => { this.setState({ uninstall: false }) }}
                 />
                 <Modals
                     modalVisible={noMoreTimes}

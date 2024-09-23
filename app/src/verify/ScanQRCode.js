@@ -90,7 +90,8 @@ const ReadQrCodeScreen = () => {
                 window.navigateToSceneGlobe()
             } else {
                 //验证失败
-                NevisErrs(res, window.NevisModeType)
+                setQrCodeDate('')
+                setQrcodeInvalid(true)
             }
         })
     }
@@ -164,13 +165,15 @@ const ReadQrCodeScreen = () => {
                 !!base64Image &&
                 <View style={{width: 2, height: 2}}>
                     <WebView
-                         style={{width: 2, height: 2}}
+                        key={Math.random()}
+                        style={{width: 2, height: 2}}
                         ref={() => {}}
                         originWhitelist={['*']}
                         source={{ html: ReadImageQrCode(base64Image) }}
                         onMessage={(event) => {
-                            event.persist();
+                            event.persist && event.persist();
                             const qrCodeData= event?.nativeEvent?.data || ''
+                            setBase64Image('')
                             if(qrCodeData.includes('error_found')) {
                                 //图片不是二维码
                                 alert(translate('没有找到二维码'))
