@@ -54,13 +54,17 @@ class NevisModal extends React.Component {
         get(ApiLink.MemberAuthenticators + 'username=' + window.userNameDB + '&')
             .then((res) => {
                 const otherPhoneSetId = res?.result?.authenticators[0]?.authenticatorId || false
+                const isUninstall = this.isUninstall()
                 if (res?.isSuccess && otherPhoneSetId) {
                     window.AuthenticatorId = otherPhoneSetId
-                    if(!window.NevisModeType && window.RegisteredUserName) {
-                        //如果有authenticatorId，还有手机设置了nevis，并且本地没缓存，应该是卸载重新安装用户，要删除nevis重新设置
+                    if(isUninstall) {
                         NevisRemove()
                     }
                 } else {
+                    if(isUninstall) {
+                        NevisRemove()
+                        return
+                    }
                     //没有设置过，提醒可以去设置
                     if (isNevisEnabled && !this.state.homeModeType && isHome) {
                         global.storage.load({
@@ -80,6 +84,12 @@ class NevisModal extends React.Component {
             .catch((error) => {
 
             })
+    }
+    //是否卸载过
+    isUninstall = () => {
+        //手机设置了nevis，并且本地没缓存，应该是卸载重新安装用户，要删除nevis重新设置
+        const uninstall = !window.NevisModeType && window.RegisteredUserName || false
+        return uninstall
     }
 
     homeSetModal = (confirm = false) => {
