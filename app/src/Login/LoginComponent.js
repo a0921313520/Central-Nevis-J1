@@ -6,11 +6,15 @@ import styles from '$NevisStyles/LoginComponent'
 import { Actions } from "react-native-router-flux";
 import { NevisListData } from '../InitClient'
 
-export const ScanIcon = (isIphone14Upper) => {
+export const ScanIcon = (props) => {
     useEffect(() => {
 
     }, []);
-
+    const { isIphone14Upper = false } = props;
+    if (typeof isIphone14Upper !== 'boolean') {
+        console.warn('isIphone14Upper should be a boolean value');
+        return null;
+    } 
     return (
         window.NevisModeType ?
             <Touch onPress={() => {
