@@ -44,6 +44,8 @@ class Setting extends React.Component {
             changModal: false,
             changMode: '',
             selectModeAaid: '',
+            closeVerifyModal: false,
+            changeVerifyModal: false,
         }
     }
 
@@ -122,8 +124,13 @@ class Setting extends React.Component {
     }
     //本地验证,验证成功后才能删除
     removeVerify = () => {
-        this.setState({ removeModal: '' })
-        window.NevisVerify(this.removeVerifySuccess)
+        this.setState({ removeModal: '',closeVerifyModal:true })
+    }
+    //更换验证前的再次簡易验证
+    closeVerify = () => {
+        this.setState({closeVerifyModal:false}, () => {
+            window.NevisVerify(this.removeVerifySuccess)
+        })
     }
     //本地验证成功
     removeVerifySuccess = (res = {}) => {
@@ -161,9 +168,18 @@ class Setting extends React.Component {
     }
     //更换验证
     changeVerify = () => {
-        this.setState({changModal: false}, () => {
+        this.setState({changModal: false,changeVerifyModal:true})
+    }
+    //更换验证前的再次簡易验证
+    againVerify = () => {
+        this.setState({changeVerifyModal:false}, () => {
             window.NevisVerify(this.changeVerifySuccess)
         })
+    }
+    goOTP = () => {
+        const { NevisOtp } = getConfig()
+        //去验证otp
+        NevisOtp()
     }
 
 
@@ -180,6 +196,8 @@ class Setting extends React.Component {
             changModal,
             changMode,
             selectModeAaid,
+            closeVerifyModal,
+            changeVerifyModal
         } = this.state
 
         window.NevisSetMode = () => {
@@ -216,6 +234,32 @@ class Setting extends React.Component {
                     onCancel={() => { this.setState({ changModal: false }) }}
                     confirm={'确认'}
                     onConfirm={() => { this.changeVerify() }}
+                />
+                <Modals
+                    // 关闭nevis >>> pwl驗證
+                    modalVisible={closeVerifyModal}
+                    onlyOkBtn={true}
+                    againVerify={true}
+                    title={translate('账户信息验证')}
+                    msg={translate('为保障您的账户安全，请完成账户信息验证。')}
+                    cancel={'手机验证'}
+                    onCancel={() => { this.setState({ closeVerifyModal: false }), this.goOTP() }}
+                    confirm={translate(NevisListData[changMode]?.name)}
+                    onConfirm={() => { this.closeVerify() }}
+                    imgIcon={NevisListData[changMode]?.icon}
+                />
+                <Modals
+                    // 改nevis >>> pwl驗證
+                    modalVisible={changeVerifyModal}
+                    onlyOkBtn={true}
+                    againVerify={true}
+                    title={translate('账户信息验证')}
+                    msg={translate('为保障您的账户安全，请完成账户信息验证。')}
+                    cancel={'手机验证'}
+                    onCancel={() => { this.setState({ changeVerifyModal: false }), this.goOTP() }}
+                    confirm={translate(NevisListData[changMode]?.name)}
+                    onConfirm={() => { this.againVerify() }}
+                    imgIcon={NevisListData[changMode]?.icon}
                 />
 
                 <Text style={styles.SettingWord}>{translate("启用验证方式")}</Text>

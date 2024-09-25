@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Platform, Image, StyleSheet, Text, View, Alert } from 'react-native';
+import { Platform, Image, StyleSheet, Text, View, Alert, Dimensions, } from 'react-native';
 import {
     check as checkPermission,
     PERMISSIONS,
@@ -142,18 +142,22 @@ const ReadQrCodeScreen = () => {
             />
             <Text style={styles.cameraText}>{translate('请扫描竞博网页上所显示的二维码')}</Text>
             {
-                isIos ? <Camera
-                    style={StyleSheet.absoluteFill}
+                isIos ? <View style={{ position: 'absolute',
+                top: 150,
+                left: 45,
+                right: 40,
+                bottom: Dimensions.get('window').width - 120, }}><Camera
+                    style={{  width: 300, height: 300}}
                     device={device}
                     codeScanner={codeScannerIos}
                     isActive={true}
-                />
+                /></View>
                     : <RNCamera
-                        style={{ flex: 1, width: '95%' }}
+                        style={{ width: 200, height: 200 }}
                         onBarCodeRead={(res) => { scanChange(res?.data || '') }}
-                    />
+                    />               
             }
-            <Touch onPress={() => { imageLibrary() }} style={styles.photoView}>
+            <Touch onPress={() => { imageLibrary() }} style={[styles.photoView,{ marginTop: Platform.OS === 'ios'? 100:300 }]}>
                 <Image
                     resizeMode="stretch"
                     source={ImgIcon['photoAlbum']}
@@ -212,7 +216,7 @@ const styles = StyleSheet.create({
     },
     cameraText: {
         color: '#fff',
-        paddingBottom: 40,
+        paddingBottom: 50,
         paddingTop: 100,
         textAlign: 'center',
     },

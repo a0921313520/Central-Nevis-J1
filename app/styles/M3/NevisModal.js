@@ -125,6 +125,36 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		lineHeight: 42,
 	},
+	btnVerticalListVerify: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		padding: 50,
+		width: '100%',
+	},
+	confirmButton: {
+        backgroundColor: '#00B324',
+        borderColor: '#00B324',
+        borderWidth: 1,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row', // 确保图标和文字在同一行
+        paddingVertical: 8, // 调整按钮高度
+        paddingHorizontal: 42, // 调整左右内边距
+        marginBottom: 20, // 调整按钮之间的间距
+    },
+    cancelButton: {
+        borderColor: '#00E62E',
+        borderWidth: 1,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12, // 调整按钮高度
+        paddingHorizontal: 80, // 调整左右内边距
+        marginBottom: 10, // 调整按钮之间的间距
+    },
 })
 
 export default styles

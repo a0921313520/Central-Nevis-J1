@@ -5,6 +5,7 @@ import translate from '$Nevis/translate'
 const { width, height } = Dimensions.get('window')
 import Touch from 'react-native-touch-once';
 import { Actions } from 'react-native-router-flux';
+import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 
 class Modals extends React.Component {
     constructor(props) {
@@ -33,6 +34,8 @@ class Modals extends React.Component {
             confirm = '确认',
             onConfirm = () => {},
             onlyOkBtn = false,
+            againVerify = false,
+            imgIcon = ''
         } = this.props
         return (
             <>
@@ -44,11 +47,25 @@ class Modals extends React.Component {
                     <View style={styles.models}>
                         <View style={[styles.modalActive]}>
                             <View style={[styles.modalCenter]}>
-                                <Text style={styles.modalTitle}>{translate(title)}</Text>
+                                { 
+                                    onlyOkBtn == true && againVerify == true ?
+                                    <View>
+                                        <Text style={styles.modalTitle}>{translate(title)}</Text>
+                                        <Touch onPress={onCancel}>
+                                            <Image
+                                                onPress={onCancel}
+                                                resizeMode="stretch"
+                                                source={ImgIcon['pwlClose']}
+                                                style={{ width: 24, height: 24, position:'absolute', top: -35, right: -50  }}
+                                            />
+                                        </Touch>
+                                    </View>:
+                                    <Text style={styles.modalTitle}>{translate(title)}</Text>
+                                }
                                 <Text style={[styles.modalMsg]}>{translate(msg)}</Text>
 
                                 {
-                                    onlyOkBtn &&
+                                    onlyOkBtn && againVerify == false &&
                                     <Touch
                                         style={[styles.btnBg]}
                                         onPress={onConfirm}
@@ -58,8 +75,8 @@ class Modals extends React.Component {
                                 }
 
                                 {
-                                    !onlyOkBtn &&
-                                    //豎两个 
+                                    !onlyOkBtn && againVerify == false &&
+                                    //豎两个                                    
                                     <View style={styles.btnVerticalList}>
                                         <Touch
                                             style={styles.leftBtn}
@@ -74,6 +91,32 @@ class Modals extends React.Component {
                                             <Text style={[styles.rightBtnItem]}>{translate(confirm)}</Text>
                                         </Touch>
                                     </View>
+                                }
+
+                                {
+                                    onlyOkBtn == true && againVerify == true &&
+                                    //豎两个 
+                                    <>
+                                        <Touch onPress={onConfirm}>
+                                            <View style={[styles.confirmButton]}>
+                                                <Image
+                                                    resizeMode="stretch"
+                                                    source={imgIcon}
+                                                    style={{ width: 27, height: 24, marginRight: 10 }}
+                                                />
+                                                <Text style={{ color: '#F5F5F5', fontSize: 14 }}>
+                                                    {translate(confirm)}
+                                                </Text>
+                                            </View>
+                                        </Touch>
+                                        <Touch onPress={onCancel}>
+                                            <View style={styles.cancelButton}>
+                                                <Text style={{ color: '#00E62E', fontSize: 14 }}>
+                                                    {translate(cancel)}
+                                                </Text>
+                                            </View>
+                                        </Touch>
+                                    </>
                                 }
                             </View>
                         </View>
