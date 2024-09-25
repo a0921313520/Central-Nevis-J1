@@ -6,7 +6,7 @@ import styles from '$NevisStyles/LoginComponent'
 import { Actions } from "react-native-router-flux";
 import { NevisListData } from '../InitClient'
 
-export const ScanIcon = () => {
+export const ScanIcon = (isIphone14Upper) => {
     useEffect(() => {
 
     }, []);
@@ -19,7 +19,7 @@ export const ScanIcon = () => {
                 <Image
                     resizeMode="stretch"
                     source={ImgIcon['scanIcon']}
-                    style={styles.scanIcon}
+                    style={[styles.scanIcon,{  marginTop: isIphone14Upper ? 13 : 24 }]}
                 />
             </Touch>
             :<View />
