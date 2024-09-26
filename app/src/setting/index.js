@@ -55,7 +55,7 @@ class Setting extends React.Component {
         //home弹窗跳过来直接去设置
         if(homeModeType && homeModeAaid ) {
             this.setState({selectModeAaid: homeModeType + 'mode__aaid' + homeModeAaid}, () => {
-                NevisOtp()
+                NevisOtp({actionType: 'Enrollment'})
                 homeModeType == 'Pin' && (window.PinIsSet = true)//Pin设置需要两次输入
             })
         }
@@ -114,7 +114,7 @@ class Setting extends React.Component {
             // 未开启，点击打开
             if(enableUse) { return }//其他手机已绑定设置
             //去验证otp
-            NevisOtp()
+            NevisOtp({actionType: 'Enrollment'})
             // setTimeout(() => {
             //     window.NevisSetMode()
             // }, 1000);
@@ -179,7 +179,7 @@ class Setting extends React.Component {
     goOTP = () => {
         const { NevisOtp } = getConfig()
         //去验证otp
-        NevisOtp()
+        NevisOtp({actionType: 'Unbind'})
     }
 
 
