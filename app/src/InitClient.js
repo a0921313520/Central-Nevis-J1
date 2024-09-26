@@ -11,7 +11,7 @@ export const allTypeId = {
     'F1D0#1001': 'Pin',//ios
     'F1D0#0002': 'Fingerprint',
     'F1D0#1002': 'Fingerprint',//ios
-    'F1D0#0003': 'Face',
+    // 'F1D0#0003': 'Face',//android 移除，很多设备不支持
     'F1D0#1003': 'Face',//ios
 }
 
