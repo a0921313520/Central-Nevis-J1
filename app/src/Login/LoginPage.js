@@ -5,6 +5,7 @@ import translate from '$Nevis/translate'
 import Touch from 'react-native-touch-once';
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 import { Actions } from 'react-native-router-flux';
+import { ScanQRCode } from './LoginComponent'
 import { getConfig } from '$Nevis/config'
 import { NevisListData, NevisErrs } from '../InitClient'
 
@@ -98,7 +99,7 @@ class LoginPage extends React.Component {
 
 
     render() {
-        const { LiveChat } = getConfig()
+        const { LiveChat, HomePage, Registered } = getConfig()
         const { userName, modeType } = this.state
 
         return (
@@ -110,9 +111,7 @@ class LoginPage extends React.Component {
                 >
                     <View style={[styles.headerTop]}>
                         <TouchableOpacity
-                            onPress={() => {
-                                Actions.ScanQRCode()
-                            }}
+                            onPress={() => { ScanQRCode() }}
                             style={{ width: 30 }}
                         >
                             <Image
@@ -161,7 +160,10 @@ class LoginPage extends React.Component {
                     <View style={styles.contentStyle}>
                         <Text style={{ color: '#CCCCCC', fontSize: 16, fontWeight: '400', lineHeight: 40 }}>{translate("欢迎回来")}</Text>
                         <Text style={{ color: '#F5F5F5', fontSize: 24, fontWeight: '700', lineHeight: 40 }}>{userName}</Text>
-                        <Text onPress={() => { Actions.pop() }} style={{ color: '#00E62E', fontSize: 14, fontWeight: '400', lineHeight: 35 }}>{translate('切换账号')}</Text>
+                        <Text onPress={() => {
+                            Actions.pop()
+                            window.UserNameChange && window.UserNameChange()
+                        }} style={{ color: '#00E62E', fontSize: 14, fontWeight: '400', lineHeight: 35 }}>{translate('切换账号')}</Text>
                     </View>
 
 
@@ -178,7 +180,10 @@ class LoginPage extends React.Component {
                         </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => { Actions.pop() }}>
+                    <TouchableOpacity onPress={() => {
+                        Actions.pop()
+                        window.UserNameChange && window.UserNameChange({userName: userName})
+                    }}>
                         <View style={styles.Tologin}>
                             <Text style={{ color: '#00E62E', fontSize: 17 }}>
                                 {translate('账号密码登录')}
@@ -188,12 +193,12 @@ class LoginPage extends React.Component {
 
                     <View style={{ paddingTop: 25, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ color: '#999999', fontSize: 14, }}>{translate('没有账号?')}
-                            <Text style={{ color: '#00E62E', fontSize: 14, }} onPress={() => { Actions.Registered() }}>{translate('立即注册')}</Text>
+                            <Text style={{ color: '#00E62E', fontSize: 14, }} onPress={() => { Registered() }}>{translate('立即注册')}</Text>
                         </Text>
                     </View>
 
 
-                    <TouchableOpacity style={styles.guestViewMode} onPress={() => { Actions.home() }}>
+                    <TouchableOpacity style={styles.guestViewMode} onPress={() => { HomePage() }}>
                         <Text style={styles.guestText}>{translate('去逛逛')}</Text>
                     </TouchableOpacity>
 

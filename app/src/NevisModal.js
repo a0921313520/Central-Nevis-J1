@@ -23,12 +23,12 @@ class NevisModal extends React.Component {
         super(props)
         this.state = {
             noMoreTimes: false,
-            noLoginMoreTimes: false,
             homeSetModal: false,
             nevisConfigurations: {},
             isEnabled: false,
             checkBox: false,
-            repeatSet: false,
+            otherPhoneSet: false,
+            otherNameSet: false,
             homeModeType: '',
             homeModeAaid: '',
             uninstall: false,
@@ -88,7 +88,7 @@ class NevisModal extends React.Component {
     //是否卸载过
     isUninstall = () => {
         //手机设置了nevis，并且本地没缓存，应该是卸载重新安装用户，要删除nevis重新设置
-        const uninstall = !window.NevisModeType && window.RegisteredUserName || false
+        const uninstall = !window.NevisModeType && window.NevisUserName || false
         return uninstall
     }
 
@@ -113,8 +113,8 @@ class NevisModal extends React.Component {
     render() {
         const {
             noMoreTimes,
-            noLoginMoreTimes,
-            repeatSet,
+            otherPhoneSet,
+            otherNameSet,
             homeSetModal,
             checkBox,
             homeModeType,
@@ -140,9 +140,12 @@ class NevisModal extends React.Component {
             const isOtherName = window.NevisUsername && window.NevisUsername != window.userNameDB
             //这个账户在其他手机上设置过了
             const isOtherPhone = window.AuthenticatorId && !window.NevisModeType
-            if (isOtherName || isOtherPhone) {
-                //重复设置提示,1.登录名和已设置的不同，2.当前手机未设置,其他手机已设置了
-                this.setState({ repeatSet: true })
+            if (isOtherPhone) {
+                //这个账户在其他手机上设置过了
+                this.setState({ otherPhoneSet: true })
+            } else if(isOtherName) {
+                //本机其他账户已经设置了
+                this.setState({otherNameSet: true})
             } else if(isNevisEnabled) {
                 //计入nevis设置
                 Actions.NevisSetting()
@@ -160,14 +163,6 @@ class NevisModal extends React.Component {
         return (
             <>
                 <Modals
-                    modalVisible={noLoginMoreTimes}
-                    onlyOkBtn={true}
-                    title={translate('已达验证次数上限')}
-                    msg={translate('验证失败次数已达上限，请使用账号与密码进行登录。')}
-                    confirm={translate('我知道了')}
-                    onConfirm={() => { this.setState({ noLoginMoreTimes: false }) }}
-                />
-                <Modals
                     modalVisible={uninstall}
                     onlyOkBtn={true}
                     title={translate('请重新设置')}
@@ -181,9 +176,9 @@ class NevisModal extends React.Component {
                     modalVisible={noMoreTimes}
                     onlyOkBtn={true}
                     title={translate('已达验证次数上限')}
-                    msg={translate('验证失败次数已达上限，请稍后再尝试或使用其他验证方式。')}
+                    msg={translate(ApiPort.UserLogin?'验证失败次数已达上限，请稍后再尝试或使用其他验证方式。': '验证失败次数已达上限，请使用账号与密码进行登录。')}
                     confirm={translate('我知道了')}
-                    onConfirm={() => { this.setState({ noMoreTimes: false }) }}
+                    onConfirm={() => { this.setState({ noMoreTimes: false }, () => {Actions.pop()}) }}
                 />
                 <Modals
                     modalVisible={isEnabled}
@@ -210,14 +205,28 @@ class NevisModal extends React.Component {
                     onConfirm={() => { this.setState({ fingerprintEnabled: false }) }}
                 />
                 <Modals
-                    // 关闭nevis提示
-                    modalVisible={repeatSet}
+                    modalVisible={otherPhoneSet}
                     title={translate('检测到重复设置')}
-                    msg={translate('一个账号仅能在一个装置上启用验证方式。若您在此装置启用验证方式，请先在原装置上解除绑定，原装置中的相关数据将会被删除。是否要前往启用？')}
+                    msg={translate('一个账号仅能在一个装置上启用验证方式。若您在此装置启用验证方式，原装置中的相关数据将会被删除。是否要前往启用？')}
                     cancel={'取消'}
-                    onCancel={() => { this.setState({ repeatSet: false }) }}
+                    onCancel={() => { this.setState({ otherPhoneSet: false }) }}
                     confirm={'确认'}
-                    onConfirm={() => { this.setState({ repeatSet: false }, () => { Actions.NevisSetting({ enableUse: true }) }) }}
+                    onConfirm={() => { this.setState({ otherPhoneSet: false }, () => {
+                        NevisRemove()
+                        Actions.NevisSetting()
+                    }) }}
+                />
+                <Modals
+                    modalVisible={otherNameSet}
+                    title={translate('检测到重复设置')}
+                    msg={translate('一个装置仅能启用一个账号。若此账号需要启用验证方式，请切换账号删除已添加的验证方式。')}
+                    cancel={'取消'}
+                    onCancel={() => { this.setState({ otherNameSet: false }) }}
+                    confirm={'确认'}
+                    onConfirm={() => { this.setState({ otherNameSet: false }, () => {
+                        NevisRemove()
+                        Actions.NevisSetting({ enableUse: true })
+                    }) }}
                 />
                 <Modal
                     animationType="none"

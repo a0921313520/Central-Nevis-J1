@@ -10,6 +10,7 @@ import Touch from 'react-native-touch-once';
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 import translate from '$Nevis/translate'
 import Modals from '$Nevis/src/Modals'
+import { getConfig } from '$Nevis/config'
 import { RNCamera } from 'react-native-camera'
 import { Actions } from "react-native-router-flux";
 import { WebView } from 'react-native-webview';
@@ -85,9 +86,16 @@ const ReadQrCodeScreen = () => {
     }
     const loginVerify = (data = '') => {
         const value = data || qrCodeDate
+        setValidCodeModal(false)
         window.NevisLoginVerify(value, (res = {}) => {
             if (res.isSuccess) {
-                window.navigateToSceneGlobe()
+                if(ApiPort.UserLogin) {
+                    //已登录状态，要call logout登出
+                    getConfig().Logout()
+                } else {
+                    //未登录状态
+                    Actions.pop()
+                }
             } else {
                 //验证失败
                 setQrCodeDate('')

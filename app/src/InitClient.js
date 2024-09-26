@@ -4,6 +4,7 @@ import { decodePayload } from './nevis/userInteraction/OutOfBandOperationHandler
 import useAuthCloudApiRegistrationViewModel from './nevis/screens/AuthCloudApiRegistrationViewModel'
 import HomeViewModel from './nevis/screens/HomeViewModel'
 import { getConfig } from '$Nevis/config'
+import translate from '$Nevis/translate'
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 
 export const allTypeId = {
@@ -101,7 +102,7 @@ export const NevisErrs = (res, mode) => {
         window.onModal('noMoreTimes', true)
     } else if(type == 'USER_CANCELED') {
         //用户取消了
-    } else if(type == 'AUTHENTICATOR_ACCESS_DENIED' || type == 'AUTHENTICATOR_ACCESS_DENIED') {
+    } else if(type == 'AUTHENTICATOR_ACCESS_DENIED' || type == 'AUTHENTICATOR_ACCESS_DENIED'  || type == 'NO_SUITABLE_AUTHENTICATOR') {
         //卸载后重新安装，无法使用，删除nevis，再重新创建注册
         window.onModal('uninstall', true, {mode: mode})
         NevisRemove()
@@ -161,7 +162,7 @@ export const GetModeType = (res) => {
     const actives = res.find((v) => { return (v.registration?.registeredAccounts?.length > 0) }) || false
 
     if (actives) {
-        window.RegisteredUserName = actives?.registration?.registeredAccounts[0]?.username || ''
+        window.NevisUserName = actives?.registration?.registeredAccounts[0]?.username || ''
         //无密码登录aaid
         global.storage.load({
             key: 'NevisSelectAaid',
@@ -185,28 +186,42 @@ export const GetModeType = (res) => {
 }
 
 //删除后清楚数据
-export const NevisRemove = () => {
+export const NevisRemove = (callback = () => {}) => {
     const { put } = getConfig()
+    //api删除后台数据
     put(ApiLink.PUTEnroll + 'authenticatorId=' + window.AuthenticatorId + '&')
         .then((res) => {
+            console.log(res)
         })
         .catch((error) => {
+            console.log(error)
+        })
+        //删除手机数据
+        window.NevisRemoveNevis((res) => {
+            if(res.isSuccess) {
+                //删除成功
+                window.NevisInitClient()
+                callback()
+                window.NevisModeType = ''
+                window.NevisUsername = ''
+                window.NevisSelectAaid = ''
+                window.AuthenticatorId = ''
+                window.NevisUserName = ''
+                global.storage.remove({
+                    key: 'NevisSelectAaid',
+                    id: 'NevisSelectAaid'
+                })
+                global.storage.remove({
+                    key: 'NevisUsername',
+                    id: 'NevisUsername'
+                })
+                global.storage.remove({
+                    key: 'NevisSelectAaid',
+                    id: 'NevisSelectAaid'
+                })
+            } else {
+                alert(translate('出现错误，请重试'))
+            }
 
-        })
-        window.NevisInitClient()
-        window.NevisModeType = ''
-        window.NevisUsername = ''
-        window.NevisSelectAaid = ''
-        global.storage.remove({
-            key: 'NevisSelectAaid',
-            id: 'NevisSelectAaid'
-        })
-        global.storage.remove({
-            key: 'NevisUsername',
-            id: 'NevisUsername'
-        })
-        global.storage.remove({
-            key: 'NevisSelectAaid',
-            id: 'NevisSelectAaid'
         })
 }

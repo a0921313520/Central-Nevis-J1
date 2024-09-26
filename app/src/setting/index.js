@@ -46,6 +46,7 @@ class Setting extends React.Component {
             selectModeAaid: '',
             closeVerifyModal: false,
             changeVerifyModal: false,
+            otpRemove: false,
         }
     }
 
@@ -126,7 +127,7 @@ class Setting extends React.Component {
     removeVerify = () => {
         this.setState({ removeModal: '',closeVerifyModal:true })
     }
-    //更换验证前的再次簡易验证
+    //删除前验证
     closeVerify = () => {
         this.setState({closeVerifyModal:false}, () => {
             window.NevisVerify(this.removeVerifySuccess)
@@ -136,19 +137,11 @@ class Setting extends React.Component {
     removeVerifySuccess = (res = {}) => {
         const mode = this.state.activeOpen
         if(res.isSuccess) {
-            window.NevisRemoveNevis(this.removeNevis)
+            NevisRemove(() => {
+                this.setState({ activeOpen: '' })
+            })
         } else {
             NevisErrs(res, mode)
-        }
-    }
-
-    removeNevis = (status = true) => {
-        if (status == true) {
-            //删除验证成功
-            this.setState({ activeOpen: '' })
-            NevisRemove()
-        } else {
-            alert(translate('关闭失败，请重试'))
         }
     }
 
@@ -194,6 +187,7 @@ class Setting extends React.Component {
             userName,
             language,
             changModal,
+            otpRemove,
             changMode,
             selectModeAaid,
             closeVerifyModal,
@@ -201,6 +195,13 @@ class Setting extends React.Component {
         } = this.state
 
         window.NevisSetMode = () => {
+            if(otpRemove) {
+                //otp删除nevis
+                NevisRemove(() => {
+                    this.setState({ activeOpen: '', otpRemove: false })
+                })
+                return
+            }
             const modeAaid = selectModeAaid?.split('mode__aaid')
             this.setState({ selectMode: modeAaid[0], onSuccess: false })
             window.NevisSelectAaid = modeAaid[1]

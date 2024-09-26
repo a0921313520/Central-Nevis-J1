@@ -4,7 +4,22 @@ import Touch from 'react-native-touch-once';
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 import styles from '$NevisStyles/LoginComponent'
 import { Actions } from "react-native-router-flux";
-import { NevisListData } from '../InitClient'
+import { NevisListData, NevisErrs } from '../InitClient'
+
+//点击扫描icon
+export const ScanQRCode = () => {
+    if(ApiPort.UserLogin) {
+        Actions.ScanQRCode()
+        return
+    }
+    window.NevisVerify((res = {}) => {
+        if(res.isSuccess) {
+            Actions.ScanQRCode()
+        } else {
+            NevisErrs(res, window.NevisModeType)
+        }
+    })
+}
 
 export const ScanIcon = (props) => {
     useEffect(() => {
@@ -17,9 +32,7 @@ export const ScanIcon = (props) => {
     } 
     return (
         window.NevisModeType ?
-            <Touch onPress={() => {
-                ApiPort.UserLogin && Actions.ScanQRCode()
-            }}>
+            <Touch onPress={() => { ScanQRCode() }}>
                 <Image
                     resizeMode="stretch"
                     source={ImgIcon['scanIcon']}

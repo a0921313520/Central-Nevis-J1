@@ -131,11 +131,14 @@ const useHomeViewModel = () => {
 
 	//删除
 	async function deleteLocalAuthenticators(callback = () => {}) {
+		if (localAccounts.length === 0) { return }
+		const items = localAccounts.map((account) => new AccountItem(account.username))
 		const client = ClientProvider.getInstance().client;
-		client?.localData.deleteAuthenticator(window.RegisteredUserName).then(() => {
-			callback()
+		client?.localData.deleteAuthenticator(items[0]?.username).then(() => {
+			callback({isSuccess: true})
 			console.log('删除成功')
 		}).catch((err) => {
+			callback(err)
 			console.log('deleteLocalAuthenticatorserr', err)
 		})
 	}

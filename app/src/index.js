@@ -19,7 +19,7 @@ window.ChangeNevisSelectAaid = ''//更改时候选中的aaid
 window.NevisUsername = ''//nevis缓存姓名
 window.NToast = ''
 window.AuthenticatorId = ''//已设置的id，
-window.RegisteredUserName = ''//registeredAccounts里面的username，用于删除使用
+window.NevisUserName = ''//已设置的nevis参数userName
 class Nevis extends React.Component {
     constructor(props) {
         super(props)

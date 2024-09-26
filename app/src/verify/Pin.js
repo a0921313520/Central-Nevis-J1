@@ -20,6 +20,13 @@ class Pin extends React.Component {
             isSet: window.PinIsSet || false,
             onSuccess: false,
         }
+        global.storage.load({
+            key: 'NevisPinLock',
+            id: 'NevisPinLock'
+        }).then(res => {
+            Actions.pop()
+            window.onModal('noMoreTimes', true)
+        }).catch(err => { })
     }
 
     componentDidMount() {
@@ -55,7 +62,13 @@ class Pin extends React.Component {
         })
         if(errTimes <= 0) {
             Actions.pop()
-            window.onModal('noLoginMoreTimes', true)
+            window.onModal('noMoreTimes', true)
+            global.storage.save({
+                key: 'NevisPinLock',
+                id: 'NevisPinLock',
+                data: true,
+                expires: 5 * 60 * 1000//5分钟
+            })
         }
     }
     checked(code) {
