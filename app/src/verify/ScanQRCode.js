@@ -165,7 +165,7 @@ const ReadQrCodeScreen = () => {
                         onBarCodeRead={(res) => { scanChange(res?.data || '') }}
                     />               
             }
-            <Touch onPress={() => { imageLibrary() }} style={[styles.photoView,{ marginTop: Platform.OS === 'ios'? 100:300 }]}>
+            <Touch onPress={() => { imageLibrary() }} style={[styles.photoView,{ marginTop: Platform.OS === 'ios'? 300:300 }]}>
                 <Image
                     resizeMode="stretch"
                     source={ImgIcon['photoAlbum']}

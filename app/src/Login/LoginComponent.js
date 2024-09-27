@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import Touch from 'react-native-touch-once';
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 import styles from '$NevisStyles/LoginComponent'
 import { Actions } from "react-native-router-flux";
 import { NevisListData, NevisErrs } from '../InitClient'
+import { getConfig } from '$Nevis/config'
+import translate from '$Nevis/translate'
 
 //点击扫描icon
 export const ScanQRCode = () => {
@@ -26,7 +28,7 @@ export const ScanIcon = (props) => {
 
     }, []);
     const { isIphone14Upper = false } = props;
-    if (typeof isIphone14Upper !== 'boolean') {
+    if (typeof isIphone14Upper !== 'boolean' || typeof isIphone12Upper !== 'boolean' ) {
         console.warn('isIphone14Upper should be a boolean value');
         return null;
     } 
@@ -36,7 +38,7 @@ export const ScanIcon = (props) => {
                 <Image
                     resizeMode="stretch"
                     source={ImgIcon['scanIcon']}
-                    style={[styles.scanIcon,{  marginTop: isIphone14Upper ? 13 : 24 }]}
+                    style={[styles.scanIcon,{  marginTop: isIphone14Upper ? 13 : (isIphone12Upper ? 0 : 24) }]}
                 />
             </Touch>
             :<View />
@@ -63,4 +65,21 @@ export const NevisLoginIcon = ({ }) => {
             <></>
     )
 };
+
+
+export const GetAround = ({ }) => {
+    useEffect(() => {
+
+    }, []);
+    const { HomePage } = getConfig()
+
+    return (
+        window.NevisModeType ?
+        <TouchableOpacity style={styles.guestViewMode} onPress={() => { HomePage() }}>
+            <Text style={styles.guestText}>{translate('去逛逛')}</Text>
+        </TouchableOpacity>
+        :
+        <></>
+    )
+}
 

@@ -27,6 +27,16 @@ const styles = StyleSheet.create({
         height: 26,
         marginLeft: 15,
     },
+    guestViewMode: {
+        position: 'absolute', // 這裡使用了絕對定位
+        bottom: 80, // 距離底部10個單位 eg,iphone14 ui ok
+        left: 0,
+        right: 0,
+        alignItems: 'center',
+    },
+    guestText: {
+        color: '#00FF00', // 綠色文字
+    },
 
 })
 

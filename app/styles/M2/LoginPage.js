@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		zIndex: 20,
 		padding: 15,
-    	paddingTop: 55,
+        paddingTop: 55,
 	},
     logo: {
 		justifyContent: "center",
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
-       marginBottom: 25
+        marginBottom: 25
     },
     guestViewMode: {
         position: 'absolute', // 這裡使用了絕對定位
