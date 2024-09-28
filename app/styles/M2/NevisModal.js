@@ -142,7 +142,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'row', // 确保图标和文字在同一行
         paddingVertical: 8, // 调整按钮高度
-        paddingHorizontal: 42, // 调整左右内边距
+        //paddingHorizontal: 73, // 调整左右内边距
+		width: 274,
         marginBottom: 20, // 调整按钮之间的间距
     },
     cancelButton: {

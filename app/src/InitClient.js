@@ -18,15 +18,15 @@ export const allTypeId = {
 
 export const NevisListData = {
     Face: {
-        icon: ImgIcon['faceIcon'],
+        icon: ImgIcon['LoginFace'],
         name: '人脸识别',
     },
     Fingerprint: {
-        icon: ImgIcon['fingerIcon'],
+        icon: ImgIcon['LoginFinger'],
         name: '指纹识别'
     },
     Pin: {
-        icon: ImgIcon['pinIcon'],
+        icon: ImgIcon['LoginPin'],
         name: 'PIN 码识别'
     }
 }

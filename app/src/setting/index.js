@@ -47,6 +47,8 @@ class Setting extends React.Component {
             closeVerifyModal: false,
             changeVerifyModal: false,
             otpRemove: false,
+            didChange: false,
+            didClose: false,
         }
     }
 
@@ -169,10 +171,22 @@ class Setting extends React.Component {
             window.NevisVerify(this.changeVerifySuccess)
         })
     }
-    goOTP = () => {
+    goOTP = (type) => {
+        console.log('type>>>',type)
         const { NevisOtp } = getConfig()
         //去验证otp
         NevisOtp({actionType: 'Unbind'})
+        if(type == "changeVerify"){
+            this.setState({
+                didChange: true,
+                didClose: false
+            })
+        }else{
+            this.setState({
+                didClose: true,
+                didChange:false
+            })
+        }
     }
 
 
@@ -214,6 +228,15 @@ class Setting extends React.Component {
             })
         }
 
+        window.NevisReSetMode = () => {
+            const { didChange, didClose } = this.state;
+            if (didChange) {
+                window.NevisVerify(this.changeVerifySuccess); // 執行更改驗證邏輯
+            } else if (didClose) {
+                window.NevisVerify(this.removeVerifySuccess); // 執行移除驗證邏輯
+            }
+        }
+
         return (
             <View style={styles.SettingBG}>
                 <Modals
@@ -238,16 +261,17 @@ class Setting extends React.Component {
                 />
                 <Modals
                     // 关闭nevis >>> pwl驗證
-                    modalVisible={closeVerifyModal}
+                    modalVisible={closeVerifyModal}                    
                     onlyOkBtn={true}
                     againVerify={true}
                     title={translate('账户信息验证')}
                     msg={translate('为保障您的账户安全，请完成账户信息验证。')}
                     cancel={'手机验证'}
-                    onCancel={() => { this.setState({ closeVerifyModal: false }), this.goOTP() }}
-                    confirm={translate(NevisListData[changMode]?.name)}
+                    onCancel={() => { this.setState({ closeVerifyModal: false }), this.goOTP("closeVerify") }}
+                    onClose={() => this.setState({ closeVerifyModal: false })}
+                    confirm={translate(NevisListData[activeOpen]?.name)}
                     onConfirm={() => { this.closeVerify() }}
-                    imgIcon={NevisListData[changMode]?.icon}
+                    imgIcon={NevisListData[activeOpen]?.icon}
                 />
                 <Modals
                     // 改nevis >>> pwl驗證
@@ -257,7 +281,8 @@ class Setting extends React.Component {
                     title={translate('账户信息验证')}
                     msg={translate('为保障您的账户安全，请完成账户信息验证。')}
                     cancel={'手机验证'}
-                    onCancel={() => { this.setState({ changeVerifyModal: false }), this.goOTP() }}
+                    onCancel={() => { this.setState({ changeVerifyModal: false }), this.goOTP("changeVerify") }}
+                    onClose={() => this.setState({ changeVerifyModal: false })}
                     confirm={translate(NevisListData[changMode]?.name)}
                     onConfirm={() => { this.againVerify() }}
                     imgIcon={NevisListData[changMode]?.icon}
@@ -302,7 +327,7 @@ export const UserTerms = () => {
             }
             {
                 language == 'TH' && <Touch>
-                    <Text style={[styles.modalMsg]} onPress={() => { UserTerms() }}>
+                    <Text style={[styles.modalMsg]} onPress={() => { ApiPort.UserTerms = "เงื่อนไขและข้อตกลง"; UserTerms() }}>
                     เปิดใช้งานและยอมรับ<Text style={{ color: '#00E62E' }}>ข้อกำหนด</Text>ของ JBO
                     </Text>
                 </Touch>

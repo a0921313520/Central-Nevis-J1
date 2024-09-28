@@ -31,6 +31,7 @@ class Modals extends React.Component {
             msg = '',
             cancel = '取消',
             onCancel = () => {},
+            onClose = () => {},
             confirm = '确认',
             onConfirm = () => {},
             onlyOkBtn = false,
@@ -51,12 +52,12 @@ class Modals extends React.Component {
                                     onlyOkBtn == true && againVerify == true ?
                                     <View>
                                         <Text style={styles.modalTitle}>{translate(title)}</Text>
-                                        <Touch onPress={onCancel}>
+                                        <Touch onPress={onClose}>
                                             <Image
-                                                onPress={onCancel}
+                                                onPress={onClose}
                                                 resizeMode="stretch"
                                                 source={ImgIcon['pwlClose']}
-                                                style={{ width: 24, height: 24, position:'absolute', top: -35, right: -50  }}
+                                                style={{ width: 24, height: 24, position:'absolute', top: -35, right: Platform.OS === "android" ? -35 : -45  }}
                                             />
                                         </Touch>
                                     </View>:
