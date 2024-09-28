@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, Image, Dimensions, Platform, ImageBackground } from "react-native";
 import styles from '$NevisStyles/LoginPage'
 import translate from '$Nevis/translate'
-import Touch from 'react-native-touch-once';
+import Touch from '$Components/Touch';
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 import { Actions } from 'react-native-router-flux';
 import { ScanQRCode } from './LoginComponent'

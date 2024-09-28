@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Dimensions, Image } from "react-native";
-import Touch from 'react-native-touch-once';
+import Touch from '$Components/Touch';
 import { Actions } from "react-native-router-flux";
 import styles from '$NevisStyles/Setting'
 import { getConfig } from '$Nevis/config'
@@ -51,6 +51,9 @@ class Setting extends React.Component {
     }
 
     componentDidMount() {
+        const { linkss } = this.state
+
+
         const { homeModeType, homeModeAaid } = this.props
         const { NevisOtp } = getConfig()
         //home弹窗跳过来直接去设置
@@ -67,6 +70,8 @@ class Setting extends React.Component {
     }
     //api获取appLinkUri，去注册开启nevis
     getEnroll = () => {
+        window.NevisRegistration(this.props.linkss || 'https://ogauth-852eea-app.mauth.nevis.cloud/open?dispatchTokenResponse=eyJubWFfZGF0YSI6eyJ0b2tlbiI6IjA0ZTBkODIxLWY4ODYtNGQwZC04ODlkLTlkYjI4MWExODMyOSIsInJlZGVlbV91cmwiOiJodHRwczovL29nYXV0aC04NTJlZWEubWF1dGgubmV2aXMuY2xvdWQvX2FwcC90b2tlbi9yZWRlZW0vcmVnaXN0cmF0aW9uIiwiY29ycmVsYXRpb25JZCI6Ijc4NDk5NjVmLTNhMWEtNGY1Mi1iMDcyLWJjYmViMmYxYzFkZSJ9LCJubWFfZGF0YV9jb250ZW50X3R5cGUiOiJhcHBsaWNhdGlvbi9qc29uIiwibm1hX2RhdGFfdmVyc2lvbiI6IjEifQ', this.onRegistration)
+        return
         const { get } = getConfig()
         NToast.loading(translate('Loading...'), 200)
         get(ApiLink.GETEnroll)
@@ -90,10 +95,11 @@ class Setting extends React.Component {
         if (res.isSuccess) {
             //开启成功
             window.NevisInitClient()
-            window.NevisAuthenticators()
+            // window.NevisAuthenticators()
             this.setState({ activeOpen, onSuccess: true, changMode: '' })
             SetNevisSuccess()
             Actions.refresh({ onSuccess: true })
+            alert('开启成功')
         } else {
             const mode = this.state.selectModeAaid?.split('mode__aaid')[0]
             NevisErrs(res, activeOpen)
@@ -115,10 +121,10 @@ class Setting extends React.Component {
             // 未开启，点击打开
             if(enableUse) { return }//其他手机已绑定设置
             //去验证otp
-            NevisOtp({actionType: 'Enrollment'})
-            // setTimeout(() => {
-            //     window.NevisSetMode()
-            // }, 1000);
+            // NevisOtp({actionType: 'Enrollment'})
+            setTimeout(() => {
+                window.NevisSetMode()
+            }, 1000);
             this.setState({selectModeAaid: (mode + 'mode__aaid' + aaid)})
             mode == 'Pin' && (window.PinIsSet = true)//Pin设置需要两次输入
         }

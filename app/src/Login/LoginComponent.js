@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, Image } from "react-native";
-import Touch from 'react-native-touch-once';
+import Touch from '$Components/Touch';
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 import styles from '$NevisStyles/LoginComponent'
 import { Actions } from "react-native-router-flux";

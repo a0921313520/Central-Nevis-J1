@@ -3,7 +3,7 @@ import { View, Text, Modal, Dimensions, Image, Platform } from "react-native";
 import styles from '$NevisStyles/NevisModal'
 import translate from '$Nevis/translate'
 const { width, height } = Dimensions.get('window')
-import Touch from 'react-native-touch-once';
+import Touch from '$Components/Touch';
 import { Actions } from 'react-native-router-flux';
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 

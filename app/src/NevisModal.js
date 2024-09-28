@@ -4,11 +4,10 @@ import styles from '$NevisStyles/NevisModal'
 import translate from '$Nevis/translate'
 const { width, height } = Dimensions.get('window')
 import { getConfig } from '$Nevis/config'
-import Touch from 'react-native-touch-once';
+import Touch from '$Components/Touch';
 import { Actions } from 'react-native-router-flux';
 import Modals from '$Nevis/src/Modals'
 import ImgIcon from '$NevisStyles/imgs/ImgIcon';
-import CheckBox from 'react-native-check-box'
 import { NevisRemove } from './InitClient'
 
 
@@ -263,23 +262,7 @@ class NevisModal extends React.Component {
                                 }
 
                                 <View style={{ marginBottom: 25, marginLeft: -100 }}>
-                                    <CheckBox
-                                        checkBoxColor={"#c3c3c3"}
-                                        checkedCheckBoxColor={"#00E62E"}
-                                        onClick={() => {
-                                            this.setState({
-                                                checkBox: !checkBox,
-                                            })
-                                        }}
-                                        checkedImage={
-                                            <Image source={ImgIcon['checkIcon']} style={{ width: 20, height: 20 }} />
-                                        }
-                                        unCheckedImage={
-                                            <Image source={ImgIcon['uncheckIcon']} style={{ width: 20, height: 20 }} />
-                                        }
-                                        isChecked={this.state.checkBox}
-                                        rightTextView={<Text style={{ color: "#fff", marginLeft: 5 }}> {translate('{X} 天内不再显示', { X: nevisSetupReminderDays })}</Text>}
-                                    />
+                                     
                                 </View>
 
                                 <View style={styles.btnList}>

@@ -6,7 +6,7 @@ import {
     request as requestPermission,
     RESULTS,
 } from 'react-native-permissions';
-import Touch from 'react-native-touch-once';
+import Touch from '$Components/Touch';
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 import translate from '$Nevis/translate'
 import Modals from '$Nevis/src/Modals'
@@ -89,14 +89,9 @@ const ReadQrCodeScreen = () => {
         setValidCodeModal(false)
         window.NevisLoginVerify(value, (res = {}) => {
             if (res.isSuccess) {
-                if(ApiPort.UserLogin) {
-                    //已登录状态，要call logout登出
-                    getConfig().Logout()
-                } else {
-                    //未登录状态
-                    Actions.pop()
-                }
+                alert('扫描成功')
             } else {
+                alert(JSON.stringify(res))
                 //验证失败
                 setQrCodeDate('')
                 setQrcodeInvalid(true)

@@ -5,7 +5,7 @@ import styles from '$NevisStyles/PinCode'
 import VerificationCodeInput from "./VerificationCodeInput";
 import { usePinView, usePinCancel } from '../nevis/screens/PinViewModel'
 import { Actions } from "react-native-router-flux";
-import Touch from 'react-native-touch-once';
+import Touch from '$Components/Touch';
 
 
 class Pin extends React.Component {

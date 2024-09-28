@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Image, Platform } from "react-native";
-import Touch from 'react-native-touch-once';
+import Touch from '$Components/Touch';
 import { ApiLink } from './Api'
 import styles from '$NevisStyles/main'
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
@@ -53,6 +53,7 @@ class Nevis extends React.Component {
     //是否开启无密码登录。以及设置提示时间
     getNevisConfigurations = () => {
         window.NevisInitClient()
+        return
         const { get } = getConfig()
         get(ApiLink.NevisConfigurations)
             .then((res) => {

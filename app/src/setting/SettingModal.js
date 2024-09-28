@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Dimensions, Image } from "react-native";
-import Touch from 'react-native-touch-once';
+import Touch from '$Components/Touch';
 import { Actions } from "react-native-router-flux";
 import styles from '$NevisStyles/Setting'
 import { getConfig } from '$Nevis/config'

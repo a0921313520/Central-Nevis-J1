@@ -17,6 +17,7 @@ const useAuthCloudApiRegistrationViewModel = () => {
 	const [appLinkUri, setAppLinkUri] = useState('');
 
 	async function confirm(appLinkUris, callback) {
+		alert(appLinkUris)
 		const client = ClientProvider.getInstance().client;
 		const authCloudApiRegistration = client?.operations.authCloudApiRegistration
 			.deviceInformation(DeviceInformationUtils.create())

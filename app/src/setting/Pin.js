@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Dimensions, Image } from "react-native";
 import styles from '$NevisStyles/Pin'
 import translate from '$Nevis/translate'
-import Touch from 'react-native-touch-once';
+import Touch from '$Components/Touch';
 import ImgIcon from '$NevisStyles/imgs/ImgIcon';
 const { width, height } = Dimensions.get('window')
 import { UserTerms } from './index'
