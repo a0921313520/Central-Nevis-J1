@@ -271,7 +271,7 @@ class Setting extends React.Component {
                     cancel={'手机验证'}
                     onCancel={() => { this.setState({ closeVerifyModal: false }), this.goOTP("closeVerify") }}
                     onClose={() => this.setState({ closeVerifyModal: false })}
-                    confirm={translate(NevisListData[activeOpen]?.name)}
+                    confirm={translate(NevisListData[activeOpen]?.name)}//要被解除的
                     onConfirm={() => { this.closeVerify() }}
                     imgIcon={NevisListData[activeOpen]?.icon}
                 />
@@ -285,9 +285,9 @@ class Setting extends React.Component {
                     cancel={'手机验证'}
                     onCancel={() => { this.setState({ changeVerifyModal: false }), this.goOTP("changeVerify") }}
                     onClose={() => this.setState({ changeVerifyModal: false })}
-                    confirm={translate(NevisListData[changMode]?.name)}
+                    confirm={translate(NevisListData[activeOpen]?.name)}//要被解除的
                     onConfirm={() => { this.againVerify() }}
-                    imgIcon={NevisListData[changMode]?.icon}
+                    imgIcon={NevisListData[activeOpen]?.icon}
                 />
 
                 <Text style={styles.SettingWord}>{translate("启用验证方式")}</Text>
