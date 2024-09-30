@@ -2,6 +2,7 @@ import React from 'react'
 import {
 	StyleSheet,
 	Dimensions,
+	Platform
 } from "react-native";
 const { width, height } = Dimensions.get("window");
 
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
 	modalCenter: {
 		width: width * 0.9,
 		borderRadius: 10,
-		padding: 18,
+		padding: Platform.OS == 'android'? 21 : 40,
 		paddingTop: 30,
 		paddingBottom: 30,
 		display: 'flex',
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		flexDirection: 'row',
-		width: '100%',
+		width:Platform.OS == 'android'? '96%' : '97%'
 	},
 	btnBorder: {
 		width: '45%',
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row', // 确保图标和文字在同一行
         paddingVertical: 8, // 调整按钮高度
         //paddingHorizontal: 73, // 调整左右内边距
-		width: 274,
+		width: 247,
         marginBottom: 20, // 调整按钮之间的间距
     },
     cancelButton: {
@@ -152,10 +153,21 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 12, // 调整按钮高度
-        paddingHorizontal: 80, // 调整左右内边距
+        paddingVertical: 13, // 调整按钮高度
+        width: 247,
         marginBottom: 10, // 调整按钮之间的间距
     },
+	CheckBox: {
+		marginLeft: Platform.OS == 'android' ? -73 :  -63,
+		marginBottom: 25 
+	},
+	ImgStyle: {
+		width: 24, 
+		height: 24, 
+		position:'absolute', 
+		top: -38, 
+		right: Platform.OS === "android" ? -35 : (isIphone12Upper ? -45 : -45) 
+	}
 })
 
 export default styles

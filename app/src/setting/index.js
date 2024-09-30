@@ -290,7 +290,7 @@ class Setting extends React.Component {
                     imgIcon={NevisListData[activeOpen]?.icon}
                 />
 
-                <Text style={[styles.SettingWord,{ marginTop: Platform.OS == 'android' ? 0 : 15 }]}>{translate("启用验证方式")}</Text>
+                <Text style={styles.SettingWord}>{translate("启用验证方式")}</Text>
                 {
                     allModeType.map((item, index) => {
                         return (

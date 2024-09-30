@@ -2,6 +2,7 @@ import React from 'react'
 import {
 	StyleSheet,
 	Dimensions,
+	Platform
 } from "react-native";
 const { width, height } = Dimensions.get("window");
 
@@ -69,6 +70,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		flexDirection: 'row',
+		width:Platform.OS == 'android'? '97%' : '96%'
 	},
 	btnBorder: {
 		width: '45%',
@@ -155,6 +157,17 @@ const styles = StyleSheet.create({
         paddingHorizontal: 95, // 调整左右内边距
         marginBottom: 10, // 调整按钮之间的间距
     },
+	CheckBox: {
+		marginLeft: Platform.OS == 'android' ? -110 :  -130,
+		marginBottom: 25 
+	},
+	ImgStyle: {
+		width: 24, 
+		height: 24, 
+		position:'absolute', 
+		top: -38, 
+		right: Platform.OS === "android" ? -35 : (isIphone12Upper ? -110 : -45) 
+	}
 })
 
 export default styles
