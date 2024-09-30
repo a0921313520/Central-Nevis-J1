@@ -125,8 +125,8 @@ class Nevis extends React.Component {
                 line-height: normal !important;
                 max-height: ${languageType === 'M2' ? '1rem !important':'3rem !important'};
                 color: black !important;
-                height: 0.65rem !important;
-                font-size: 13px !important;
+                height:  ${languageType === 'M1' ? '44px !important':'0.65rem !important'};
+                font-size: ${languageType === 'M1' ? '16px !important':'13px !important'};
                 padding-top: 0.05rem;
             }
         `;
@@ -145,7 +145,7 @@ class Nevis extends React.Component {
     
         const alert = () => (
             <div>
-                <p>
+                <p style={{paddingTop: languageType === 'M1' ? '6px':''}}>
                     <img
                         style={{ bottom: '-5px', position: 'relative', paddingRight: '10px' }}
                         src={this.getSuccessImage(languageType)}
