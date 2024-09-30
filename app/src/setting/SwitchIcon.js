@@ -36,9 +36,9 @@ class SwitchIcon extends Component {
 
 const styles = StyleSheet.create({
   switchContainer: {
-    marginTop: 2,
-    width: 43,
-    height: 25,
+    marginTop: 6,
+    width: 34,
+    height: 18,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -55,8 +55,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#999999', // 關閉時的軌道顏色
   },
   switchThumb: {
-    width: 21,
-    height: 21,
+    width: 14,
+    height: 14,
     borderRadius: 13,
     position: 'absolute',
     top: 2,

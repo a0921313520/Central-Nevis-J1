@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Dimensions, Image } from "react-native";
+import { View, Text, Dimensions, Image, Platform } from "react-native";
 import Touch from 'react-native-touch-once';
 import { Actions } from "react-native-router-flux";
 import styles from '$NevisStyles/Setting'
@@ -267,7 +267,7 @@ class Setting extends React.Component {
                     onlyOkBtn={true}
                     againVerify={true}
                     title={translate('账户信息验证')}
-                    msg={translate('为保障您的账户安全，请完成账户信息验证。')}
+                    msg={translate(`为保障您的账户安全，请完成账户信息验证。`)}
                     cancel={'手机验证'}
                     onCancel={() => { this.setState({ closeVerifyModal: false }), this.goOTP("closeVerify") }}
                     onClose={() => this.setState({ closeVerifyModal: false })}
@@ -281,7 +281,7 @@ class Setting extends React.Component {
                     onlyOkBtn={true}
                     againVerify={true}
                     title={translate('账户信息验证')}
-                    msg={translate('为保障您的账户安全，请完成账户信息验证。')}
+                    msg={translate(`为保障您的账户安全，请完成账户信息验证。`)}
                     cancel={'手机验证'}
                     onCancel={() => { this.setState({ changeVerifyModal: false }), this.goOTP("changeVerify") }}
                     onClose={() => this.setState({ changeVerifyModal: false })}
@@ -290,15 +290,15 @@ class Setting extends React.Component {
                     imgIcon={NevisListData[activeOpen]?.icon}
                 />
 
-                <Text style={styles.SettingWord}>{translate("启用验证方式")}</Text>
+                <Text style={[styles.SettingWord,{ marginTop: Platform.OS == 'android' ? 0 : 15 }]}>{translate("启用验证方式")}</Text>
                 {
                     allModeType.map((item, index) => {
                         return (
-                            <View key={index} style={[styles.switchContainer, { marginTop: 20, }]}>
+                            <View key={index} style={[styles.switchContainer, { marginTop: 8, }]}>
                                 <Image
                                     resizeMode="stretch"
                                     source={NevisListData[item.mode].icon || ImgIcon['faceIcon']}
-                                    style={{ width: 30, height: 30 }}
+                                    style={{ width: 30, height: 30, marginLeft: 10 }}
                                 />
                                 <View style={styles.modeSetting}>
                                     <Text style={styles.SettingFace}>{translate(NevisListData[item.mode].name)}</Text>
@@ -321,8 +321,8 @@ export const UserTerms = () => {
     return (
         <>
             {
-                language == 'CN' && <Touch onPress={() => { UserTerms() }}>
-                    <Text style={[styles.modalMsg]}>
+                language == 'CN' && <Touch onPress={() => { ApiPort.UserTerms = "用户规则条款"; UserTerms() }}>
+                    <Text style={[styles.modalMsg,{ marginBottom: 10, }]}>
                         点击“启用”即表示您同意竞博规则与条款<Text style={{ color: '#00E62E' }}>规则与条款</Text>
                     </Text>
                 </Touch>

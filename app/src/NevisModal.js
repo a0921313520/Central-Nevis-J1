@@ -272,7 +272,7 @@ class NevisModal extends React.Component {
                                             <Text style={[styles.modalMsg]}>{translate('在“我的”页面中完成 PIN 码识别设置，以提升账号验证的便捷性与安全性。')}</Text>
                                 }
 
-                                <View style={{ marginBottom: 25, marginLeft: -100 }}>
+                                <View style={{ marginBottom: 25, marginLeft: Platform.OS == 'android' ? -110 :  -130 }}>
                                     <CheckBox
                                         checkBoxColor={"#c3c3c3"}
                                         checkedCheckBoxColor={"#00E62E"}
@@ -292,7 +292,7 @@ class NevisModal extends React.Component {
                                     />
                                 </View>
 
-                                <View style={styles.btnList}>
+                                <View style={[styles.btnList,{ width:Platform.OS == 'android'? '97%' : '96%' }]}>
                                     <Touch
                                         style={styles.btnBorder}
                                         onPress={() => { this.homeSetModal() }}

@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 	modalCenter: {
 		width: width * 0.9,
 		borderRadius: 10,
-		padding: 18,
+		padding: 40,
 		paddingTop: 30,
 		paddingBottom: 30,
 		display: 'flex',
@@ -69,7 +69,6 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		flexDirection: 'row',
-		width: '100%',
 	},
 	btnBorder: {
 		width: '45%',
@@ -142,7 +141,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'row', // 确保图标和文字在同一行
         paddingVertical: 8, // 调整按钮高度
-        paddingHorizontal: 42, // 调整左右内边距
+        //paddingHorizontal: 73, // 调整左右内边距
+		width: 247,
         marginBottom: 20, // 调整按钮之间的间距
     },
     cancelButton: {
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 12, // 调整按钮高度
-        paddingHorizontal: 80, // 调整左右内边距
+        paddingHorizontal: 95, // 调整左右内边距
         marginBottom: 10, // 调整按钮之间的间距
     },
 })
