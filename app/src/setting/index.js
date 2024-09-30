@@ -104,6 +104,7 @@ class Setting extends React.Component {
     changeMode = (mode = '', aaid) => {
         const { NevisOtp } = getConfig()
         const { activeOpen, enableUse } = this.state
+        this.setState({otpRemove: false})
         if (activeOpen == mode) {
             // 已开启，点击后提示关闭
             this.setState({ removeModal: mode })
@@ -175,6 +176,7 @@ class Setting extends React.Component {
         console.log('type>>>',type)
         const { NevisOtp } = getConfig()
         //去验证otp
+        this.setState({otpRemove: true})
         NevisOtp({actionType: 'Unbind'})
         if(type == "changeVerify"){
             this.setState({

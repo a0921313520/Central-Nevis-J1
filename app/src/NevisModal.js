@@ -34,6 +34,7 @@ class NevisModal extends React.Component {
             uninstall: false,
             faceEnabled: false,
             fingerprintEnabled: false,
+            undefinedModal: false,
         }
     }
 
@@ -122,6 +123,7 @@ class NevisModal extends React.Component {
             uninstall,
             faceEnabled,
             fingerprintEnabled,
+            undefinedModal,
         } = this.state
 
         let uninstallMode = ''
@@ -187,6 +189,14 @@ class NevisModal extends React.Component {
                     msg={translate('即将启用，请耐心等待')}
                     confirm={translate('我知道了')}
                     onConfirm={() => { this.setState({ isEnabled: false }) }}
+                />
+                <Modals
+                    modalVisible={undefinedModal}
+                    onlyOkBtn={true}
+                    title={translate('出现错误')}
+                    msg={translate('请重新尝试')}
+                    confirm={translate('继续')}
+                    onConfirm={() => { this.setState({ undefinedModal: false }) }}
                 />
                 <Modals
                     modalVisible={faceEnabled}

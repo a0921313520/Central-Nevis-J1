@@ -109,6 +109,9 @@ export const NevisErrs = (res, mode) => {
     } else if(type == 'USER_NOT_ENROLLED') {
         //指纹/脸部辨识未开启
         window.onModal(mode == 'Face'? 'faceEnabled': 'fingerprintEnabled', true)
+    } else if(type == 'undefined') {
+        //临时错误，再试一次一般就OK了
+        window.onModal('undefinedModal', true)
     } else {
         //其他错误处理
         alert(description + '==>type=' + type)
