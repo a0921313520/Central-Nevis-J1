@@ -18,11 +18,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#F5F5F5',
         textAlign: 'center',
+        fontFamily:"Kanit",
     },
     backBtn: {
         color: '#00E62E',
         textAlign: 'center',
         paddingTop: 70,
+        fontFamily:"Kanit",
     },
 })
 

@@ -29,7 +29,8 @@ const styles = StyleSheet.create({
         color: '#CCCCCC',
         fontSize: 14,
         fontWeight: '400',
-        paddingLeft: 10
+        paddingLeft: 10,
+        fontFamily:"Kanit",
     },
     switchContainer: {
         flexDirection: 'row',
@@ -52,6 +53,7 @@ const styles = StyleSheet.create({
 		paddingTop: 20,
 		paddingBottom: 30,
 		color: '#CCCCCC',
+        fontFamily:"Kanit",
 	},
 })
 

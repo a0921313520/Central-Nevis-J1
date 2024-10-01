@@ -168,6 +168,14 @@ const styles = StyleSheet.create({
 		position:'absolute', 
 		top: -38, 
 		right: Platform.OS === "android" ? -35 : (isIphone12Upper ? -110 : -45) 
+	},
+	confirmButtonUpper: {
+		color: '#F5F5F5', 
+		fontSize: 14,
+	},
+	cancelButtonDown: {
+		color: '#00E62E', 
+		fontSize: 14,
 	}
 })
 

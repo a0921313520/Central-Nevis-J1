@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         lineHeight: 24,
         marginTop: 15,
-        marginBottom: 30
+        marginBottom: 30,
+        fontFamily:"Kanit",
     },
     faceBG: {
 		padding: 18,
@@ -31,6 +32,7 @@ const styles = StyleSheet.create({
 		color: "#CCCCCC",
 		lineHeight: 25,
         marginBottom: 20,
+        fontFamily:"Kanit",
 	},
     modalMsg: {
 		fontSize: 12,
@@ -53,6 +55,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		textAlign: 'center',
 		lineHeight: 42,
+        fontFamily:"Kanit",
 	},
     touchStyle: {
         justifyContent: 'center',
@@ -62,7 +65,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
 		color: "#F5F5F5",
 		lineHeight: 24,
-        //marginBottom: 20,
+        fontFamily:"Kanit",
     },
     successUser: {
         paddingTop: ( height-400 ) / 5,
@@ -77,6 +80,7 @@ const styles = StyleSheet.create({
 		paddingTop: 10,
 		paddingBottom: 30,
 		color: '#CCCCCC',
+        fontFamily:"Kanit",
     }
 
     

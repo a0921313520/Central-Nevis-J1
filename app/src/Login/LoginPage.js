@@ -158,12 +158,12 @@ class LoginPage extends React.Component {
                     <View style={{ flex: 0.2 }}></View>
 
                     <View style={styles.contentStyle}>
-                        <Text style={{ color: '#CCCCCC', fontSize: 16, fontWeight: '400', lineHeight: 40 }}>{translate("欢迎回来")}</Text>
-                        <Text style={{ color: '#F5F5F5', fontSize: 24, fontWeight: '700', lineHeight: 40 }}>{userName}</Text>
+                        <Text style={styles.contentHeadText}>{translate("欢迎回来")}</Text>
+                        <Text style={styles.contentNameText}>{userName}</Text>
                         <Text onPress={() => {
                             Actions.pop()
                             window.UserNameChange && window.UserNameChange()
-                        }} style={{ color: '#00E62E', fontSize: 14, fontWeight: '400', lineHeight: 35 }}>{translate('切换账号')}</Text>
+                        }} style={styles.contentAccChange}>{translate('切换账号')}</Text>
                     </View>
 
 
@@ -174,26 +174,28 @@ class LoginPage extends React.Component {
                                 source={NevisListData[modeType].icon}
                                 style={{ width: 27, height: 24, marginRight: 10 }}
                             />
-                            <Text style={{ color: '#F5F5F5', fontSize: 17 }}>
+                            <Text style={styles.loginName}>
                                 {translate(NevisListData[modeType].name)}
                             </Text>
                         </View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => {
-                        Actions.pop()
-                        window.UserNameChange && window.UserNameChange({userName: userName})
-                    }}>
+                    <TouchableOpacity 
+                        onPress={() => {
+                            Actions.pop()
+                            window.UserNameChange && window.UserNameChange({userName: userName})
+                        }}
+                    >
                         <View style={styles.Tologin}>
-                            <Text style={{ color: '#00E62E', fontSize: 17 }}>
+                            <Text style={styles.normalLogin}>
                                 {translate('账号密码登录')}
                             </Text>
                         </View>
                     </TouchableOpacity>
 
                     <View style={{ paddingTop: 25, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ color: '#999999', fontSize: 14, }}>{translate('没有账号?')}
-                            <Text style={{ color: '#00E62E', fontSize: 14, }} onPress={() => { Registered() }}>{translate('立即注册')}</Text>
+                        <Text style={styles.noAcc}>{translate('没有账号?')}
+                            <Text style={styles.goRegister} onPress={() => { Registered() }}>{translate('立即注册')}</Text>
                         </Text>
                     </View>
 

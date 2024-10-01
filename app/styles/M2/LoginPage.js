@@ -65,8 +65,49 @@ const styles = StyleSheet.create({
     },
     guestText: {
         color: '#00FF00', // 綠色文字
+        fontFamily: "Kanit",
     },
-    
+    contentHeadText: {
+        color: '#CCCCCC', 
+        fontSize: 16, 
+        fontWeight: '400', 
+        lineHeight: 40,
+        fontFamily: "Kanit",
+    },
+    contentNameText: {
+        color: '#F5F5F5', 
+        fontSize: 24, 
+        fontWeight: '700', 
+        lineHeight: 40,
+        fontFamily: "Kanit",
+    },
+    contentAccChange: {
+        color: '#00E62E', 
+        fontSize: 14, 
+        fontWeight: '400',
+        lineHeight: 35,
+        fontFamily: "Kanit",
+    },
+    loginName: {
+        color: '#F5F5F5', 
+        fontSize: 17,
+        fontFamily: "Kanit",
+    },
+    normalLogin: {
+        color: '#00E62E', 
+        fontSize: 17,
+        fontFamily: "Kanit",
+    },
+    noAcc: {
+        color: '#999999', 
+        fontSize: 14,
+        fontFamily: "Kanit",
+    },
+    goRegister: {
+        color: '#00E62E', 
+        fontSize: 14, 
+        fontFamily: "Kanit",
+    }
 })
 
 export default styles

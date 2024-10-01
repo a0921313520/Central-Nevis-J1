@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '400',
         lineHeight: 25,
+        fontFamily:"Kanit",
     },
     nevisLoginIcon: {
         width: 30,
@@ -36,6 +37,7 @@ const styles = StyleSheet.create({
     },
     guestText: {
         color: '#00FF00', // 綠色文字
+        fontFamily:"Kanit",
     },
 
 })

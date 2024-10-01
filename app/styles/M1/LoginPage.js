@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		zIndex: 20,
 		padding: 15,
-    	paddingTop: 55,
+        paddingTop: 55,
 	},
     logo: {
 		justifyContent: "center",
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
-       marginBottom: 25
+        marginBottom: 25
     },
     guestViewMode: {
         position: 'absolute', // 這裡使用了絕對定位
@@ -66,7 +66,42 @@ const styles = StyleSheet.create({
     guestText: {
         color: '#00FF00', // 綠色文字
     },
-    
+    contentHeadText: {
+        color: '#CCCCCC', 
+        fontSize: 16, 
+        fontWeight: '400', 
+        lineHeight: 40,
+
+    },
+    contentNameText: {
+        color: '#F5F5F5', 
+        fontSize: 24, 
+        fontWeight: '700', 
+        lineHeight: 40,
+
+    },
+    contentAccChange: {
+        color: '#00E62E', 
+        fontSize: 14, 
+        fontWeight: '400',
+        lineHeight: 35,
+    },
+    loginName: {
+        color: '#F5F5F5', 
+        fontSize: 17,
+    },
+    normalLogin: {
+        color: '#00E62E', 
+        fontSize: 17,
+    },
+    noAcc: {
+        color: '#999999', 
+        fontSize: 14,
+    },
+    goRegister: {
+        color: '#00E62E', 
+        fontSize: 14, 
+    }
 })
 
 export default styles

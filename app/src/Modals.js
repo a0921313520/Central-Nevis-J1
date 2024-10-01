@@ -105,14 +105,14 @@ class Modals extends React.Component {
                                                     source={imgIcon}
                                                     style={{ width: 27, height: 24, marginRight: 10 }}
                                                 />
-                                                <Text style={{ color: '#F5F5F5', fontSize: 14 }}>
+                                                <Text style={styles.confirmButtonUpper}>
                                                     {translate(confirm)}
                                                 </Text>
                                             </View>
                                         </Touch>
                                         <Touch onPress={onCancel}>
                                             <View style={styles.cancelButton}>
-                                                <Text style={{ color: '#00E62E', fontSize: 14 }}>
+                                                <Text style={styles.cancelButtonDown}>
                                                     {translate(cancel)}
                                                 </Text>
                                             </View>

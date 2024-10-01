@@ -36,7 +36,8 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		color: "#F5F5F5",
 		lineHeight: 20,
-		textAlign: 'center'
+		textAlign: 'center',
+		fontFamily:"Kanit",
 	},
 	models: {
 		position: 'absolute',
@@ -51,6 +52,7 @@ const styles = StyleSheet.create({
 		paddingTop: 20,
 		paddingBottom: 20,
 		color: '#F5F5F5',
+		fontFamily:"Kanit",
 	},
 	modalBtnGg: {
 		backgroundColor: '#00B324',
@@ -94,6 +96,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		textAlign: 'center',
 		lineHeight: 42,
+		fontFamily:"Kanit",
 	},
 	btnVerticalList: {
 		display: 'flex',
@@ -114,6 +117,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		textAlign: 'center',
 		lineHeight: 40,
+		fontFamily:"Kanit",
 	},
 	rightBtn: {
 		width: '46%',
@@ -125,6 +129,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		textAlign: 'center',
 		lineHeight: 42,
+		fontFamily:"Kanit",
 	},
 	btnVerticalListVerify: {
 		display: 'flex',
@@ -167,6 +172,16 @@ const styles = StyleSheet.create({
 		position:'absolute', 
 		top: -38, 
 		right: Platform.OS === "android" ? -35 : (isIphone12Upper ? -45 : -45) 
+	},
+	confirmButtonUpper: {
+		color: '#F5F5F5', 
+		fontSize: 14,
+		fontFamily:"Kanit",
+	},
+	cancelButtonDown: {
+		color: '#00E62E', 
+		fontSize: 14,
+		fontFamily:"Kanit",
 	}
 })
 
