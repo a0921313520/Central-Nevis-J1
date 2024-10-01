@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
 	modalCenter: {
 		width: width * 0.9,
 		borderRadius: 10,
-		padding: 40,
+		padding: Platform.OS == 'android'? 35 : 40,
 		paddingTop: 30,
 		paddingBottom: 30,
 		display: 'flex',
@@ -158,7 +158,8 @@ const styles = StyleSheet.create({
         marginBottom: 10, // 调整按钮之间的间距
     },
 	CheckBox: {
-		marginLeft: Platform.OS == 'android' ? -110 :  -130,
+		//marginLeft: Platform.OS == 'android' ? -35 :  -130,
+		marginLeft: Platform.OS == 'android' ? -150 : (isIphone14Upper ? 13 : DeviceInfoIos ? -70 : -80),
 		marginBottom: 25 
 	},
 	ImgStyle: {

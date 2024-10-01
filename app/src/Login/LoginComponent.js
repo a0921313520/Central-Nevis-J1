@@ -74,12 +74,9 @@ export const GetAround = ({ }) => {
     const { HomePage } = getConfig()
 
     return (
-        window.NevisModeType ?
         <TouchableOpacity style={styles.guestViewMode} onPress={() => { HomePage() }}>
             <Text style={styles.guestText}>{translate('去逛逛')}</Text>
         </TouchableOpacity>
-        :
-        <></>
     )
 }
 
