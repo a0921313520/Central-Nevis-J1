@@ -6,6 +6,7 @@ import HomeViewModel from './nevis/screens/HomeViewModel'
 import { getConfig } from '$Nevis/config'
 import translate from '$Nevis/translate'
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
+import FingerprintScanner from "react-native-fingerprint-scanner";
 
 export const allTypeId = {
     'F1D0#0001': 'Pin',
@@ -94,6 +95,17 @@ const InitClient = ({ init }) => {
 };
 export default InitClient
 
+export const PhoneSensorAvailable = () => {
+    FingerprintScanner
+    .isSensorAvailable()
+    .then(biometryType => {
+        window.SensorAvailable = true
+    })
+    .catch(err => {
+        window.SensorAvailable = false
+    })
+}
+
 //
 export const NevisErrs = (res, mode) => {
     const { type, description } = res.errorCode || {}
@@ -109,6 +121,7 @@ export const NevisErrs = (res, mode) => {
     } else if(type == 'USER_NOT_ENROLLED') {
         //指纹/脸部辨识未开启
         window.onModal(mode == 'Face'? 'faceEnabled': 'fingerprintEnabled', true)
+        PhoneSensorAvailable()
     } else if(type == 'undefined') {
         //临时错误，再试一次一般就OK了
         window.onModal('undefinedModal', true)

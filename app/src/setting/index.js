@@ -105,6 +105,11 @@ class Setting extends React.Component {
         const { NevisOtp } = getConfig()
         const { activeOpen, enableUse } = this.state
         this.setState({otpRemove: false})
+        if(['Fingerprint', 'Face'].includes(mode) && !window.SensorAvailable) {
+            //指纹/face未开启
+            window.onModal(mode == 'Face'? 'faceEnabled': 'fingerprintEnabled', true)
+            return
+        }
         if (activeOpen == mode) {
             // 已开启，点击后提示关闭
             this.setState({ removeModal: mode })

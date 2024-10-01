@@ -7,7 +7,7 @@ import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 import translate from '$Nevis/translate'
 import NevisModal from './NevisModal'
 import { getConfig } from '$Nevis/config'
-import InitClient from './InitClient'
+import InitClient, { PhoneSensorAvailable } from './InitClient'
 import { Actions } from "react-native-router-flux";
 
 window.NevisModeType = ''//已设置mode，setting那边使用, Face/Pin/Fingerprint
@@ -20,6 +20,7 @@ window.NevisUsername = ''//nevis缓存姓名
 window.NToast = ''
 window.AuthenticatorId = ''//已设置的id，
 window.NevisUserName = ''//已设置的nevis参数userName
+window.SensorAvailable = true//指纹/face是否开启
 class Nevis extends React.Component {
     constructor(props) {
         super(props)
@@ -45,6 +46,7 @@ class Nevis extends React.Component {
 
     componentDidMount() {
         this.getNevisConfigurations()
+        PhoneSensorAvailable()
     }
 
     componentWillUnmount() {
