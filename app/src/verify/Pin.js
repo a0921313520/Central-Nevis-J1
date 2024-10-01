@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Dimensions } from "react-native";
+import { View, Text, Dimensions, Vibration } from "react-native";
 import translate from '$Nevis/translate'
 import styles from '$NevisStyles/PinCode'
 import VerificationCodeInput from "./VerificationCodeInput";
@@ -36,6 +36,7 @@ class Pin extends React.Component {
         if (prevProps.lastRecoverableError != this.props.lastRecoverableError) {
             //Pin错误
             this.verifyErr()
+            Vibration.vibrate(300)
         }
     }
 
@@ -83,6 +84,7 @@ class Pin extends React.Component {
             } else {
                 if (code != pinCode) {
                     this.setState({ pinMessage: translate('两次Pin不同') })
+                    Vibration.vibrate(300)
                     this.refresh()
                 } else {
                     usePinView(code, mode, handler)
