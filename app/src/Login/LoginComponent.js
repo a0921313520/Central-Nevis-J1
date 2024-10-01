@@ -38,7 +38,7 @@ export const ScanIcon = (props) => {
                 <Image
                     resizeMode="stretch"
                     source={ImgIcon['scanIcon']}
-                    style={[styles.scanIcon,{  marginTop: isIphone14Upper ? 13 : (isIphone12Upper ? -10 : 24) }]}
+                    style={[styles.scanIcon]}
                 />
             </Touch>
             :<View />

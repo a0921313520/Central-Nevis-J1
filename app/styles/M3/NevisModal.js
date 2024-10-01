@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
 	modalCenter: {
 		width: width * 0.9,
 		borderRadius: 10,
-		padding: 18,
+		padding: DeviceInfoIos ? 30 : 40,
 		paddingTop: 30,
 		paddingBottom: 30,
 		display: 'flex',
@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		lineHeight: 23,
 		textAlign: 'center',
-		paddingTop: 20,
-		paddingBottom: 20,
+		paddingTop: 25,
+		paddingBottom: 23,
 		color: '#F5F5F5',
 	},
 	modalBtnGg: {
@@ -142,10 +142,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row', // 确保图标和文字在同一行
-        paddingVertical: 8, // 调整按钮高度
+        paddingVertical: 5, // 调整按钮高度
         //paddingHorizontal: 73, // 调整左右内边距
 		width: 247,
-        marginBottom: 20, // 调整按钮之间的间距
+        marginBottom: 10, // 调整按钮之间的间距
     },
     cancelButton: {
         borderColor: '#00E62E',
@@ -153,12 +153,13 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 12, // 调整按钮高度
-        paddingHorizontal: 95, // 调整左右内边距
-        marginBottom: 10, // 调整按钮之间的间距
+        paddingVertical: 10, // 调整按钮高度
+        width: 247,
+        //marginBottom: 10,  // 调整按钮之间的间距
     },
 	CheckBox: {
-		marginLeft: Platform.OS == 'android' ? -110 :  -130,
+		marginLeft: Platform.OS == 'android' ? -55 : (isIphone14Upper ? 13 : DeviceInfoIos ? -70 : -80),
+		//(isIphone12Upper ? -130 : -80),
 		marginBottom: 25 
 	},
 	ImgStyle: {

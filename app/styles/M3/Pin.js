@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		color: "#CCCCCC",
 		lineHeight: 25,
-        marginBottom: 20,
+        marginBottom: 10,
 	},
     modalMsg: {
 		fontSize: 12,
