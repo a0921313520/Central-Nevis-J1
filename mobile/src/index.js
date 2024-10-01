@@ -128,6 +128,8 @@ class Nevis extends React.Component {
                 height:  ${languageType === 'M1' ? '44px !important':'0.65rem !important'};
                 font-size: ${languageType === 'M1' ? '16px !important':'13px !important'};
                 padding-top: 0.05rem;
+                padding-left:${languageType === 'M1' ? '10px !important':''};
+                padding-right:  ${languageType === 'M1' ? '10px !important':''};
             }
         `;
         const styleTag = document.createElement('style');
