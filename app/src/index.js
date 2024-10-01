@@ -42,7 +42,7 @@ class Nevis extends React.Component {
         }
         this.config = getConfig()
         window.NToast = this.config.NevisToast
-        window.JBOVersion = '1.0.2.6'
+        window.JBOVersion = '1.0.2.7'
     }
 
     componentDidMount() {
