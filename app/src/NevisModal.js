@@ -288,7 +288,7 @@ class NevisModal extends React.Component {
                                             <Image source={ImgIcon['uncheckIcon']} style={{ width: 20, height: 20 }} />
                                         }
                                         isChecked={this.state.checkBox}
-                                        rightTextView={<Text style={{ color: "#fff", marginLeft: 5 }}> {translate('{X} 天内不再显示', { X: nevisSetupReminderDays })}</Text>}
+                                        rightTextView={<Text style={{ color: "#999999", marginLeft: 5 }}> {translate('{X} 天内不再显示', { X: nevisSetupReminderDays })}</Text>}
                                     />
                                 </View>
 
