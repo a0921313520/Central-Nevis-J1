@@ -47,8 +47,6 @@ class Setting extends React.Component {
             closeVerifyModal: false,
             changeVerifyModal: false,
             otpRemove: false,
-            didChange: false,
-            didClose: false,
         }
     }
 
@@ -105,22 +103,19 @@ class Setting extends React.Component {
         const { NevisOtp } = getConfig()
         const { activeOpen, enableUse } = this.state
         this.setState({otpRemove: false})
-        if(['Fingerprint', 'Face'].includes(mode) && !window.SensorAvailable) {
-            //指纹/face未开启
-            window.onModal(mode == 'Face'? 'faceEnabled': 'fingerprintEnabled', true)
-            return
-        }
         if (activeOpen == mode) {
             // 已开启，点击后提示关闭
             this.setState({ removeModal: mode })
             mode == 'Pin' && (window.PinIsSet = false)//Pin验证只需要一次输入
         } else if (activeOpen) {
             // 已开启，点击更换
+            if(this.isSensorOff(mode)) { return }
             this.setState({changModal: true, changMode: mode})
             window.ChangeNevisSelectAaid = aaid
             mode == 'Pin' && (window.PinIsSet = true)//Pin设置需要两次输入
         } else {
             // 未开启，点击打开
+            if(this.isSensorOff(mode)) { return }
             if(enableUse) { return }//其他手机已绑定设置
             //去验证otp
             NevisOtp({actionType: 'Enrollment'})
@@ -131,9 +126,24 @@ class Setting extends React.Component {
             mode == 'Pin' && (window.PinIsSet = true)//Pin设置需要两次输入
         }
     }
+    //手机中的指纹/face未开启
+    isSensorOff = (mode = '') => {
+        const isOff = !window.SensorAvailable
+        if(['Fingerprint', 'Face'].includes(mode) && isOff) {
+            window.onModal(mode == 'Face'? 'faceEnabled': 'fingerprintEnabled', true)
+        }
+
+        return isOff
+    }
     //本地验证,验证成功后才能删除
     removeVerify = () => {
-        this.setState({ removeModal: '',closeVerifyModal:true })
+        this.setState({ removeModal: '' }, () => {
+            if(!window.SensorAvailable) {
+                this.goOTP("closeVerify")
+            } else {
+                this.setState({closeVerifyModal: true})
+            }
+        })
     }
     //删除前验证
     closeVerify = () => {
@@ -182,17 +192,8 @@ class Setting extends React.Component {
         const { NevisOtp } = getConfig()
         //去验证otp
         NevisOtp({actionType: 'Unbind'})
-        if(type == "changeVerify"){
-            this.setState({
-                didChange: true,
-                didClose: false
-            })
-        }else{
+        if(type == 'closeVerify') {
             this.setState({otpRemove: true})
-            this.setState({
-                didClose: true,
-                didChange:false
-            })
         }
     }
 
@@ -235,14 +236,6 @@ class Setting extends React.Component {
             })
         }
 
-        window.NevisReSetMode = () => {
-            const { didChange, didClose } = this.state;
-            if (didChange) {
-                window.NevisVerify(this.changeVerifySuccess); // 執行更改驗證邏輯
-            } else if (didClose) {
-                window.NevisVerify(this.removeVerifySuccess); // 執行移除驗證邏輯
-            }
-        }
 
         return (
             <View style={styles.SettingBG}>
