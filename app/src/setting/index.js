@@ -176,7 +176,6 @@ class Setting extends React.Component {
         console.log('type>>>',type)
         const { NevisOtp } = getConfig()
         //去验证otp
-        this.setState({otpRemove: true})
         NevisOtp({actionType: 'Unbind'})
         if(type == "changeVerify"){
             this.setState({
@@ -184,6 +183,7 @@ class Setting extends React.Component {
                 didClose: false
             })
         }else{
+            this.setState({otpRemove: true})
             this.setState({
                 didClose: true,
                 didChange:false
