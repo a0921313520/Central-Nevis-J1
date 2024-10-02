@@ -65,7 +65,7 @@ class Nevis extends React.Component {
     }
 
     verifyLoginSession = (token) => {
-        const { post } = getConfig()
+        const { post, getApi } = getConfig()
         this.refresh = setInterval(() => { 
             if (this.state.loginVerified || this.state.countdown == 0) {
                 clearInterval(this.refresh);
@@ -76,13 +76,18 @@ class Nevis extends React.Component {
                     localStorage.setItem('access_token',JSON.stringify(res.result?.tokenType + ' ' + res.result?.accessToken));
                     localStorage.setItem('refresh_token', JSON.stringify(res.result?.refreshToken));
                     sessionStorage.setItem('isLogin', true);
-                    this.props.setLoginStatus();
-                    // this.props.Memberlist();
-                    this.setState({
-                        loginVerified: true
+                    getApi(ApiLink.Member).then((data) => {
+                        localStorage.setItem('UserName', data.result?.memberInfo.userName);
+                        localStorage.setItem('memberInfoDB', JSON.stringify(data.result));
+                        this.props.setLoginStatus();
+                        this.setState({
+                            loginVerified: true
+                        })
+                        window.location.reload();
+                    }).catch(() => {
+            
                     })
                     clearInterval(this.refresh);
-                    window.location.reload();
                 }
             })
             .catch(() => {
@@ -157,7 +162,7 @@ class Nevis extends React.Component {
                                 {translate('登录内容')}
                             </div>
                             <div style={{margin: 'auto', width: '150px', opacity: countdown <= 0 ? '0.2' : ''}}>
-                                <img src={loginQR} width={'150px'}/>
+                                <img src={loginQR} width={'150px'} style={{cursor: 'pointer'}}/>
                             </div>
                             {countdown <= 0 &&
                                 <img className="refreshIcon" onClick={() => {this.getLoginQR()}} src={refreshIcon.src}/>

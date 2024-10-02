@@ -9,19 +9,21 @@
 		width: 30px;
 		height: 30px;
 		background-size: 100%;
+		cursor: pointer;
 	}
 	.loginQRText {
 		margin-left: 0.5rem;
 		background: url('./imgs/loginQRText.png') center center no-repeat;
-		width: 91px;
-		height: 22px;
-		background-size: 100%;
+		width: 90px;
+		height: 25px;
+		background-size: 100% 100%;
 	}
 	.loginNormal {
 		background: url('./imgs/normalLoginIcon.png') center center no-repeat;
 		width: 30px;
 		height: 30px;
 		background-size: 100%;
+		cursor: pointer;
 	}
 }
 .loginQRCOntainer {
@@ -59,6 +61,7 @@
 			width: 4.5rem;
 			top: 11.6rem;
 			left: 14rem;
+			cursor: pointer;
 		}
 	}
 	.backToRegister {
@@ -73,6 +76,7 @@
 		background: none;
 		border-radius: 0.2rem;
 		line-height: 40px;
+		cursor: pointer;
 	}
 }
 
