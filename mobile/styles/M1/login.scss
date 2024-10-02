@@ -210,7 +210,7 @@
     left: 0;
     right: 0;
     top: 13%;
-    width: 3.2rem;
+        // width: 3.2rem;
     height: 1.6rem;
 }
 
@@ -451,8 +451,9 @@
     text-align: center;
     padding-left: 0.6rem;
     padding-right: 0.6rem;
-    font-size: 14px;
-    font-size: 0.28rem;
+    font-size: 0.14rem;
+    font-size: 0.3rem;
+    line-height: 0.45rem;
 }
 
 .videoTextNevis .DownloadQrCode{
@@ -466,8 +467,9 @@
 .videoTextNevis .DownloadAppTxt{
     margin-top: 0.7rem;
     color: #cccccc;
-    font-size: 0.28rem;
-    padding: 0 0.6rem;
+    font-size: 0.30rem;
+    padding: 0 1.5rem;
+    line-height: 0.45rem;
 }
 
 .videoTextNevis .GreenTxt{
@@ -476,6 +478,6 @@
 
 .videoTextNevis .GreenTxtSecond{
     color: #00E62E;
-    font-size: 0.32rem;
+    font-size: 0.345rem;
     margin-top: 0.85rem;
 }
