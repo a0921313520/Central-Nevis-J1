@@ -4,6 +4,7 @@ import {
 	AuthenticatorSelectionHandler,
 	AuthenticatorSelector,
 } from '@nevis-security/nevis-mobile-authentication-sdk-react';
+import { NevisAaid } from '../../InitClient'
 
 import { AuthenticatorItem } from '../model/AuthenticatorItem';
 
@@ -35,7 +36,9 @@ export class AuthenticationAuthenticatorSelectorImpl extends AuthenticatorSelect
 			);
 		}
 		setTimeout(async () => {
-			await handler?.aaid(window.NevisSelectAaid).catch((err) => {console.log('err1d1d1d', err)});
+			const aaid = NevisAaid(window.NevisModeChange)
+			console.log('aaid2222==', window.NevisModeChange)
+			await handler?.aaid(aaid).catch((err) => {console.log('err1d1d1d', err)});
 		}, 200);
 	}
 }

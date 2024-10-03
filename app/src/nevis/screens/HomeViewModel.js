@@ -9,6 +9,7 @@ import * as OutOfBandOperationHandler from '../userInteraction/OutOfBandOperatio
 import { ClientProvider } from '../utility/ClientProvider';
 import { GetInitModeType } from '../../InitClient'
 import LocalAuthenticate from './SelectAccountViewModel';
+import { PinChangerImpl } from '../userInteraction/PinChangerImpl';
 import { Actions } from 'react-native-router-flux';
 
 const useHomeViewModel = () => {
@@ -128,6 +129,33 @@ const useHomeViewModel = () => {
 		}
 	}
 
+	function pinChange(callback = () => {}) {
+		const items = localAccounts.map((account) => new AccountItem(account.username))
+		const client = ClientProvider.getInstance().client;
+		client?.operations.pinChange
+			.username(items[0]?.username)
+			.pinChanger(new PinChangerImpl())
+			.onSuccess(() => {
+				console.log('PIN Change succeeded.');
+				if(window.ActivePin) {
+					Actions.pop()
+				}
+				NToast.removeAll()
+				callback({isSuccess: true})
+			})
+			.onError((onError) => {
+				if(window.ActivePin) {
+					Actions.pop()
+				}
+				NToast.removeAll()
+				callback(onError)
+				console.log('PIN Change onError', onError);
+			})
+			.execute()
+			.catch((err) => {
+				console.log('PIN Change err', err);
+			});
+	}
 
 	//删除
 	async function deleteLocalAuthenticators(callback = () => {}) {
@@ -153,6 +181,7 @@ const useHomeViewModel = () => {
 		inBandAuthenticate,
 		deleteLocalAuthenticators,
 		localAccountsVerify,
+		pinChange,
 	};
 };
 

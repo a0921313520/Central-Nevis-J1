@@ -8,6 +8,7 @@ import {
 	AuthenticatorSelectionHandler,
 	AuthenticatorSelector,
 } from '@nevis-security/nevis-mobile-authentication-sdk-react';
+import { NevisAaid } from '../../InitClient'
 
 import { AuthenticatorItem } from '../model/AuthenticatorItem';
 
@@ -39,9 +40,10 @@ export class RegistrationAuthenticatorSelectorImpl extends AuthenticatorSelector
 				)
 			);
 		}
-		//首次注册window.ChangeNevisSelectAaid=‘’，更改时候window.ChangeNevisSelectAaid不为空
-		const aaid = window.ChangeNevisSelectAaid || window.NevisSelectAaid
 		setTimeout(async () => {
+			//NevisModeChange为空，使用NevisModeType
+			const aaid = NevisAaid(window.NevisModeChange)
+			console.log('aaid11111==', window.NevisModeChange)
 			await handler?.aaid(aaid).catch((err) => {console.log('err1d1d1d', err)});
 		}, 200);
 	}

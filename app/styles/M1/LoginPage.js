@@ -56,15 +56,17 @@ const styles = StyleSheet.create({
         padding: 20,
         marginBottom: 25
     },
+    iconImage: {
+        width: width * 0.65,
+        height: width * 0.65 * 0.4
+    },
     guestViewMode: {
-        position: 'absolute', // 這裡使用了絕對定位
-        bottom: 10, // 距離底部10個單位
-        left: 0,
-        right: 0,
+        paddingTop: height * 0.1,
         alignItems: 'center',
     },
     guestText: {
         color: '#00FF00', // 綠色文字
+        fontSize: 16,
     },
     contentHeadText: {
         color: '#CCCCCC', 

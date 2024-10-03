@@ -38,12 +38,9 @@ class Setting extends React.Component {
             allModeType: window.NevisAllModeType,//{pin: true, open: false}
             activeOpen: window.NevisModeType,//已开启
             selectMode: '',
-            onSuccess: false,
             userName: window.userNameDB || 'userName',
             enableUse: this.props.enableUse || false,
             changModal: false,
-            changMode: '',
-            selectModeAaid: '',
             closeVerifyModal: false,
             changeVerifyModal: false,
             otpRemove: false,
@@ -55,7 +52,7 @@ class Setting extends React.Component {
         const { NevisOtp } = getConfig()
         //home弹窗跳过来直接去设置
         if(homeModeType && homeModeAaid ) {
-            this.setState({selectModeAaid: homeModeType + 'mode__aaid' + homeModeAaid}, () => {
+            this.setState({selectMode: homeModeType}, () => {
                 NevisOtp({actionType: 'Enrollment'})
                 homeModeType == 'Pin' && (window.PinIsSet = true)//Pin设置需要两次输入
             })
@@ -63,17 +60,29 @@ class Setting extends React.Component {
     }
 
     componentWillUnmount() {
-        window.ChangeNevisSelectAaid = ''
+        
     }
     //api获取appLinkUri，去注册开启nevis
     getEnroll = () => {
+        const { selectMode } = this.state
+        const allActive = window.NevisAllModeType.filter((v) => { return v?.registration?.length > 0 })
+        if(allActive.length > 1) {
+            //手机已经有两个方法了，不需要call api注册，验证成功后直接切换
+            if(selectMode == 'Pin') {
+                //pin是更改pin code
+                window.NevisChangePin(this.onRegistration)
+            } else {
+                window.NevisVerify(this.onRegistration, selectMode)
+            }
+            return
+        }
         const { get } = getConfig()
         NToast.loading(translate('Loading...'), 200)
         get(ApiLink.GETEnroll)
             .then((res) => {
                 NToast.removeAll()
                 if (res?.isSuccess && res?.result?.appLinkUri) {
-                    window.NevisRegistration(res.result.appLinkUri, this.onRegistration)
+                    window.NevisRegistration(res.result.appLinkUri, this.onRegistration, selectMode)
                 } else {
                     const errMessage = res?.errors[0]?.description || res?.errors[0]?.message
                     NToast.fail(errMessage)
@@ -85,24 +94,27 @@ class Setting extends React.Component {
     }
     //开启成功
     onRegistration = (res = {}) => {
-        const { selectMode, changMode } = this.state
-        const activeOpen = selectMode || changMode
+        const { selectMode } = this.state
+        const activeOpen = selectMode
         if (res.isSuccess) {
             //开启成功
-            window.NevisInitClient()
             window.NevisAuthenticators()
-            this.setState({ activeOpen, onSuccess: true, changMode: '' })
+            this.setState({ activeOpen, selectModeAaid: '' })
             SetNevisSuccess()
-            Actions.refresh({ onSuccess: true })
+            window.NevisSetSuccess && window.NevisSetSuccess()
+            setTimeout(() => {
+                window.NevisInitClient()
+            }, 500);
         } else {
-            const mode = this.state.selectModeAaid?.split('mode__aaid')[0]
             NevisErrs(res, activeOpen)
         }
     }
-    changeMode = (mode = '', aaid) => {
+    changeMode = (mode = '') => {
         const { NevisOtp } = getConfig()
         const { activeOpen, enableUse } = this.state
-        this.setState({otpRemove: false})
+        if(enableUse) { return }//其他手机已绑定设置
+
+        this.setState({otpRemove: false, selectMode: mode})
         if (activeOpen == mode) {
             // 已开启，点击后提示关闭
             this.setState({ removeModal: mode })
@@ -110,25 +122,22 @@ class Setting extends React.Component {
         } else if (activeOpen) {
             // 已开启，点击更换
             if(this.isSensorOff(mode)) { return }
-            this.setState({changModal: true, changMode: mode})
-            window.ChangeNevisSelectAaid = aaid
+            this.setState({changModal: true})
             mode == 'Pin' && (window.PinIsSet = true)//Pin设置需要两次输入
         } else {
             // 未开启，点击打开
             if(this.isSensorOff(mode)) { return }
-            if(enableUse) { return }//其他手机已绑定设置
             //去验证otp
             NevisOtp({actionType: 'Enrollment'})
             // setTimeout(() => {
             //     window.NevisSetMode()
             // }, 1000);
-            this.setState({selectModeAaid: (mode + 'mode__aaid' + aaid)})
             mode == 'Pin' && (window.PinIsSet = true)//Pin设置需要两次输入
         }
     }
     //手机中的指纹/face未开启
     isSensorOff = (mode = '') => {
-        const isOff = !window.SensorAvailable
+        const isOff = mode != 'Pin' && !window.SensorAvailable
         if(['Fingerprint', 'Face'].includes(mode) && isOff) {
             window.onModal(mode == 'Face'? 'faceEnabled': 'fingerprintEnabled', true)
         }
@@ -137,8 +146,9 @@ class Setting extends React.Component {
     }
     //本地验证,验证成功后才能删除
     removeVerify = () => {
+        const mode = this.state.removeModal
         this.setState({ removeModal: '' }, () => {
-            if(!window.SensorAvailable) {
+            if(!window.SensorAvailable && mode != 'Pin') {
                 this.goOTP("closeVerify")
             } else {
                 this.setState({closeVerifyModal: true})
@@ -148,7 +158,7 @@ class Setting extends React.Component {
     //删除前验证
     closeVerify = () => {
         this.setState({closeVerifyModal:false}, () => {
-            window.NevisVerify(this.removeVerifySuccess)
+            window.NevisVerify(this.removeVerifySuccess, this.state.selectMode)
         })
     }
     //本地验证成功
@@ -165,7 +175,6 @@ class Setting extends React.Component {
 
     //成功点击返回
     onSuccessBack = () => {
-        this.setState({ selectMode: '', onSuccess: false, selectModeAaid: '' })
         Actions.pop()
     }
     //更换验证成功
@@ -174,7 +183,7 @@ class Setting extends React.Component {
             //成功后去添加新的，新的添加成功后删除旧的
             this.getEnroll()
         } else {
-            alert(res.description)
+            NevisErrs(res, window.NevisModeType)
         }
     }
     //更换验证
@@ -184,7 +193,7 @@ class Setting extends React.Component {
     //更换验证前的再次簡易验证
     againVerify = () => {
         this.setState({changeVerifyModal:false}, () => {
-            window.NevisVerify(this.changeVerifySuccess)
+            window.NevisVerify(this.changeVerifySuccess, window.NevisModeType)
         })
     }
     goOTP = (type) => {
@@ -205,16 +214,18 @@ class Setting extends React.Component {
             allModeType,
             activeOpen,
             selectMode,
-            onSuccess,
             userName,
             language,
             changModal,
             otpRemove,
-            changMode,
-            selectModeAaid,
             closeVerifyModal,
+            enableUse,
             changeVerifyModal
         } = this.state
+
+        window.SetRegistration = () => {
+            this.onRegistration({isSuccess: true})
+        }
 
         window.NevisSetMode = () => {
             if(otpRemove) {
@@ -224,14 +235,10 @@ class Setting extends React.Component {
                 })
                 return
             }
-            const modeAaid = selectModeAaid?.split('mode__aaid')
-            this.setState({ selectMode: modeAaid[0], onSuccess: false })
-            window.NevisSelectAaid = modeAaid[1]
-            //进入设置
+            //进入设置，添加或者更改
             Actions.NevisSettingModal({
-                selectMode: modeAaid[0],
+                selectMode: selectMode,
                 getEnroll: this.getEnroll,
-                onSuccess: onSuccess,
                 onSuccessBack: this.onSuccessBack,
             })
         }
@@ -253,7 +260,7 @@ class Setting extends React.Component {
                     // 改nevis提示
                     modalVisible={changModal}
                     title={translate('已启用其他验证方式')}
-                    msg={translate('启用{X}将会自动关闭{Y}。若您之后要再次启用{X}，需要重新设置。 是否确定要启用{Y}？', {X: translate(NevisListData[activeOpen]?.name), Y: translate(NevisListData[changMode]?.name)})}
+                    msg={translate('启用{X}将会自动关闭{Y}。若您之后要再次启用{X}，需要重新设置。 是否确定要启用{Y}？', {X: translate(NevisListData[activeOpen]?.name), Y: translate(NevisListData[selectMode]?.name)})}
                     cancel={'取消'}
                     onCancel={() => { this.setState({ changModal: false }) }}
                     confirm={'确认'}
@@ -302,7 +309,7 @@ class Setting extends React.Component {
                                     <Text style={styles.SettingFace}>{translate(NevisListData[item.mode].name)}</Text>
                                 </View>
                                 <SwitchIcon
-                                    value={item.mode == activeOpen}
+                                    value={!enableUse? item.mode == activeOpen: false}
                                     onValueChange={(value) => this.changeMode(item.mode, item.aaid)}
                                 />
                             </View>

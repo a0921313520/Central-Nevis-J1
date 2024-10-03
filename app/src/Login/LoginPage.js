@@ -41,15 +41,15 @@ class LoginPage extends React.Component {
         NToast.loading(translate('Loading...'), 200)
         get(ApiLink.GETInitLoginSession)
             .then((res) => {
-                NToast.removeAll()
                 const appLink = res?.result?.appLink
                 const dispatchToken = appLink && appLink.split('dispatchTokenResponse=')[1] || ''
                 if (res?.isSuccess && dispatchToken) {
-                    window.NevisLoginVerify(dispatchToken, this.loginVerify)
+                    window.NevisLoginVerify(dispatchToken, this.loginVerify, window.NevisModeType)
                     this.setState({
                         statusToken: res?.result?.statusToken,
                     })
                 } else {
+                    NToast.removeAll()
                     const errMessage = res?.errors[0]?.description || res?.errors[0]?.message
                     NToast.fail(errMessage)
                 }
@@ -137,7 +137,7 @@ class LoginPage extends React.Component {
                     <View style={[
                         styles.logo,
                         {
-                            paddingTop: Platform.OS === "android" ? 80 : 80,
+                            paddingTop: 45,
                             top:
                                 Platform.OS === "android"
                                     ? -50
@@ -148,10 +148,7 @@ class LoginPage extends React.Component {
                         <Image
                             resizeMode='stretch'
                             source={ImgIcon['newWelcome']}
-                            style={{
-                                width: Platform.OS == "android" ? width / 3.3 : width / 2,
-                                height: height / 10
-                            }}
+                            style={styles.iconImage}
                         />
                     </View>
 

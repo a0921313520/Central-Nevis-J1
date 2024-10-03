@@ -10,6 +10,7 @@ import { RegistrationAuthenticatorSelectorImpl } from './RegistrationAuthenticat
 import { AuthorizationUtils } from '../utility/AuthorizationUtils';
 import { ClientProvider } from '../utility/ClientProvider';
 import { DeviceInformationUtils } from '../utility/DeviceInformationUtils';
+import { Actions } from 'react-native-router-flux';
 
 async function handleRegistration(registration) {
 	await registration
@@ -37,10 +38,22 @@ async function handleAuthentication(authentication, callback) {
 		.fingerprintUserVerifier(new FingerprintUserVerifierImpl())
 		.onSuccess((authorizationProvider) => {
 			AuthorizationUtils.printAuthorizationInfo(authorizationProvider);
+			if(window.ActivePin) {
+				//关闭Pin输入框
+				Actions.pop()
+			}
+			NToast.removeAll()
+			window.onModal('sensorModal', false)
 			callback({isSuccess: true})
 			console.log('登录验证成功')
 		})
 		.onError((err) => {
+			if(window.ActivePin) {
+				//关闭Pin输入框
+				Actions.pop()
+			}
+			NToast.removeAll()
+			window.onModal('sensorModal', false)
 			callback(err)
 			console.log('登录验证失败err', err)
 		})

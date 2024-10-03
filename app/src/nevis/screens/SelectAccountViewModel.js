@@ -25,12 +25,20 @@ export default function LocalAuthenticate(username, callback = () => { }) {
 				//关闭Pin输入框
 				Actions.pop()
 			}
+			NToast.removeAll()
+			window.onModal('sensorModal', false)
 			callback({isSuccess: true})
 		})
 		.onError((error) => {
 			AuthorizationUtils.printSessionInfo(error.sessionProvider);
+			NToast.removeAll()
+			window.onModal('sensorModal', false)
 			callback(error)
 			console.log('本地验证错误error', error)
+			if(window.ActivePin) {
+				//关闭Pin输入框
+				Actions.pop()
+			}
 		})
 		.execute()
 		.catch((err) => { console.log('本地验证错误err', err) });

@@ -19,6 +19,7 @@ class SettingModal extends React.Component {
         this.state = {
             userName: window.userNameDB || 'userName',
             language: getConfig().language,
+            onSuccess: false,
         }
     }
 
@@ -38,10 +39,13 @@ class SettingModal extends React.Component {
         const {
             userName,
             language,
+            onSuccess,
         } = this.state
 
-        const { onSuccess, getEnroll, onSuccessBack, selectMode } = this.props
-
+        const { getEnroll, onSuccessBack, selectMode } = this.props
+        window.NevisSetSuccess = () => {
+            this.setState({onSuccess: true})
+        }
         return (
             <View style={styles.SettingBG}>
                 {

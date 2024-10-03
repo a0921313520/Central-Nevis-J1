@@ -5,6 +5,7 @@ import styles from '$NevisStyles/PinCode'
 import VerificationCodeInput from "./VerificationCodeInput";
 import { usePinView, usePinCancel } from '../nevis/screens/PinViewModel'
 import { Actions } from "react-native-router-flux";
+import { NevisErrs } from '../InitClient'
 import Touch from 'react-native-touch-once';
 
 
@@ -17,20 +18,22 @@ class Pin extends React.Component {
             errCode: 0,
             pinMessage: translate("请输入 PIN 码"),
             errTimes: 5,
+            oldPin: '',
             isSet: window.PinIsSet || false,
             onSuccess: false,
         }
-        global.storage.load({
-            key: 'NevisPinLock',
-            id: 'NevisPinLock'
-        }).then(res => {
-            Actions.pop()
-            window.onModal('noMoreTimes', true)
-        }).catch(err => { })
     }
 
     componentDidMount() {
+        NToast.removeAll()
         window.ActivePin = true
+        global.storage.load({
+            key: 'NevisOldPin',
+            id: 'NevisOldPin'
+        }).then(oldPin => {
+            //获取之前设置的pin，用于修改pin
+            this.setState({oldPin})
+        }).catch(err => { })
     }
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.lastRecoverableError != this.props.lastRecoverableError) {
@@ -55,6 +58,7 @@ class Pin extends React.Component {
         }, 500);
     }
     verifyErr = () => {
+        NToast.removeAll()
         const errTimes = this.state.errTimes - 1
         this.refresh()
         this.setState({
@@ -63,18 +67,13 @@ class Pin extends React.Component {
         })
         if(errTimes <= 0) {
             Actions.pop()
-            window.onModal('noMoreTimes', true)
-            global.storage.save({
-                key: 'NevisPinLock',
-                id: 'NevisPinLock',
-                data: true,
-                expires: 5 * 60 * 1000//5分钟
-            })
+            NevisErrs({errorCode: {type: 'USER_LOCKOUT'}})
         }
     }
     checked(code) {
-        const { pinCode, isSet, refresh } = this.state
+        const { pinCode, isSet, refresh, oldPin } = this.state
         const { mode, handler, lastRecoverableError, authenticatorProtectionStatus } = this.props
+        console.log(mode, 'mode, handler', handler)
         if (isSet) {
             //设置pin
             console.log(code, 'pinCode111',pinCode)
@@ -87,12 +86,30 @@ class Pin extends React.Component {
                     Vibration.vibrate(300)
                     this.refresh()
                 } else {
-                    usePinView(code, mode, handler)
+                    if(oldPin == code && mode == 'credentialChange') {
+                        //修改pin，与旧code相同，直接退出，切换成功
+                        Actions.pop()
+                        window.SetRegistration && window.SetRegistration()
+                        return
+                    }
+                    usePinView(code, mode, handler, oldPin)
+                    global.storage.save({
+                        key: 'NevisOldPin',
+                        id: 'NevisOldPin',
+                        data: code,
+                        expires: null
+                    })
                 }
             }
         } else {
             //验证pin
             usePinView(code, mode, handler)
+            global.storage.save({
+                key: 'NevisOldPin',
+                id: 'NevisOldPin',
+                data: code,
+                expires: null
+            })
         }
 
     }

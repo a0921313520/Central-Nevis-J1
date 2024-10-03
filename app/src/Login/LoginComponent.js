@@ -67,16 +67,3 @@ export const NevisLoginIcon = ({ }) => {
 };
 
 
-export const GetAround = ({ }) => {
-    useEffect(() => {
-
-    }, []);
-    const { HomePage } = getConfig()
-
-    return (
-        <TouchableOpacity style={styles.guestViewMode} onPress={() => { HomePage() }}>
-            <Text style={styles.guestText}>{translate('去逛逛')}</Text>
-        </TouchableOpacity>
-    )
-}
-

@@ -10,6 +10,15 @@ const styles = StyleSheet.create({
 	QRcode: {
 
 	},
+	sensorIcon: {
+		backgroundColor: '#2E2E2E',
+		width: 150,
+		height: 150,
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderRadius: 10,
+	},
 	modalActive: {
 		display: 'flex',
 		justifyContent: 'center',
@@ -162,12 +171,15 @@ const styles = StyleSheet.create({
 		marginLeft: Platform.OS == 'android' ? -150 : (isIphone14Upper ? 13 : DeviceInfoIos ? -70 : -80),
 		marginBottom: 25 
 	},
-	ImgStyle: {
-		width: 24, 
-		height: 24, 
+	closeIcon: {
+		padding: 5,
 		position:'absolute', 
 		top: -38, 
 		right: Platform.OS === "android" ? -35 : (isIphone12Upper ? -110 : -45) 
+	},
+	ImgStyle: {
+		width: 24, 
+		height: 24, 
 	},
 	confirmButtonUpper: {
 		color: '#F5F5F5', 

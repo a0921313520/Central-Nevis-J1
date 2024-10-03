@@ -162,12 +162,15 @@ const styles = StyleSheet.create({
 		//(isIphone12Upper ? -130 : -80),
 		marginBottom: 25 
 	},
-	ImgStyle: {
-		width: 24, 
-		height: 24, 
+	closeIcon: {
+		padding: 5,
 		position:'absolute', 
 		top: -38, 
 		right: Platform.OS === "android" ? -35 : (isIphone12Upper ? -110 : -45) 
+	},
+	ImgStyle: {
+		width: 24, 
+		height: 24, 
 	},
 	confirmButtonUpper: {
 		color: '#F5F5F5', 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text } from "react-native";
+import { View, Text, Platform } from "react-native";
 import { decodePayload } from './nevis/userInteraction/OutOfBandOperationHandler';
 import useAuthCloudApiRegistrationViewModel from './nevis/screens/AuthCloudApiRegistrationViewModel'
 import HomeViewModel from './nevis/screens/HomeViewModel'
@@ -7,15 +7,19 @@ import { getConfig } from '$Nevis/config'
 import translate from '$Nevis/translate'
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 import FingerprintScanner from "react-native-fingerprint-scanner";
+import { Actions } from 'react-native-router-flux';
 
-export const allTypeId = {
+const androidMode = {
     'F1D0#0001': 'Pin',
-    'F1D0#1001': 'Pin',//ios
     'F1D0#0002': 'Fingerprint',
-    'F1D0#1002': 'Fingerprint',//ios
     // 'F1D0#0003': 'Face',//android 移除，很多设备不支持
-    'F1D0#1003': 'Face',//ios
 }
+const iosMode = {
+    'F1D0#1001': 'Pin',
+    'F1D0#1002': 'Fingerprint',
+    'F1D0#1003': 'Face',
+}
+export const allTypeId = Platform.OS == 'ios'? iosMode: androidMode
 
 export const NevisListData = {
     Face: {
@@ -33,7 +37,7 @@ export const NevisListData = {
 }
 
 const InitClient = ({ init }) => {
-    const { initClient, localAccountsVerify, deleteLocalAuthenticators } = HomeViewModel();
+    const { initClient, localAccountsVerify, deleteLocalAuthenticators, pinChange } = HomeViewModel();
     const onInitClient = useCallback(async () => { await initClient() }, []);
     const { confirm } = useAuthCloudApiRegistrationViewModel()
     const registration = useCallback(async (appLinkUri, callback) => {
@@ -75,20 +79,56 @@ const InitClient = ({ init }) => {
     }
 
     //本地验证
-    window.NevisVerify = (callback = () => { }) => {
-        localAccountsVerify(callback)
+    window.NevisVerify = (callback = () => { }, mode = '') => {
+        sensorLock(() => {
+            window.NevisModeChange = mode
+            loading()
+            localAccountsVerify(callback)
+        })
     }
     //删除
     window.NevisRemoveNevis = (callback = () => { }) => {
         deleteLocalAuthenticators(callback)
     }
     //注册开启nevis
-    window.NevisRegistration = (appLinkUri = '', callback = () => { }) => {
-        registration(appLinkUri, callback).then()
+    window.NevisRegistration = (appLinkUri = '', callback = () => { }, mode = '') => {
+        sensorLock(() => {
+            window.NevisModeChange = mode
+            loading()
+            registration(appLinkUri, callback).then()
+        })
     }
     //登录验证
-    window.NevisLoginVerify = (appLink = '', callback = () => { }) => {
-        decodePayload(appLink, callback).catch(() => {})
+    window.NevisLoginVerify = (appLink = '', callback = () => { }, mode = '') => {
+        sensorLock(() => {
+            window.NevisModeChange = mode
+            loading()
+            decodePayload(appLink, callback).catch(() => {})
+        })
+    }
+    //设置过pin，切换变成更换pin
+    window.NevisChangePin = (callback = () => { }) => {
+        sensorLock(() => {
+            window.NevisModeChange = 'Pin'
+            pinChange(callback)
+        })
+    }
+
+    const loading = () => {
+        NToast.loading(translate('Loading...'), 200)
+        window.onModal('sensorModal', true)
+    }
+
+    const sensorLock = (callback = () => {}) => {
+        NToast.removeAll()
+        global.storage.load({
+            key: 'NevisLock',
+            id: 'NevisLock'
+        }).then(res => {
+            window.onModal('noMoreTimes', true)
+        }).catch(err => { 
+            callback()
+        })
     }
 
     return <></>;
@@ -106,30 +146,49 @@ export const PhoneSensorAvailable = () => {
     })
 }
 
-//
+//错误处理
 export const NevisErrs = (res, mode) => {
-    const { type, description } = res.errorCode || {}
+    const { type, description } = res?.errorCode || {}
     if(type == 'USER_LOCKOUT') {
         //次数上限，锁定
         window.onModal('noMoreTimes', true)
+        global.storage.save({
+            key: 'NevisLock',
+            id: 'NevisLock',
+            data: true,
+            expires: 5 * 60 * 1000//5分钟
+        })
     } else if(type == 'USER_CANCELED') {
         //用户取消了
-    } else if(type == 'AUTHENTICATOR_ACCESS_DENIED' || type == 'AUTHENTICATOR_ACCESS_DENIED'  || type == 'NO_SUITABLE_AUTHENTICATOR') {
-        //卸载后重新安装，无法使用，删除nevis，再重新创建注册
+    } else if(
+        type == 'AUTHENTICATOR_ACCESS_DENIED' ||
+        type == 'NO_SUITABLE_AUTHENTICATOR' ||
+        type == 'KEY_DISAPPEARED_PERMANENTLY' ||
+        type == 'INVALID_TRANSACTION_CONTENT'
+    ) {
+        //无法使用，删除nevis，再重新创建注册
         window.onModal('uninstall', true, {mode: mode})
         NevisRemove()
+        Actions.pop()
     } else if(type == 'USER_NOT_ENROLLED') {
         //指纹/脸部辨识未开启
         window.onModal(mode == 'Face'? 'faceEnabled': 'fingerprintEnabled', true)
         PhoneSensorAvailable()
-    } else if(type == 'undefined') {
-        //临时错误，再试一次一般就OK了
-        window.onModal('undefinedModal', true)
+    } else if(type == 'USER_CANCELLED' || type == 'UNTRUSTED_FACET_ID') {
+        //用户取消了
+        if(window.ActivePin) {
+            Actions.pop()
+        }
+    } else if(type == 'PROTOCOL_ERROR' || type == 'USER_NOT_RESPONSIVE') {
+        //超时了
+        window.onModal('timeoutModal', true)
+        Actions.pop()
     } else {
         //其他错误处理
-        alert(description + '==>type=' + type)
+        if(description) {
+            alert(description + '==>type=' + type)
+        }
     }
-    window.ChangeNevisSelectAaid = ''
 }
 
 //获取全部能用的无密码登录方式。符合条件
@@ -140,6 +199,7 @@ export const GetInitModeType = (res) => {
         active && allModeType.push({
             mode: active,
             aaid: v.aaid,
+            registration: v.registration?.registeredAccounts
         })
     })
     //排序Face>Fingerprint>Pin
@@ -147,6 +207,7 @@ export const GetInitModeType = (res) => {
     const newAllMode = allModeType.sort((a, b) => {
         return sortOrder.indexOf(a.mode) - sortOrder.indexOf(b.mode);
     });
+    console.log('newAllModenewAllMode',newAllMode)
     window.NevisAllModeType = newAllMode
     GetModeType(res)
 }
@@ -159,15 +220,12 @@ export const SetNevisSuccess = () => {
         data: window.userNameDB,
         expires: null
     });
-    if(window.ChangeNevisSelectAaid) {
-        //如果是更改，重新设置NevisSelectAaid
-        window.NevisSelectAaid = window.ChangeNevisSelectAaid
-        window.ChangeNevisSelectAaid = ''
-    }
+    window.NevisModeType = window.NevisModeChange
+    window.NevisModeChange = ''
     global.storage.save({
-        key: 'NevisSelectAaid',
-        id: 'NevisSelectAaid',
-        data: window.NevisSelectAaid,
+        key: 'NevisModeType',
+        id: 'NevisModeType',
+        data: window.NevisModeType,
         expires: null
     });
 }
@@ -178,21 +236,40 @@ export const GetModeType = (res) => {
     const actives = res.find((v) => { return (v.registration?.registeredAccounts?.length > 0) }) || false
 
     if (actives) {
-        window.NevisUserName = actives?.registration?.registeredAccounts[0]?.username || ''
-        //无密码登录aaid
+        window.NevisRegistrationUserName = actives?.registration?.registeredAccounts[0]?.username || ''
+        //无密码登录
         global.storage.load({
             key: 'NevisSelectAaid',
             id: 'NevisSelectAaid'
-        }).then(res => {
-            window.NevisSelectAaid = res || ''
-            window.NevisModeType = allTypeId[res] || ''
-
+        }).then(val => {
+            window.NevisModeType = allTypeId[val] || ''
             //无密码登录NevisUsername
             global.storage.load({
                 key: 'NevisUsername',
                 id: 'NevisUsername'
-            }).then(res => {
-                window.NevisUsername = res
+            }).then(i => {
+                window.NevisUsername = i
+            }).catch(err => { })
+            global.storage.remove({
+                key: 'NevisSelectAaid',
+                id: 'NevisSelectAaid'
+            })
+        }).catch(err => {
+            //本地有nevis，但是没有缓存，表示卸载后重新安装，需要移除
+        })
+
+        global.storage.load({
+            key: 'NevisModeType',
+            id: 'NevisModeType'
+        }).then(val => {
+            window.NevisModeType = val || ''
+            //无密码登录NevisUsername
+            global.storage.load({
+                key: 'NevisUsername',
+                id: 'NevisUsername'
+            }).then(i => {
+                window.NevisUsername = i
+                Actions.NevisLogin()
             }).catch(err => { })
 
         }).catch(err => {
@@ -205,13 +282,15 @@ export const GetModeType = (res) => {
 export const NevisRemove = (callback = () => {}) => {
     const { put } = getConfig()
     //api删除后台数据
-    put(ApiLink.PUTEnroll + 'authenticatorId=' + window.AuthenticatorId + '&')
+    window.AuthenticatorId.forEach((v) => {
+        put(ApiLink.PUTEnroll + 'authenticatorId=' + v.authenticatorId + '&')
         .then((res) => {
             console.log(res)
         })
         .catch((error) => {
             console.log(error)
         })
+    })
         //删除手机数据
         window.NevisRemoveNevis((res) => {
             if(res.isSuccess) {
@@ -220,24 +299,26 @@ export const NevisRemove = (callback = () => {}) => {
                 callback()
                 window.NevisModeType = ''
                 window.NevisUsername = ''
-                window.NevisSelectAaid = ''
-                window.AuthenticatorId = ''
-                window.NevisUserName = ''
+                window.NevisModeChange = ''
+                window.AuthenticatorId = []
+                window.NevisRegistrationUserName = ''
                 global.storage.remove({
-                    key: 'NevisSelectAaid',
-                    id: 'NevisSelectAaid'
+                    key: 'NevisModeType',
+                    id: 'NevisModeType'
                 })
                 global.storage.remove({
                     key: 'NevisUsername',
                     id: 'NevisUsername'
-                })
-                global.storage.remove({
-                    key: 'NevisSelectAaid',
-                    id: 'NevisSelectAaid'
                 })
             } else {
                 alert(translate('出现错误，请重试'))
             }
 
         })
+}
+//获取aaid
+export const NevisAaid = (mode = '') => {
+    var aaid = Object.entries(allTypeId).find(([key, value]) => value == mode)?.[0] || ''
+
+    return aaid
 }

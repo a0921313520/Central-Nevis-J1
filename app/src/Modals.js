@@ -52,7 +52,7 @@ class Modals extends React.Component {
                                     onlyOkBtn == true && againVerify == true ?
                                     <View>
                                         <Text style={styles.modalTitle}>{translate(title)}</Text>
-                                        <Touch onPress={onClose}>
+                                        <Touch onPress={onClose} style={styles.closeIcon}>
                                             <Image
                                                 onPress={onClose}
                                                 resizeMode="stretch"

@@ -32,9 +32,17 @@ const useAuthCloudApiRegistrationViewModel = () => {
 					//关闭Pin输入框
 					Actions.pop()
 				}
+				NToast.removeAll()
+				window.onModal('sensorModal', false)
 				callback({isSuccess: true})
 			})
 			.onError((err) => {
+				if(window.ActivePin) {
+					//关闭Pin输入框
+					Actions.pop()
+				}
+				NToast.removeAll()
+				window.onModal('sensorModal', false)
 				callback(err)
 				console.log('注册失败err', err)
 			});

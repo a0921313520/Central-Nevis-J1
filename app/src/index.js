@@ -11,15 +11,14 @@ import InitClient, { PhoneSensorAvailable } from './InitClient'
 import { Actions } from "react-native-router-flux";
 
 window.NevisModeType = ''//已设置mode，setting那边使用, Face/Pin/Fingerprint
+window.NevisModeChange = ''//选中的mode, Face/Pin/Fingerprint
 window.NevisAllModeType = []
 window.ActivePin = false//防止重复进入PIN
 window.ApiLink = ApiLink
-window.NevisSelectAaid = ''//已开启的aaid
-window.ChangeNevisSelectAaid = ''//更改时候选中的aaid
 window.NevisUsername = ''//nevis缓存姓名
 window.NToast = ''
-window.AuthenticatorId = ''//已设置的id，
-window.NevisUserName = ''//已设置的nevis参数userName
+window.AuthenticatorId = []//已设置的id，可能出现多个，删除时候要一起删除，不然无法再创建
+window.NevisRegistrationUserName = ''//已设置的nevis参数userName
 window.SensorAvailable = true//指纹/face是否开启
 class Nevis extends React.Component {
     constructor(props) {
@@ -42,7 +41,7 @@ class Nevis extends React.Component {
         }
         this.config = getConfig()
         window.NToast = this.config.NevisToast
-        window.JBOVersion = '1.0.2.7'
+        window.JBOVersion = '1.0.2.9'
     }
 
     componentDidMount() {

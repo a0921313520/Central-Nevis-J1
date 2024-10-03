@@ -75,12 +75,7 @@ const ReadQrCodeScreen = () => {
     const scanChange = (value) => {
         if (value && qrCodeDate == '') {
             setQrCodeDate(value)
-            if (ApiPort.UserLogin) {
-                //已登录需要提示
-                setValidCodeModal(true)
-            } else {
-                loginVerify(value)
-            }
+            setValidCodeModal(true)
 
         }
     }
@@ -101,7 +96,7 @@ const ReadQrCodeScreen = () => {
                 setQrCodeDate('')
                 setQrcodeInvalid(true)
             }
-        })
+        }, window.NevisModeType)
     }
     const imageLibrary = () => {
         launchImageLibrary({

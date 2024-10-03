@@ -9,7 +9,7 @@ import { Actions } from 'react-native-router-flux';
 import Modals from '$Nevis/src/Modals'
 import ImgIcon from '$NevisStyles/imgs/ImgIcon';
 import CheckBox from 'react-native-check-box'
-import { NevisRemove } from './InitClient'
+import { NevisRemove, allTypeId } from './InitClient'
 
 
 const homeModalConfig = {
@@ -29,10 +29,12 @@ class NevisModal extends React.Component {
             checkBox: false,
             otherPhoneSet: false,
             otherNameSet: false,
+            sensorModal: false,
             homeModeType: '',
-            homeModeAaid: '',
+            timeoutModal: false,
             uninstall: false,
             faceEnabled: false,
+            uninstallMode: '',
             fingerprintEnabled: false,
             undefinedModal: false,
         }
@@ -51,13 +53,13 @@ class NevisModal extends React.Component {
         const { isNevisEnabled } = this.props.nevisConfigurations
         const { get } = getConfig()
         if (!ApiPort.UserLogin) { return }
-        window.AuthenticatorId = ''
+        window.AuthenticatorId = []
         get(ApiLink.MemberAuthenticators + 'username=' + window.userNameDB + '&')
             .then((res) => {
-                const otherPhoneSetId = res?.result?.authenticators[0]?.authenticatorId || false
+                const otherPhoneIdList = res?.result?.authenticators || []
                 const isUninstall = this.isUninstall()
-                if (res?.isSuccess && otherPhoneSetId) {
-                    window.AuthenticatorId = otherPhoneSetId
+                if (res?.isSuccess && otherPhoneIdList.length > 0) {
+                    window.AuthenticatorId = otherPhoneIdList
                     if(isUninstall) {
                         NevisRemove()
                     }
@@ -75,8 +77,13 @@ class NevisModal extends React.Component {
 
                         }).catch(err => {
                             if(!window.NevisModeType) {
-                                const { mode, aaid } = window.NevisAllModeType[0]
-                                this.setState({ homeSetModal: true, homeModeType: mode, homeModeAaid: aaid })
+                                const { mode } = window.NevisAllModeType[0]
+                                let modes = mode
+                                if(!window.SensorAvailable) {
+                                    //指纹/face未开启，只用face
+                                    modes = 'Pin'
+                                }
+                                this.setState({ homeSetModal: true, homeModeType: modes })
                             }
                         })
                     }
@@ -89,16 +96,15 @@ class NevisModal extends React.Component {
     //是否卸载过
     isUninstall = () => {
         //手机设置了nevis，并且本地没缓存，应该是卸载重新安装用户，要删除nevis重新设置
-        const uninstall = !window.NevisModeType && window.NevisUserName || false
+        const uninstall = !window.NevisModeType && window.NevisRegistrationUserName || false
         return uninstall
     }
 
     homeSetModal = (confirm = false) => {
-        const homeModeAaid = this.state.homeModeAaid
         const homeModeType = this.state.homeModeType
-        this.setState({ homeSetModal: false, homeModeAaid: '', homeModeType: '' }, () => {
+        this.setState({ homeSetModal: false, homeModeType: '' }, () => {
             if (confirm) {
-                Actions.NevisSetting({ homeModeType, homeModeAaid })
+                Actions.NevisSetting({ homeModeType })
             }
         })
         if (this.state.checkBox) {
@@ -122,18 +128,24 @@ class NevisModal extends React.Component {
             isEnabled,
             uninstall,
             faceEnabled,
+            timeoutModal,
+            sensorModal,
             fingerprintEnabled,
             undefinedModal,
+            uninstallMode,
         } = this.state
 
-        let uninstallMode = ''
 
         const { nevisSetupReminderDays = 7, isNevisEnabled = false } = this.props.nevisConfigurations || {}
 
         window.onModal = (key, status, data = {}, callback = () => { }) => {
+            if(key == 'sensorModal' && Platform.OS == 'ios') {
+                //ios不显示
+                return
+            }
             this.setState({ [key]: status })
             if(key == 'uninstall') {
-                uninstallMode = data.mode || ''
+                this.setState({uninstallMode: data.mode || ''})
             }
         }
 
@@ -191,6 +203,14 @@ class NevisModal extends React.Component {
                     onConfirm={() => { this.setState({ isEnabled: false }) }}
                 />
                 <Modals
+                    modalVisible={timeoutModal}
+                    onlyOkBtn={true}
+                    title={translate('安全设置')}
+                    msg={translate('已超时，请重新设定')}
+                    confirm={translate('我知道了')}
+                    onConfirm={() => { this.setState({ timeoutModal: false }) }}
+                />
+                <Modals
                     modalVisible={undefinedModal}
                     onlyOkBtn={true}
                     title={translate('出现错误')}
@@ -238,6 +258,27 @@ class NevisModal extends React.Component {
                         Actions.NevisSetting({ enableUse: true })
                     }) }}
                 />
+                <Modal
+                    animationType="none"
+                    transparent={true}
+                    visible={sensorModal}
+                >
+                    <View style={styles.models}>
+                        <View style={[styles.modalActive]}>
+                            <View style={styles.sensorIcon}>
+                                <Image
+                                    resizeMode="stretch"
+                                    source={
+                                        window.NevisModeChange == 'Face' ?
+                                            ImgIcon['faceIcon1'] :
+                                                ImgIcon['fingerIcon1']
+                                    }
+                                    style={{ width: 80, height: 80 }}
+                                />
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
                 <Modal
                     animationType="none"
                     transparent={true}

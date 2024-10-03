@@ -166,12 +166,15 @@ const styles = StyleSheet.create({
 		marginLeft: Platform.OS == 'android' ? -73 :  -63,
 		marginBottom: 25 
 	},
+	closeIcon: {
+		padding: 5,
+		position:'absolute', 
+		top: -38, 
+		right: Platform.OS === "android" ? -35 : (isIphone12Upper ? -110 : -45) 
+	},
 	ImgStyle: {
 		width: 24, 
 		height: 24, 
-		position:'absolute', 
-		top: -38, 
-		right: Platform.OS === "android" ? -35 : (isIphone12Upper ? -45 : -45) 
 	},
 	confirmButtonUpper: {
 		color: '#F5F5F5', 
