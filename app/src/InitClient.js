@@ -279,9 +279,6 @@ export const GetModeType = (res) => {
             //本地有nevis，但是没有缓存，表示卸载后重新安装，需要移除
         })
     }
-    if(!ApiPort.UserLogin) {
-        Actions.logins()
-    }
 }
 
 //删除后清楚数据
