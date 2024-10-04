@@ -269,6 +269,7 @@ export const GetModeType = (res) => {
                 id: 'NevisUsername'
             }).then(i => {
                 window.NevisUsername = i
+                Actions.pop()
                 Actions.NevisLogin()
             }).catch(err => { })
 
@@ -276,6 +277,7 @@ export const GetModeType = (res) => {
             //本地有nevis，但是没有缓存，表示卸载后重新安装，需要移除
         })
     }
+    Actions.logins()
 }
 
 //删除后清楚数据
