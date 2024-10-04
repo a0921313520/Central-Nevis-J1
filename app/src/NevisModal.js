@@ -341,7 +341,7 @@ class NevisModal extends React.Component {
                                         <Text style={styles.btnBorderItem}>{translate('稍后再说')}</Text>
                                     </Touch>
                                     <Touch
-                                        style={[styles.btnBg]}
+                                        style={[styles.btnBgs]}
                                         onPress={() => { this.homeSetModal(true) }}
                                     >
                                         <Text style={[styles.btnBgItem]}>{translate('前往设定')}</Text>

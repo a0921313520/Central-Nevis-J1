@@ -82,7 +82,7 @@ const InitClient = ({ init }) => {
     window.NevisVerify = (callback = () => { }, mode = '') => {
         sensorLock(() => {
             window.NevisModeChange = mode
-            loading()
+            loading(mode)
             localAccountsVerify(callback)
         })
     }
@@ -94,7 +94,7 @@ const InitClient = ({ init }) => {
     window.NevisRegistration = (appLinkUri = '', callback = () => { }, mode = '') => {
         sensorLock(() => {
             window.NevisModeChange = mode
-            loading()
+            loading(mode)
             registration(appLinkUri, callback).then()
         })
     }
@@ -102,7 +102,7 @@ const InitClient = ({ init }) => {
     window.NevisLoginVerify = (appLink = '', callback = () => { }, mode = '') => {
         sensorLock(() => {
             window.NevisModeChange = mode
-            loading()
+            loading(mode)
             decodePayload(appLink, callback).catch(() => {})
         })
     }
@@ -114,9 +114,9 @@ const InitClient = ({ init }) => {
         })
     }
 
-    const loading = () => {
+    const loading = (mode) => {
         NToast.loading(translate('Loading...'), 200)
-        window.onModal('sensorModal', true)
+        mode != 'Pin' && window.onModal('sensorModal', true)
     }
 
     const sensorLock = (callback = () => {}) => {
@@ -269,15 +269,19 @@ export const GetModeType = (res) => {
                 id: 'NevisUsername'
             }).then(i => {
                 window.NevisUsername = i
-                Actions.pop()
-                Actions.NevisLogin()
+                if(!ApiPort.UserLogin) {
+                    Actions.pop()
+                    Actions.NevisLogin()
+                }
             }).catch(err => { })
 
         }).catch(err => {
             //本地有nevis，但是没有缓存，表示卸载后重新安装，需要移除
         })
     }
-    Actions.logins()
+    if(!ApiPort.UserLogin) {
+        Actions.logins()
+    }
 }
 
 //删除后清楚数据

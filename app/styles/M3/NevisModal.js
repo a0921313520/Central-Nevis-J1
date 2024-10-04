@@ -10,6 +10,15 @@ const styles = StyleSheet.create({
 	QRcode: {
 
 	},
+	sensorIcon: {
+		backgroundColor: '#2E2E2E',
+		width: 150,
+		height: 150,
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderRadius: 10,
+	},
 	modalActive: {
 		display: 'flex',
 		justifyContent: 'center',
@@ -21,9 +30,7 @@ const styles = StyleSheet.create({
 	modalCenter: {
 		width: width * 0.9,
 		borderRadius: 10,
-		padding: DeviceInfoIos ? 30 : 40,
-		paddingTop: 30,
-		paddingBottom: 30,
+		padding: 30,
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
@@ -36,6 +43,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		color: "#F5F5F5",
 		lineHeight: 20,
+		paddingTop: 10,
 		textAlign: 'center'
 	},
 	models: {
@@ -48,8 +56,8 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		lineHeight: 23,
 		textAlign: 'center',
-		paddingTop: 25,
-		paddingBottom: 23,
+		paddingTop: 20,
+		paddingBottom: 20,
 		color: '#F5F5F5',
 	},
 	modalBtnGg: {
@@ -70,12 +78,17 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		flexDirection: 'row',
-		width:Platform.OS == 'android'? '97%' : '96%'
+		width: '92%'
 	},
 	btnBorder: {
-		width: '45%',
+		width: '46%',
 		borderWidth: 1,
 		borderColor: '#00E62E',//綠匡
+		borderRadius: 4,
+	},
+	btnBgs: {
+		width: '46%',
+		backgroundColor: '#00B324',//綠底
 		borderRadius: 4,
 	},
 	btnBorderItem: {
@@ -85,9 +98,10 @@ const styles = StyleSheet.create({
 		lineHeight: 40,
 	},
 	btnBg: {
-		width: '45%',
+		width: '55%',
 		backgroundColor: '#00B324',//綠底
 		borderRadius: 4,
+		marginBottom: 10,
 	},
 	btnBgItem: {
 		color: '#fff',
@@ -139,13 +153,13 @@ const styles = StyleSheet.create({
         borderColor: '#00B324',
         borderWidth: 1,
         borderRadius: 5,
+		display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row', // 确保图标和文字在同一行
-        paddingVertical: 5, // 调整按钮高度
-        //paddingHorizontal: 73, // 调整左右内边距
-		width: 247,
-        marginBottom: 10, // 调整按钮之间的间距
+        marginBottom: 20, // 调整按钮之间的间距
+		width: width * 0.9 - 70,
+		height: 40,
     },
     cancelButton: {
         borderColor: '#00E62E',
@@ -153,20 +167,18 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 10, // 调整按钮高度
-        width: 247,
-        //marginBottom: 10,  // 调整按钮之间的间距
+        marginBottom: 10, // 调整按钮之间的间距
+		width: width * 0.9 - 70,
+		height: 40,
     },
 	CheckBox: {
-		marginLeft: Platform.OS == 'android' ? -55 : (isIphone14Upper ? 13 : DeviceInfoIos ? -70 : -80),
-		//(isIphone12Upper ? -130 : -80),
+		width: '92%',
 		marginBottom: 25 
 	},
 	closeIcon: {
-		padding: 5,
 		position:'absolute', 
-		top: -38, 
-		right: Platform.OS === "android" ? -35 : (isIphone12Upper ? -110 : -45) 
+		top: 15, 
+		right: 15
 	},
 	ImgStyle: {
 		width: 24, 

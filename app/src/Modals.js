@@ -48,20 +48,17 @@ class Modals extends React.Component {
                     <View style={styles.models}>
                         <View style={[styles.modalActive]}>
                             <View style={[styles.modalCenter]}>
-                                { 
-                                    onlyOkBtn == true && againVerify == true ?
-                                    <View>
-                                        <Text style={styles.modalTitle}>{translate(title)}</Text>
-                                        <Touch onPress={onClose} style={styles.closeIcon}>
-                                            <Image
-                                                onPress={onClose}
-                                                resizeMode="stretch"
-                                                source={ImgIcon['pwlClose']}
-                                                style={styles.ImgStyle}
-                                            />
-                                        </Touch>
-                                    </View>:
-                                    <Text style={styles.modalTitle}>{translate(title)}</Text>
+                                <Text style={styles.modalTitle}>{translate(title)}</Text>
+                                {
+                                    againVerify == true &&
+                                    <Touch onPress={onClose} style={styles.closeIcon}>
+                                        <Image
+                                            onPress={onClose}
+                                            resizeMode="stretch"
+                                            source={ImgIcon['pwlClose']}
+                                            style={styles.ImgStyle}
+                                        />
+                                    </Touch>
                                 }
                                 <Text style={[styles.modalMsg]}>{translate(msg)}</Text>
 
