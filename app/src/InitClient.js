@@ -270,8 +270,10 @@ export const GetModeType = (res) => {
             }).then(i => {
                 window.NevisUsername = i
                 if(!ApiPort.UserLogin) {
-                    Actions.pop()
-                    Actions.NevisLogin()
+                    setTimeout(() => {
+                        //延迟确保进入login
+                        Actions.NevisLogin()
+                    }, 1000);
                 }
             }).catch(err => { })
 

@@ -68,7 +68,7 @@ class LoginPage extends React.Component {
         }
     }
     postVerifyLoginSession = () => {
-        const { post } = getConfig()
+        const { post, HomePage } = getConfig()
         const { userName } = this.state
         NToast.loading(translate('Loading...'), 200)
         post(ApiLink.POSTVerifyLoginSession + 'statusToken=' + this.state.statusToken + '&')
@@ -83,6 +83,9 @@ class LoginPage extends React.Component {
                     ApiPort.UserLogin = true
                     window.userNameDB = userName
                     window.LoginRefresh()
+                    setTimeout(() => {
+                        HomePage()
+                    }, 200);
                 } else {
                     const errMessage = res?.errors[0]?.description || res?.errors[0]?.message
                     NToast.fail(errMessage)
