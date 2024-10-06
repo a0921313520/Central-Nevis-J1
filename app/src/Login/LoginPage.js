@@ -83,9 +83,7 @@ class LoginPage extends React.Component {
                     ApiPort.UserLogin = true
                     window.userNameDB = userName
                     window.LoginRefresh()
-                    setTimeout(() => {
-                        HomePage()
-                    }, 200);
+                    HomePage()
                 } else {
                     const errMessage = res?.errors[0]?.description || res?.errors[0]?.message
                     NToast.fail(errMessage)

@@ -14,14 +14,15 @@ class Pin extends React.Component {
         super(props)
         this.state = {
             refresh: false,
-            pinCode: '',
+            pinCode: this.props.pinCode || '',
             errCode: 0,
-            pinMessage: translate("请输入 PIN 码"),
+            pinMessage: this.props.pinCode? translate("请确认 PIN 码"): translate("请输入 PIN 码"),
             errTimes: 5,
             oldPin: '',
-            isSet: window.PinIsSet || false,
+            isSet: this.props.mode != 'verification' || false,
             onSuccess: false,
         }
+        this.isAddSubmit = false//第二次输入是否提交,未提交返回第一次输入
     }
 
     componentDidMount() {
@@ -36,7 +37,8 @@ class Pin extends React.Component {
         }).catch(err => { })
     }
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.lastRecoverableError != this.props.lastRecoverableError) {
+        const { mode, lastRecoverableError } = this.props
+        if (mode== 'verification' && prevProps.lastRecoverableError != lastRecoverableError) {
             //Pin错误
             this.verifyErr()
             Vibration.vibrate(300)
@@ -45,17 +47,21 @@ class Pin extends React.Component {
 
     componentWillUnmount() {
         const { mode, handler } = this.props
-        setTimeout(() => {
-            usePinCancel(mode, handler)
-        }, 1000);
-        window.PinIsSet = false
-        window.ActivePin = false
+        if(mode == 'verification' || this.state.pinCode === '') {
+            setTimeout(() => {
+                usePinCancel(mode, handler)
+            }, 1000);
+            window.ActivePin = false
+        }
+        if(this.isAddSubmit) {
+            Actions.pop()
+        }
     }
     refresh = () => {
         const { refresh } = this.state
         setTimeout(() => {
             this.setState({ refresh: !refresh })
-        }, 500);
+        }, 200);
     }
     verifyErr = () => {
         NToast.removeAll()
@@ -73,19 +79,22 @@ class Pin extends React.Component {
     checked(code) {
         const { pinCode, isSet, refresh, oldPin } = this.state
         const { mode, handler, lastRecoverableError, authenticatorProtectionStatus } = this.props
-        console.log(mode, 'mode, handler', handler)
         if (isSet) {
             //设置pin
-            console.log(code, 'pinCode111',pinCode)
             if (pinCode == '') {
-                this.setState({ pinCode: code, pinMessage: translate('请确认 PIN 码') });
                 this.refresh()
+                Actions.PinCode({
+                    mode: mode,
+                    handler: handler,
+                    pinCode: code,
+                })
             } else {
                 if (code != pinCode) {
                     this.setState({ pinMessage: translate('两次Pin不同') })
                     Vibration.vibrate(300)
                     this.refresh()
                 } else {
+                    this.isAddSubmit = true
                     if(oldPin == code && mode == 'credentialChange') {
                         //修改pin，与旧code相同，直接退出，切换成功
                         Actions.pop()

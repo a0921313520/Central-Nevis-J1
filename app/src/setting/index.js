@@ -13,7 +13,6 @@ import SwitchIcon from './SwitchIcon';
 import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 import Modals from '$Nevis/src/Modals'
 
-window.PinIsSet = false//pin设置和验证不同提示语,设置需要输入两次pin
 const closeModalText = {
     Face: {
         title: '关闭人脸识别',
@@ -54,7 +53,6 @@ class Setting extends React.Component {
         if(homeModeType && homeModeAaid ) {
             this.setState({selectMode: homeModeType}, () => {
                 NevisOtp({actionType: 'Enrollment'})
-                homeModeType == 'Pin' && (window.PinIsSet = true)//Pin设置需要两次输入
             })
         }
     }
@@ -118,12 +116,10 @@ class Setting extends React.Component {
         if (activeOpen == mode) {
             // 已开启，点击后提示关闭
             this.setState({ removeModal: mode })
-            mode == 'Pin' && (window.PinIsSet = false)//Pin验证只需要一次输入
         } else if (activeOpen) {
             // 已开启，点击更换
             if(this.isSensorOff(mode)) { return }
             this.setState({changModal: true})
-            mode == 'Pin' && (window.PinIsSet = true)//Pin设置需要两次输入
         } else {
             // 未开启，点击打开
             if(this.isSensorOff(mode)) { return }
@@ -132,7 +128,6 @@ class Setting extends React.Component {
             // setTimeout(() => {
             //     window.NevisSetMode()
             // }, 1000);
-            mode == 'Pin' && (window.PinIsSet = true)//Pin设置需要两次输入
         }
     }
     //手机中的指纹/face未开启

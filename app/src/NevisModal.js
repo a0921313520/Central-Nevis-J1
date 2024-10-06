@@ -30,6 +30,7 @@ class NevisModal extends React.Component {
             otherPhoneSet: false,
             otherNameSet: false,
             sensorModal: false,
+            sensorModalMsg: '',
             homeModeType: '',
             timeoutModal: false,
             uninstall: false,
@@ -80,7 +81,7 @@ class NevisModal extends React.Component {
                                 const { mode } = window.NevisAllModeType[0]
                                 let modes = mode
                                 if(!window.SensorAvailable) {
-                                    //指纹/face未开启，只用face
+                                    //指纹/face未开启，只用Pin
                                     modes = 'Pin'
                                 }
                                 this.setState({ homeSetModal: true, homeModeType: modes })
@@ -130,6 +131,7 @@ class NevisModal extends React.Component {
             faceEnabled,
             timeoutModal,
             sensorModal,
+            sensorModalMsg,
             fingerprintEnabled,
             undefinedModal,
             uninstallMode,
@@ -275,6 +277,7 @@ class NevisModal extends React.Component {
                                     }
                                     style={{ width: 80, height: 80 }}
                                 />
+                                <Text style={{color: '#F5F5F5', paddingTop: 5}}>{sensorModalMsg}</Text>
                             </View>
                         </View>
                     </View>

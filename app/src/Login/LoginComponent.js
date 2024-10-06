@@ -20,7 +20,7 @@ export const ScanQRCode = () => {
         } else {
             NevisErrs(res, window.NevisModeType)
         }
-    })
+    }, window.NevisModeType)
 }
 
 export const ScanIcon = (props) => {

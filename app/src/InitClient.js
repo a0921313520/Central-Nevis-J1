@@ -80,9 +80,9 @@ const InitClient = ({ init }) => {
 
     //本地验证
     window.NevisVerify = (callback = () => { }, mode = '') => {
+        loading(mode)
         sensorLock(() => {
             window.NevisModeChange = mode
-            loading(mode)
             localAccountsVerify(callback)
         })
     }
@@ -92,17 +92,17 @@ const InitClient = ({ init }) => {
     }
     //注册开启nevis
     window.NevisRegistration = (appLinkUri = '', callback = () => { }, mode = '') => {
+        loading(mode)
         sensorLock(() => {
             window.NevisModeChange = mode
-            loading(mode)
             registration(appLinkUri, callback).then()
         })
     }
     //登录验证
     window.NevisLoginVerify = (appLink = '', callback = () => { }, mode = '') => {
+        loading(mode)
         sensorLock(() => {
             window.NevisModeChange = mode
-            loading(mode)
             decodePayload(appLink, callback).catch(() => {})
         })
     }
@@ -120,11 +120,12 @@ const InitClient = ({ init }) => {
     }
 
     const sensorLock = (callback = () => {}) => {
-        NToast.removeAll()
         global.storage.load({
             key: 'NevisLock',
             id: 'NevisLock'
         }).then(res => {
+            NToast.removeAll()
+            window.onModal('sensorModal', false)
             window.onModal('noMoreTimes', true)
         }).catch(err => { 
             callback()
@@ -148,6 +149,7 @@ export const PhoneSensorAvailable = () => {
 
 //错误处理
 export const NevisErrs = (res, mode) => {
+    window.onModal('sensorModal', false)
     const { type, description } = res?.errorCode || {}
     if(type == 'USER_LOCKOUT') {
         //次数上限，锁定
