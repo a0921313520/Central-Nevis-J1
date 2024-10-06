@@ -27,11 +27,6 @@ export const ScanIcon = (props) => {
     useEffect(() => {
 
     }, []);
-    const { isIphone14Upper = false } = props;
-    if (typeof isIphone14Upper !== 'boolean' || typeof isIphone12Upper !== 'boolean' ) {
-        console.warn('isIphone14Upper should be a boolean value');
-        return null;
-    } 
     return (
         window.NevisModeType ?
             <Touch onPress={() => { ScanQRCode() }}>
@@ -41,7 +36,7 @@ export const ScanIcon = (props) => {
                     style={[styles.scanIcon]}
                 />
             </Touch>
-            :<View />
+            :<View style={{width: 40, height: 40}} />
     )
 };
 
@@ -62,7 +57,7 @@ export const NevisLoginIcon = ({ }) => {
                 <Text style={styles.userName}>{window.NevisUsername}</Text>
             </Touch>
             :
-            <></>
+            <View style={{height: 80, width: 20,}} />
     )
 };
 

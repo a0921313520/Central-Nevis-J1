@@ -272,6 +272,7 @@ export const GetModeType = (res) => {
             }).then(i => {
                 window.NevisUsername = i
                 if(!ApiPort.UserLogin) {
+                    window.LoginRefresh()
                     setTimeout(() => {
                         //延迟确保进入login
                         Actions.NevisLogin()
