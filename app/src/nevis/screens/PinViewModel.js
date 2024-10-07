@@ -4,7 +4,7 @@ import translate from '$Nevis/translate'
 
 //提交Pin
 export const usePinView = async (pin = '', mode, handler, oldPin = '') => {
-	NToast.loading(translate('Loading...'), 3)
+	NToast.loading(translate('加载中...'), 3)
 	console.log('提交Pin', pin);
 	switch (mode) {
 		case PinMode.enrollment:

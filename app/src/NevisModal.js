@@ -256,7 +256,6 @@ class NevisModal extends React.Component {
                     onCancel={() => { this.setState({ otherNameSet: false }) }}
                     confirm={'确认'}
                     onConfirm={() => { this.setState({ otherNameSet: false }, () => {
-                        NevisRemove()
                         Actions.NevisSetting({ enableUse: true })
                     }) }}
                 />

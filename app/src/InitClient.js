@@ -115,7 +115,7 @@ const InitClient = ({ init }) => {
     }
 
     const loading = (mode) => {
-        NToast.loading(translate('Loading...'), 200)
+        NToast.loading(translate('加载中...'), 200)
         mode != 'Pin' && window.onModal('sensorModal', true)
     }
 

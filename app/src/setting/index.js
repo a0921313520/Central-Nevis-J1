@@ -47,10 +47,10 @@ class Setting extends React.Component {
     }
 
     componentDidMount() {
-        const { homeModeType, homeModeAaid } = this.props
+        const { homeModeType } = this.props
         const { NevisOtp } = getConfig()
         //home弹窗跳过来直接去设置
-        if(homeModeType && homeModeAaid ) {
+        if(homeModeType ) {
             this.setState({selectMode: homeModeType}, () => {
                 NevisOtp({actionType: 'Enrollment'})
             })
@@ -75,7 +75,7 @@ class Setting extends React.Component {
             return
         }
         const { get } = getConfig()
-        NToast.loading(translate('Loading...'), 200)
+        NToast.loading(translate('加载中...'), 200)
         get(ApiLink.GETEnroll)
             .then((res) => {
                 NToast.removeAll()
@@ -231,7 +231,9 @@ class Setting extends React.Component {
                 return
             }
             //进入设置，添加或者更改
+            const title = selectMode == 'Face'? translate('人脸识别'): selectMode == 'Pin'? translate('PIN 码识别'): translate('指纹识别')
             Actions.NevisSettingModal({
+                title: title,
                 selectMode: selectMode,
                 getEnroll: this.getEnroll,
                 onSuccessBack: this.onSuccessBack,

@@ -117,7 +117,7 @@ const ReadQrCodeScreen = () => {
             }
             let assets = res.assets || []
             if (assets.length > 0) {
-                NToast.loading(translate('Loading...'), 20)
+                NToast.loading(translate('加载中...'), 20)
                 let fileBytes = assets[0].base64 || ''
                 setBase64Image(fileBytes)
             }

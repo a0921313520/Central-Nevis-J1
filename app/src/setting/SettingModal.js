@@ -25,10 +25,13 @@ class SettingModal extends React.Component {
 
     componentDidMount() {
         const { selectMode } = this.props
-        const title = selectMode == 'Face'? translate('人脸识别'): selectMode == 'Pin'? translate('PIN 码识别'): translate('指纹识别')
-        this.props.navigation?.setParams && this.props.navigation.setParams({
-            title: title
-        })
+        if(this.state.language == 'VN') {
+            //vn改title方式不同
+            const title = selectMode == 'Face'? translate('人脸识别'): selectMode == 'Pin'? translate('PIN 码识别'): translate('指纹识别')
+            this.props.navigation?.setParams && this.props.navigation.setParams({
+                title: title
+            })
+        }
     }
 
     componentWillUnmount() {

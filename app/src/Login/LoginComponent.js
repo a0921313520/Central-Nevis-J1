@@ -27,8 +27,15 @@ export const ScanIcon = (props) => {
     useEffect(() => {
 
     }, []);
+    let isShow = false
+    if(ApiPort.UserLogin) {
+        //登录，个人中心,其他账户登录不显示
+        isShow = window.NevisUsername && window.NevisUsername == window.userNameDB
+    } else {
+        isShow = window.NevisModeType
+    }
     return (
-        window.NevisModeType ?
+        isShow ?
             <Touch onPress={() => { ScanQRCode() }}>
                 <Image
                     resizeMode="stretch"

@@ -38,7 +38,7 @@ class LoginPage extends React.Component {
     //获取appLink，去验证，通过后call VerifyLoginSession登录
     getInitLoginSession = () => {
         const { get } = getConfig()
-        NToast.loading(translate('Loading...'), 200)
+        NToast.loading(translate('加载中...'), 200)
         get(ApiLink.GETInitLoginSession)
             .then((res) => {
                 const appLink = res?.result?.appLink
@@ -70,7 +70,7 @@ class LoginPage extends React.Component {
     postVerifyLoginSession = () => {
         const { post, HomePage } = getConfig()
         const { userName } = this.state
-        NToast.loading(translate('Loading...'), 200)
+        NToast.loading(translate('加载中...'), 200)
         post(ApiLink.POSTVerifyLoginSession + 'statusToken=' + this.state.statusToken + '&')
             .then((res) => {
                 NToast.removeAll()
