@@ -138,11 +138,7 @@ class LoginPage extends React.Component {
                     <View style={[
                         styles.logo,
                         {
-                            paddingTop: 45,
-                            top:
-                                Platform.OS === "android"
-                                    ? -50
-                                    : 20
+                            paddingTop: 15,
                         }
                     ]}
                     >
@@ -153,7 +149,6 @@ class LoginPage extends React.Component {
                         />
                     </View>
 
-                    <View style={{ flex: 0.2 }}></View>
 
                     <View style={styles.contentStyle}>
                         <Text style={styles.contentHeadText}>{translate("欢迎回来")}</Text>

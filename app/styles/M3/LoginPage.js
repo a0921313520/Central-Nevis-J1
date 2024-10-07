@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
         height: width * 0.6 * 0.48
     },
     guestViewMode: {
-        paddingTop: height * 0.1,
+        paddingTop: height * 0.13,
         alignItems: 'center',
     },
     guestText: {
