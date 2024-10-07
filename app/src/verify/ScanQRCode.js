@@ -47,6 +47,7 @@ const ReadQrCodeScreen = () => {
                     break;
                 case RESULTS.BLOCKED:
                     setErrorMessage(translate('摄像头被拒绝访问'));
+                    Alert.alert(translate('温馨提示'),translate('请允许使用相机和相册'))
                     Actions.pop()
                     break;
             }
@@ -57,9 +58,11 @@ const ReadQrCodeScreen = () => {
                 setHasCameraPermission(true);
             } else if (result === RESULTS.BLOCKED) {
                 setErrorMessage(translate('摄像头被拒绝访问'));
+                Alert.alert(translate('温馨提示'),translate('请允许使用相机和相册'))
                 Actions.pop()
             } else {
                 setErrorMessage(translate('拒绝使用摄像头'));
+                Alert.alert(translate('温馨提示'),translate('请允许使用相机和相册'))
                 Actions.pop()
             }
         };
