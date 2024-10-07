@@ -186,7 +186,7 @@ const ReadQrCodeScreen = () => {
                             setBase64Image('')
                             if(qrCodeData.includes('error_found')) {
                                 //图片不是二维码
-                                alert(translate('没有找到二维码'))
+                                Alert.alert(translate('温馨提示'),translate('没有找到二维码'))
                             } else if(qrCodeData.includes('error_qr')) {
                                 //无法读取二维码
                                 setQrcodeInvalid(true)

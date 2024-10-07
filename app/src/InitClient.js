@@ -318,6 +318,10 @@ export const NevisRemove = (callback = () => {}) => {
                     key: 'NevisUsername',
                     id: 'NevisUsername'
                 })
+                global.storage.remove({
+                    key: 'NevisLock',
+                    id: 'NevisLock'
+                })
             } else {
                 alert(translate('出现错误，请重试'))
             }
