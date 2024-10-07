@@ -78,16 +78,16 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		flexDirection: 'row',
-		width: '92%'
+		width: '94%'
 	},
 	btnBorder: {
-		width: '46%',
+		width: '47%',
 		borderWidth: 1,
 		borderColor: '#00E62E',//綠匡
 		borderRadius: 4,
 	},
 	btnBgs: {
-		width: '46%',
+		width: '47%',
 		backgroundColor: '#00B324',//綠底
 		borderRadius: 4,
 	},
