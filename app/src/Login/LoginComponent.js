@@ -64,7 +64,7 @@ export const NevisLoginIcon = ({ }) => {
                 <Text style={styles.userName}>{window.NevisUsername}</Text>
             </Touch>
             :
-            <View style={{height: 70, width: 20,}} />
+            <View style={{height: 65, width: 20,}} />
     )
 };
 

@@ -61,12 +61,14 @@ const styles = StyleSheet.create({
         height: width * 0.6 * 0.48
     },
     guestViewMode: {
-        paddingTop: height * 0.13,
-        alignItems: 'center',
+        position: 'absolute',
+        width: '100%',
+        bottom: 40,
     },
     guestText: {
         color: '#00FF00', // 綠色文字
         fontSize: 16,
+        textAlign: 'center',
     },
     contentHeadText: {
         color: '#CCCCCC', 

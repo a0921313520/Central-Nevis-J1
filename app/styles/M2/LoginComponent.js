@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 30
+        marginTop: 20
     },
     userName: {
         color: '#F5F5F5',
