@@ -99,6 +99,8 @@ const ReadQrCodeScreen = () => {
                 }
             } else {
                 //验证失败
+                NToast.removeAll()
+				window.onModal('sensorModal', false)
                 setQrCodeDate('')
                 setQrcodeInvalid(true)
             }
@@ -115,6 +117,7 @@ const ReadQrCodeScreen = () => {
             }
             let assets = res.assets || []
             if (assets.length > 0) {
+                NToast.loading(translate('Loading...'), 20)
                 let fileBytes = assets[0].base64 || ''
                 setBase64Image(fileBytes)
             }
@@ -187,6 +190,7 @@ const ReadQrCodeScreen = () => {
                             event.persist && event.persist();
                             const qrCodeData= event?.nativeEvent?.data || ''
                             setBase64Image('')
+                            NToast.removeAll()
                             if(qrCodeData.includes('error_found')) {
                                 //图片不是二维码
                                 Alert.alert(translate('温馨提示'),translate('没有找到二维码'))
