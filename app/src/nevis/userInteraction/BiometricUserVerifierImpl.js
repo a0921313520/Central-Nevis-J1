@@ -2,6 +2,7 @@ import {
 	BiometricPromptOptions,
 	BiometricUserVerifier,
 } from '@nevis-security/nevis-mobile-authentication-sdk-react';
+import translate from '$Nevis/translate'
 
 
 export class BiometricUserVerifierImpl extends BiometricUserVerifier {
@@ -12,10 +13,11 @@ export class BiometricUserVerifierImpl extends BiometricUserVerifier {
 		console.log('Please start biometric user verification.');
 		await handler
 			.listenForOsCredentials(
+				
 				BiometricPromptOptions.create(
-					('biometric.popup.title'),
-					('biometric.popup.cancelButtonTitle'),
-					('biometric.popup.description')
+					translate('需要验证'),
+					translate('取消'),
+					''
 				)
 			)
 			.catch((err) => { console.log('BiometricUserVerifierImplerr', err) });

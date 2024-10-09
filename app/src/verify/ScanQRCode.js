@@ -47,7 +47,7 @@ const ReadQrCodeScreen = () => {
                     break;
                 case RESULTS.BLOCKED:
                     setErrorMessage(translate('摄像头被拒绝访问'));
-                    Alert.alert(translate('温馨提示'),translate('请允许使用相机和相册'))
+                    Alert.alert(translate('错误'),translate('请允许使用相机和相册'))
                     Actions.pop()
                     break;
             }
@@ -58,11 +58,11 @@ const ReadQrCodeScreen = () => {
                 setHasCameraPermission(true);
             } else if (result === RESULTS.BLOCKED) {
                 setErrorMessage(translate('摄像头被拒绝访问'));
-                Alert.alert(translate('温馨提示'),translate('请允许使用相机和相册'))
+                Alert.alert(translate('错误'),translate('请允许使用相机和相册'))
                 Actions.pop()
             } else {
                 setErrorMessage(translate('拒绝使用摄像头'));
-                Alert.alert(translate('温馨提示'),translate('请允许使用相机和相册'))
+                Alert.alert(translate('错误'),translate('请允许使用相机和相册'))
                 Actions.pop()
             }
         };
@@ -193,7 +193,7 @@ const ReadQrCodeScreen = () => {
                             NToast.removeAll()
                             if(qrCodeData.includes('error_found')) {
                                 //图片不是二维码
-                                Alert.alert(translate('温馨提示'),translate('没有找到二维码'))
+                                Alert.alert(translate('错误'),translate('没有找到二维码'))
                             } else if(qrCodeData.includes('error_qr')) {
                                 //无法读取二维码
                                 setQrcodeInvalid(true)

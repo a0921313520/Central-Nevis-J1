@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, Platform } from "react-native";
+import { View, Text, Platform, Clipboard } from "react-native";
 import { decodePayload } from './nevis/userInteraction/OutOfBandOperationHandler';
 import useAuthCloudApiRegistrationViewModel from './nevis/screens/AuthCloudApiRegistrationViewModel'
 import HomeViewModel from './nevis/screens/HomeViewModel'
@@ -11,8 +11,8 @@ import { Actions } from 'react-native-router-flux';
 
 const androidMode = {
     'F1D0#0001': 'Pin',
-    'F1D0#0002': 'Fingerprint',
-    // 'F1D0#0003': 'Face',//android 移除，很多设备不支持
+    // 'F1D0#0002': 'Fingerprint',
+    'F1D0#0003': 'Fingerprint',
 }
 const iosMode = {
     'F1D0#1001': 'Pin',
@@ -151,6 +151,7 @@ export const PhoneSensorAvailable = () => {
 export const NevisErrs = (res, mode) => {
     window.onModal('sensorModal', false)
     const { type, description } = res?.errorCode || {}
+    alert('test 请忽视' + type)
     if(type == 'USER_LOCKOUT') {
         //次数上限，锁定
         window.onModal('noMoreTimes', true)
@@ -158,12 +159,11 @@ export const NevisErrs = (res, mode) => {
             key: 'NevisLock',
             id: 'NevisLock',
             data: true,
-            expires: 5 * 60 * 1000//5分钟
+            expires: 1 * 60 * 1000//5分钟
         })
     } else if(type == 'USER_CANCELED') {
         //用户取消了
     } else if(
-        type == 'AUTHENTICATOR_ACCESS_DENIED' ||
         type == 'NO_SUITABLE_AUTHENTICATOR' ||
         type == 'KEY_DISAPPEARED_PERMANENTLY' ||
         type == 'INVALID_TRANSACTION_CONTENT'
@@ -185,6 +185,11 @@ export const NevisErrs = (res, mode) => {
         //超时了
         window.onModal('timeoutModal', true)
         Actions.pop()
+    } else if(type == 'AUTHENTICATOR_ACCESS_DENIED') {
+        
+    } else if(type == 'UNKNOWN') {
+        //未知错误，请重试
+        // alert('未知错误，请重试')
     } else {
         //其他错误处理
         if(description) {
@@ -272,9 +277,9 @@ export const GetModeType = (res) => {
             }).then(i => {
                 window.NevisUsername = i
                 if(!ApiPort.UserLogin) {
-                    window.LoginRefresh()
                     setTimeout(() => {
                         //延迟确保进入login
+                        window.LoginRefresh()
                         Actions.NevisLogin()
                     }, 1000);
                 }
@@ -322,6 +327,7 @@ export const NevisRemove = (callback = () => {}) => {
                     key: 'NevisLock',
                     id: 'NevisLock'
                 })
+                window.LoginRefresh()
             } else {
                 alert(translate('出现错误，请重试'))
             }
