@@ -44,6 +44,7 @@ class LoginPage extends React.Component {
                 const appLink = res?.result?.appLink
                 const dispatchToken = appLink && appLink.split('dispatchTokenResponse=')[1] || ''
                 if (res?.isSuccess && dispatchToken) {
+                    window.PinCodeTitle = translate('PIN 码')
                     window.NevisLoginVerify(dispatchToken, this.loginVerify, window.NevisModeType)
                     this.setState({
                         statusToken: res?.result?.statusToken,
@@ -110,7 +111,7 @@ class LoginPage extends React.Component {
                     source={ImgIcon['newBG']}
                     style={{ width: width, height: height, flex: 1 }}
                 >
-                    <View style={[styles.headerTop]}>
+                    <View style={[styles.headerTop, {paddingTop: DeviceInfoIos? 55: 28}]}>
                         <TouchableOpacity
                             onPress={() => { ScanQRCode() }}
                             style={{ width: 30 }}

@@ -29,7 +29,6 @@ class NevisModal extends React.Component {
             checkBox: false,
             otherPhoneSet: false,
             otherNameSet: false,
-            sensorModal: false,
             sensorModalMsg: '',
             homeModeType: '',
             timeoutModal: false,
@@ -130,7 +129,6 @@ class NevisModal extends React.Component {
             uninstall,
             faceEnabled,
             timeoutModal,
-            sensorModal,
             sensorModalMsg,
             fingerprintEnabled,
             undefinedModal,
@@ -141,10 +139,6 @@ class NevisModal extends React.Component {
         const { nevisSetupReminderDays = 7, isNevisEnabled = false } = this.props.nevisConfigurations || {}
 
         window.onModal = (key, status, data = {}, callback = () => { }) => {
-            if(key == 'sensorModal' && Platform.OS == 'ios') {
-                //ios不显示
-                return
-            }
             this.setState({ [key]: status })
             if(key == 'uninstall') {
                 this.setState({uninstallMode: data.mode || ''})
@@ -259,28 +253,6 @@ class NevisModal extends React.Component {
                         Actions.NevisSetting({ enableUse: true })
                     }) }}
                 />
-                <Modal
-                    animationType="none"
-                    transparent={true}
-                    visible={sensorModal}
-                >
-                    <View style={styles.models}>
-                        <View style={[styles.modalActive]}>
-                            <View style={styles.sensorIcon}>
-                                <Image
-                                    resizeMode="stretch"
-                                    source={
-                                        window.NevisModeChange == 'Face' ?
-                                            ImgIcon['faceIcon1'] :
-                                                ImgIcon['fingerIcon1']
-                                    }
-                                    style={{ width: 80, height: 80 }}
-                                />
-                                <Text style={{color: '#F5F5F5', paddingTop: 5}}>{sensorModalMsg}</Text>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
                 <Modal
                     animationType="none"
                     transparent={true}

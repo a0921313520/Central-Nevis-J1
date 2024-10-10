@@ -20,6 +20,7 @@ export class PinEnrollerImpl extends PinEnroller {
 		);
 		if(!window.ActivePin) {
 			Actions.PinCode({
+				title: window.PinCodeTitle,
 				mode: PinMode.enrollment,
 				handler: handler,
 				lastRecoverableError: context.lastRecoverableError,

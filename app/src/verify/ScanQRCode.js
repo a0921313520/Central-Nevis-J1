@@ -100,7 +100,6 @@ const ReadQrCodeScreen = () => {
             } else {
                 //验证失败
                 NToast.removeAll()
-				window.onModal('sensorModal', false)
                 setQrCodeDate('')
                 setQrcodeInvalid(true)
             }

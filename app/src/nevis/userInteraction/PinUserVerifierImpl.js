@@ -27,6 +27,7 @@ export class PinUserVerifierImpl extends PinUserVerifier {
 		}
 		if(!window.ActivePin) {
 			Actions.PinCode({
+				title: window.PinCodeTitle,
 				mode: PinMode.verification,
 				handler: handler,
 				lastRecoverableError: context.lastRecoverableError,

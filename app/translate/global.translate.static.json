@@ -58,6 +58,10 @@
         "VN": "Mã PIN",
         "TH": "รหัส PIN"
     },
+    "PIN 码":{
+        "VN": "Mã PIN",
+        "TH": "รหัส PIN"
+    },
     "尚未开通人脸识别权限":{
         "CN": "尚未开通人脸识别权限",
         "VN": "Xác thực Khuôn mặt chưa được thiết lập trên thiết bị",
@@ -103,11 +107,20 @@
         "VN": "Đã vượt quá giới hạn số lần thử",
         "TH": "เกินขีดจำกัดจำนวนครั้งแล้ว"
     },
+    "开启iPhone ”设置 - 触控ID与密码“，验证设备密码，恢复使用": {
+        "VN": "Mở iPhone “Cài đặt - Touch ID & Mật mã”, xác minh mật khẩu thiết bị và tiếp tục sử dụng.",
+        "TH": "เปิด iPhone “การตั้งค่า - Touch ID และรหัสผ่าน” ตรวจสอบรหัสผ่านอุปกรณ์ และใช้งานต่อ"
+    },
+    "开启iPhone ”设置 - 面容ID与密码“，验证设备密码，恢复使用": {
+        "VN": "Mở iPhone “Cài đặt - Face ID & Mật mã”, xác minh mật khẩu thiết bị và tiếp tục sử dụng.",
+        "TH": "เปิด iPhone “การตั้งค่า - Face ID และรหัสผ่าน” ตรวจสอบรหัสผ่านอุปกรณ์ และใช้งานต่อ"
+    },
     "验证失败次数已达上限，请稍后再尝试或使用其他验证方式。":{
         "CN": "验证失败次数已达上限，请稍后再尝试或使用其他验证方式。",
         "VN": "Bạn đã vượt quá số lần thử. Vui lòng thử lại sau hoặc bằng phương pháp khác.",
         "TH": "คุณพยายามเข้าสู่ระบบเกินจำนวนครั้งแล้ว กรุณาลองใหม่อีกครั้งในภายหลังหรือใช้วิธีการอื่น"
     },
+    
     "人脸识别设置成功":{
         "CN": "人脸识别设置成功",
         "VN": "Thiết lập Xác thực Khuôn mặt thành công",
@@ -437,6 +450,14 @@
     "需要验证": {
         "VN": "Cần phải xác minh",
         "TH": "ต้องการการตรวจสอบ"
+    },
+    "手机尚未设置密码": {
+        "VN": "Màn hình khóa chưa được thiết lập",
+        "TH": "ยังไม่ได้ตั้งค่าล็อกหน้าจอ"
+    },
+    "需开启手机的密码与锁屏功能，才能进行免密验证的设置。请在完成锁屏设置后再试一次。": {
+        "VN": "Để sử dụng Đăng nhập không cần mật khẩu, bạn cần kích hoạt màn hình khóa trên điện thoại của mình. Vui lòng bật màn hình khóa trong cài đặt điện thoại và thử lại.",
+        "TH": "เพื่อเปิดใช้งานการเข้าระบบแบบไม่ต้องใช้รหัสผ่าน โปรดตั้งค่ารหัสผ่านล็อกหน้าจอในการตั้งค่าโทรศัพท์และลองอีกครั้ง"
     },
     "两次Pin不同": {
         "VN": "Hai Pin khác nhau",

@@ -17,6 +17,7 @@ export default function LocalAuthenticate(username, callback = () => { }) {
 		.pinUserVerifier(new PinUserVerifierImpl())
 		.biometricUserVerifier(new BiometricUserVerifierImpl())
 		.devicePasscodeUserVerifier(new DevicePasscodeUserVerifierImpl())
+		// .allowDevicePasscodeAsFallback(true)
 		.fingerprintUserVerifier(new FingerprintUserVerifierImpl())
 		.onSuccess(async (authorizationProvider) => {
 			AuthorizationUtils.printAuthorizationInfo(authorizationProvider);
@@ -26,13 +27,11 @@ export default function LocalAuthenticate(username, callback = () => { }) {
 				Actions.pop()
 			}
 			NToast.removeAll()
-			window.onModal('sensorModal', false)
 			callback({isSuccess: true})
 		})
 		.onError((error) => {
 			AuthorizationUtils.printSessionInfo(error.sessionProvider);
 			NToast.removeAll()
-			window.onModal('sensorModal', false)
 			callback(error)
 			console.log('本地验证错误error', error)
 			if(window.ActivePin) {

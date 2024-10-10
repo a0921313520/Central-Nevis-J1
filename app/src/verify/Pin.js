@@ -6,6 +6,7 @@ import VerificationCodeInput from "./VerificationCodeInput";
 import { usePinView, usePinCancel } from '../nevis/screens/PinViewModel'
 import { Actions } from "react-native-router-flux";
 import { NevisErrs } from '../InitClient'
+import { getConfig } from '$Nevis/config'
 import Touch from 'react-native-touch-once';
 
 
@@ -28,6 +29,7 @@ class Pin extends React.Component {
     componentDidMount() {
         NToast.removeAll()
         window.ActivePin = true
+        this.navigationTitle()
         global.storage.load({
             key: 'NevisOldPin',
             id: 'NevisOldPin'
@@ -46,6 +48,7 @@ class Pin extends React.Component {
     }
 
     componentWillUnmount() {
+        window.PinCodeTitle = ''
         const { mode, handler } = this.props
         if(mode == 'verification' || this.state.pinCode === '') {
             setTimeout(() => {
@@ -56,6 +59,11 @@ class Pin extends React.Component {
         if(this.isAddSubmit) {
             Actions.pop()
         }
+    }
+    navigationTitle = () => {
+        this.props.navigation?.setParams && this.props.navigation.setParams({
+            title: this.state.language == 'VN'?  window.PinCodeTitle: ''
+        })
     }
     refresh = () => {
         const { refresh } = this.state
@@ -90,9 +98,8 @@ class Pin extends React.Component {
                 })
             } else {
                 if (code != pinCode) {
-                    this.setState({ pinMessage: translate('两次Pin不同') })
                     Vibration.vibrate(300)
-                    this.refresh()
+                    Actions.pop()
                 } else {
                     this.isAddSubmit = true
                     if(oldPin == code && mode == 'credentialChange') {
@@ -139,9 +146,19 @@ class Pin extends React.Component {
                     }}
                 />
                 {
-                    !ApiPort.UserLogin &&
-                    <Touch onPress={() => { Actions.pop() }}>
-                        <Text style={styles.backBtn}>{translate('账号密码登录')}</Text>
+                    (!ApiPort.UserLogin || window.PinCodeTitle == translate('账户信息验证')) &&
+                    <Touch onPress={() => {
+                        Actions.pop()
+                        if(ApiPort.UserLogin) {
+                            const { NevisOtp } = getConfig()
+                            NevisOtp({actionType: 'Unbind'})
+                        }
+                    }}>
+                        <Text style={styles.backBtn}>
+                            {
+                                !ApiPort.UserLogin? translate('账号密码登录'): translate('手机验证')
+                            }
+                        </Text>
                     </Touch>
                 }
             </View>

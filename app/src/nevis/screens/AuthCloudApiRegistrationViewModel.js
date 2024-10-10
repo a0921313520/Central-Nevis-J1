@@ -24,6 +24,7 @@ const useAuthCloudApiRegistrationViewModel = () => {
 			.pinEnroller(new PinEnrollerImpl())
 			.biometricUserVerifier(new BiometricUserVerifierImpl())
 			.devicePasscodeUserVerifier(new DevicePasscodeUserVerifierImpl())
+			.allowDevicePasscodeAsFallback(true)
 			.fingerprintUserVerifier(new FingerprintUserVerifierImpl())
 			.onSuccess(() => {
 				console.log('注册成功');
@@ -33,7 +34,6 @@ const useAuthCloudApiRegistrationViewModel = () => {
 					Actions.pop()
 				}
 				NToast.removeAll()
-				window.onModal('sensorModal', false)
 				callback({isSuccess: true})
 			})
 			.onError((err) => {
@@ -42,7 +42,6 @@ const useAuthCloudApiRegistrationViewModel = () => {
 					Actions.pop()
 				}
 				NToast.removeAll()
-				window.onModal('sensorModal', false)
 				callback(err)
 				console.log('注册失败err', err)
 			});

@@ -18,6 +18,7 @@ export class PinChangerImpl extends PinChanger {
 		);
 		if(!window.ActivePin) {
 			Actions.PinCode({
+				title: window.PinCodeTitle,
 				mode: PinMode.credentialChange,
 				handler: handler,
 				lastRecoverableError: context.lastRecoverableError,

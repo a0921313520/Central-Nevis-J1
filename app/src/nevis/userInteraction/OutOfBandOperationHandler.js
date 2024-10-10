@@ -35,6 +35,7 @@ async function handleAuthentication(authentication, callback) {
 		.pinUserVerifier(new PinUserVerifierImpl())
 		.biometricUserVerifier(new BiometricUserVerifierImpl())
 		.devicePasscodeUserVerifier(new DevicePasscodeUserVerifierImpl())
+		// .allowDevicePasscodeAsFallback(true)
 		.fingerprintUserVerifier(new FingerprintUserVerifierImpl())
 		.onSuccess((authorizationProvider) => {
 			AuthorizationUtils.printAuthorizationInfo(authorizationProvider);
@@ -43,7 +44,6 @@ async function handleAuthentication(authentication, callback) {
 				Actions.pop()
 			}
 			NToast.removeAll()
-			window.onModal('sensorModal', false)
 			callback({isSuccess: true})
 			console.log('登录验证成功')
 		})
@@ -53,7 +53,6 @@ async function handleAuthentication(authentication, callback) {
 				Actions.pop()
 			}
 			NToast.removeAll()
-			window.onModal('sensorModal', false)
 			callback(err)
 			console.log('登录验证失败err', err)
 		})

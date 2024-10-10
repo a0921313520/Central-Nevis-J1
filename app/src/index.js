@@ -20,6 +20,7 @@ window.NToast = ''
 window.AuthenticatorId = []//已设置的id，可能出现多个，删除时候要一起删除，不然无法再创建
 window.NevisRegistrationUserName = ''//已设置的nevis参数userName
 window.SensorAvailable = true//指纹/face是否开启
+window.PinCodeTitle = ''
 class Nevis extends React.Component {
     constructor(props) {
         super(props)

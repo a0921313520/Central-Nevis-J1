@@ -152,7 +152,8 @@ class Setting extends React.Component {
     }
     //删除前验证
     closeVerify = () => {
-        this.setState({closeVerifyModal:false}, () => {
+        this.setState({closeVerifyModal:false, otpRemove: true}, () => {
+            window.PinCodeTitle = translate('账户信息验证')
             window.NevisVerify(this.removeVerifySuccess, this.state.selectMode)
         })
     }
@@ -188,6 +189,7 @@ class Setting extends React.Component {
     //更换验证前的再次簡易验证
     againVerify = () => {
         this.setState({changeVerifyModal:false}, () => {
+            window.PinCodeTitle = translate('账户信息验证')
             window.NevisVerify(this.changeVerifySuccess, window.NevisModeType)
         })
     }
@@ -230,7 +232,12 @@ class Setting extends React.Component {
                 })
                 return
             }
-            //进入设置，添加或者更改
+            if(activeOpen != '') {
+                //切换不需要进入开启页面，直接call api设置
+                this.getEnroll()
+                return
+            }
+            //进入开启，添加或者更改
             const title = selectMode == 'Face'? translate('人脸识别'): selectMode == 'Pin'? translate('PIN 码识别'): translate('指纹识别')
             Actions.NevisSettingModal({
                 title: title,
@@ -257,7 +264,7 @@ class Setting extends React.Component {
                     // 改nevis提示
                     modalVisible={changModal}
                     title={translate('已启用其他验证方式')}
-                    msg={translate('启用{X}将会自动关闭{Y}。若您之后要再次启用{X}，需要重新设置。 是否确定要启用{Y}？', {X: translate(NevisListData[activeOpen]?.name), Y: translate(NevisListData[selectMode]?.name)})}
+                    msg={translate('启用{Y}将会自动关闭{X}。若您之后要再次启用{X}，需要重新设置。 是否确定要启用{Y}？', {X: translate(NevisListData[activeOpen]?.name), Y: translate(NevisListData[selectMode]?.name)})}
                     cancel={'取消'}
                     onCancel={() => { this.setState({ changModal: false }) }}
                     confirm={'确认'}
@@ -291,27 +298,38 @@ class Setting extends React.Component {
                     onConfirm={() => { this.againVerify() }}
                     imgIcon={NevisListData[activeOpen]?.icon}
                 />
-
-                <Text style={styles.SettingWord}>{translate("启用验证方式")}</Text>
                 {
-                    allModeType.map((item, index) => {
-                        return (
-                            <View key={index} style={[styles.switchContainer, { marginTop: 8, }]}>
-                                <Image
-                                    resizeMode="stretch"
-                                    source={NevisListData[item.mode].icon || ImgIcon['faceIcon']}
-                                    style={{ width: 30, height: 30, marginLeft: 10 }}
-                                />
-                                <View style={styles.modeSetting}>
-                                    <Text style={styles.SettingFace}>{translate(NevisListData[item.mode].name)}</Text>
-                                </View>
-                                <SwitchIcon
-                                    value={!enableUse? item.mode == activeOpen: false}
-                                    onValueChange={(value) => this.changeMode(item.mode, item.aaid)}
-                                />
-                            </View>
-                        )
-                    })
+                    allModeType.length > 0 &&
+                    <>
+                        <Text style={styles.SettingWord}>{translate("启用验证方式")}</Text>
+                        {
+                            allModeType.map((item, index) => {
+                                return (
+                                    <View key={index} style={[styles.switchContainer, { marginTop: 8, }]}>
+                                        <Image
+                                            resizeMode="stretch"
+                                            source={NevisListData[item.mode].icon || ImgIcon['faceIcon']}
+                                            style={{ width: 30, height: 30, marginLeft: 10 }}
+                                        />
+                                        <View style={styles.modeSetting}>
+                                            <Text style={styles.SettingFace}>{translate(NevisListData[item.mode].name)}</Text>
+                                        </View>
+                                        <SwitchIcon
+                                            value={!enableUse? item.mode == activeOpen: false}
+                                            onValueChange={(value) => this.changeMode(item.mode, item.aaid)}
+                                        />
+                                    </View>
+                                )
+                            })
+                        }
+                    </>
+                }
+                {
+                     allModeType.length == 0 &&
+                     <>
+                        <Text style={styles.nullSetTitle}>{translate('手机尚未设置密码')}</Text>
+                        <Text style={styles.nullSetconter}>{translate('需开启手机的密码与锁屏功能，才能进行免密验证的设置。请在完成锁屏设置后再试一次。')}</Text>
+                     </>
                 }
             </View>
         )

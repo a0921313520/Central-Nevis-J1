@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, Platform, Clipboard } from "react-native";
+import { View, Text, Platform, Alert, Linking } from "react-native";
 import { decodePayload } from './nevis/userInteraction/OutOfBandOperationHandler';
 import useAuthCloudApiRegistrationViewModel from './nevis/screens/AuthCloudApiRegistrationViewModel'
 import HomeViewModel from './nevis/screens/HomeViewModel'
@@ -45,28 +45,6 @@ const InitClient = ({ init }) => {
     }, []);
 
     useEffect(() => {
-        //初始化
-        // onInitClient()
-        //     .then((url) => {
-        //         console.log('urlurl11111', url)
-        //     })
-
-        setTimeout(() => {
-            //applink 注册
-            // registration().then()
-        }, 3000);
-
-        setTimeout(() => {
-            //删除
-            // deleteLocalAuthenticators()
-        }, 2000);
-
-        setTimeout(() => {
-            //验证
-            // decodePayload('eyJubWFfZGF0YSI6eyJ0b2tlbiI6ImEyYmQ4OTFkLTQ3YzgtNGU3OC04M2U5LTJlNDM1ZmE1OGYzOSIsInJlZGVlbV91cmwiOiJodHRwczovL29nYXV0aC04NTJlZWEubWF1dGgubmV2aXMuY2xvdWQvX2FwcC90b2tlbi9yZWRlZW0vYXV0aGVudGljYXRpb24iLCJjb3JyZWxhdGlvbklkIjoiMTAyMTIwMzQtMjc5OS00NmZiLThhMGUtMTMyMTA1NmFmODNlIn0sIm5tYV9kYXRhX2NvbnRlbnRfdHlwZSI6ImFwcGxpY2F0aW9uL2pzb24iLCJubWFfZGF0YV92ZXJzaW9uIjoiMSJ9').catch((err) => {
-            //     console.log('errerrerrerrerr', err)
-            // });
-        }, 3000);
 
     }, [init]);
 
@@ -80,9 +58,9 @@ const InitClient = ({ init }) => {
 
     //本地验证
     window.NevisVerify = (callback = () => { }, mode = '') => {
-        loading(mode)
+        window.NevisModeChange = mode
         sensorLock(() => {
-            window.NevisModeChange = mode
+            loading()
             localAccountsVerify(callback)
         })
     }
@@ -92,31 +70,30 @@ const InitClient = ({ init }) => {
     }
     //注册开启nevis
     window.NevisRegistration = (appLinkUri = '', callback = () => { }, mode = '') => {
-        loading(mode)
+        window.NevisModeChange = mode
         sensorLock(() => {
-            window.NevisModeChange = mode
+            loading()
             registration(appLinkUri, callback).then()
         })
     }
     //登录验证
     window.NevisLoginVerify = (appLink = '', callback = () => { }, mode = '') => {
-        loading(mode)
+        window.NevisModeChange = mode
         sensorLock(() => {
-            window.NevisModeChange = mode
+            loading()
             decodePayload(appLink, callback).catch(() => {})
         })
     }
     //设置过pin，切换变成更换pin
     window.NevisChangePin = (callback = () => { }) => {
+        window.NevisModeChange = 'Pin'
         sensorLock(() => {
-            window.NevisModeChange = 'Pin'
             pinChange(callback)
         })
     }
 
     const loading = (mode) => {
         NToast.loading(translate('加载中...'), 200)
-        mode != 'Pin' && window.onModal('sensorModal', true)
     }
 
     const sensorLock = (callback = () => {}) => {
@@ -125,10 +102,39 @@ const InitClient = ({ init }) => {
             id: 'NevisLock'
         }).then(res => {
             NToast.removeAll()
-            window.onModal('sensorModal', false)
             window.onModal('noMoreTimes', true)
-        }).catch(err => { 
-            callback()
+        }).catch(err => {
+            if(Platform.OS == 'ios') {
+                //ios如果被锁定，要密码解锁
+                global.storage.load({
+                    key: 'NevisLockPassword',
+                    id: 'NevisLockPassword'
+                }).then(res => {
+                    NToast.removeAll()
+                    const devices = window.NevisModeChange == 'Face'? '面容ID与密码': '触控ID与密码'
+                    Alert.alert(translate('已达验证次数上限'), translate(`开启iPhone “设置 - ${devices}”，验证设备密码，恢复使用`), [
+                        {
+                            text: translate('取消'),
+                            onPress: () => { }
+                        },
+                        {
+                            text: translate('确认'), onPress: () => {
+                                Linking.openURL('App-Prefs://') .catch(() => {
+                                    Linking.openURL('app-settings:')
+                                })
+                                global.storage.remove({
+                                    key: 'NevisLockPassword',
+                                    id: 'NevisLockPassword'
+                                })
+                            }
+                        },
+                    ])
+                }).catch(err => {
+                    callback()
+                })
+            } else {
+                callback()
+            }
         })
     }
 
@@ -149,18 +155,12 @@ export const PhoneSensorAvailable = () => {
 
 //错误处理
 export const NevisErrs = (res, mode) => {
-    window.onModal('sensorModal', false)
+    NToast.removeAll()
     const { type, description } = res?.errorCode || {}
-    alert('test 请忽视' + type)
+    // alert('test 请忽视' + type)
     if(type == 'USER_LOCKOUT') {
         //次数上限，锁定
-        window.onModal('noMoreTimes', true)
-        global.storage.save({
-            key: 'NevisLock',
-            id: 'NevisLock',
-            data: true,
-            expires: 1 * 60 * 1000//5分钟
-        })
+        NevisLock()
     } else if(type == 'USER_CANCELED') {
         //用户取消了
     } else if(
@@ -187,6 +187,9 @@ export const NevisErrs = (res, mode) => {
         Actions.pop()
     } else if(type == 'AUTHENTICATOR_ACCESS_DENIED') {
         
+        // if(Platform.OS == 'ios') {
+        //     NevisLock()
+        // }
     } else if(type == 'UNKNOWN') {
         //未知错误，请重试
         // alert('未知错误，请重试')
@@ -195,6 +198,24 @@ export const NevisErrs = (res, mode) => {
         if(description) {
             alert(description + '==>type=' + type)
         }
+    }
+}
+
+const NevisLock = () => {
+    window.onModal('noMoreTimes', true)
+    global.storage.save({
+        key: 'NevisLock',
+        id: 'NevisLock',
+        data: true,
+        expires: 5 * 60 * 1000//5分钟
+    })
+    if(Platform.OS == 'ios' && window.NevisModeChange != 'Pin') {
+        global.storage.save({
+            key: 'NevisLockPassword',
+            id: 'NevisLockPassword',
+            data: true,
+            expires: null
+        })
     }
 }
 
@@ -244,26 +265,6 @@ export const GetModeType = (res) => {
 
     if (actives) {
         window.NevisRegistrationUserName = actives?.registration?.registeredAccounts[0]?.username || ''
-        //无密码登录
-        global.storage.load({
-            key: 'NevisSelectAaid',
-            id: 'NevisSelectAaid'
-        }).then(val => {
-            window.NevisModeType = allTypeId[val] || ''
-            //无密码登录NevisUsername
-            global.storage.load({
-                key: 'NevisUsername',
-                id: 'NevisUsername'
-            }).then(i => {
-                window.NevisUsername = i
-            }).catch(err => { })
-            global.storage.remove({
-                key: 'NevisSelectAaid',
-                id: 'NevisSelectAaid'
-            })
-        }).catch(err => {
-            //本地有nevis，但是没有缓存，表示卸载后重新安装，需要移除
-        })
 
         global.storage.load({
             key: 'NevisModeType',
@@ -279,7 +280,7 @@ export const GetModeType = (res) => {
                 if(!ApiPort.UserLogin) {
                     setTimeout(() => {
                         //延迟确保进入login
-                        window.LoginRefresh()
+                        window.LoginRefresh(false)
                         Actions.NevisLogin()
                     }, 1000);
                 }
@@ -306,6 +307,7 @@ export const NevisRemove = (callback = () => {}) => {
     })
         //删除手机数据
         window.NevisRemoveNevis((res) => {
+            NToast.removeAll()
             if(res.isSuccess) {
                 //删除成功
                 window.NevisInitClient()
@@ -327,7 +329,6 @@ export const NevisRemove = (callback = () => {}) => {
                     key: 'NevisLock',
                     id: 'NevisLock'
                 })
-                window.LoginRefresh()
             } else {
                 alert(translate('出现错误，请重试'))
             }

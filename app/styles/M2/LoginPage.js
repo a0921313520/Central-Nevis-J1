@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         fontSize: 17,
-        marginBottom: 10,
+        marginBottom: 16,
     },
     Tologin: {
         width: '100%',

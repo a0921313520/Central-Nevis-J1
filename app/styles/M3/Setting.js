@@ -53,6 +53,15 @@ const styles = StyleSheet.create({
 		paddingBottom: 30,
 		color: '#CCCCCC',
 	},
+    nullSetTitle: {
+        color: '#F5F5F5',
+        paddingBottom: 10,
+        paddingTop: 25,
+    },
+    nullSetconter: {
+        color: '#CCCCCC',
+        lineHeight: 20,
+    },
 })
 
 export default styles
