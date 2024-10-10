@@ -62,7 +62,7 @@ class Pin extends React.Component {
     }
     navigationTitle = () => {
         this.props.navigation?.setParams && this.props.navigation.setParams({
-            title: this.state.language == 'VN'?  window.PinCodeTitle: ''
+            title: getConfig().language == 'VN'?  window.PinCodeTitle: ''
         })
     }
     refresh = () => {

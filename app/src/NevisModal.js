@@ -149,7 +149,7 @@ class NevisModal extends React.Component {
             //本机其他账户已经设置了
             const isOtherName = window.NevisUsername && window.NevisUsername != window.userNameDB
             //这个账户在其他手机上设置过了
-            const isOtherPhone = window.AuthenticatorId && !window.NevisModeType
+            const isOtherPhone = window.AuthenticatorId.length > 0 && !window.NevisModeType
             if (isOtherPhone) {
                 //这个账户在其他手机上设置过了
                 this.setState({ otherPhoneSet: true })

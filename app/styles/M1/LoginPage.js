@@ -29,7 +29,8 @@ const styles = StyleSheet.create({
 		alignItems: "center"
 	},
     Loginsuccess: {
-        width: '100%',
+        width: '92%',
+        marginLeft: '4%',
         backgroundColor: '#00B324',
         borderColor: '#00B324',
         padding: 15,
@@ -41,7 +42,8 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     Tologin: {
-        width: '100%',
+        width: '92%',
+        marginLeft: '4%',
         borderColor: '#00E62E',
         padding: 15,
         borderWidth:1,
