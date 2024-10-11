@@ -111,7 +111,7 @@ class LoginPage extends React.Component {
                     source={ImgIcon['newBG']}
                     style={{ width: width, height: height, flex: 1 }}
                 >
-                    <View style={[styles.headerTop, {paddingTop: DeviceInfoIos? 55: 28}]}>
+                    <View style={[styles.headerTop, {paddingTop: DeviceInfoIos? 55: 25}]}>
                         <TouchableOpacity
                             onPress={() => { ScanQRCode() }}
                             style={{ width: 30 }}

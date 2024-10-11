@@ -17,6 +17,12 @@ export default class VerificationCodeInput extends Component {
         this.dismiss = true//防止Keyboard.dismiss重复
     }
 
+    componentDidMount() {
+        setTimeout(() => {
+            this.refs?.textInputs?.focus()
+        }, 500);
+    }
+
     componentDidUpdate(prevProps, prevState) {
         if(prevProps.refresh != this.props.refresh) {
             this.setState({textString: ''}, () => {
@@ -70,6 +76,7 @@ export default class VerificationCodeInput extends Component {
 
                     {/**input*/}
                     <TextInput
+                        ref='textInputs'
                         value={this.state.textString}
                         style={styles.intextInputStyle}
                         onChangeText={(text = '') => {
@@ -85,7 +92,6 @@ export default class VerificationCodeInput extends Component {
                         }}
                         underlineColorAndroid="transparent"
                         maxLength={this.props.inputSize}
-                        autoFocus={true}
                         caretHidden={true}
                         keyboardType="numeric"
                         selectionColor="transparent"

@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		zIndex: 20,
 		padding: 15,
-        paddingTop: 55,
 	},
     logo: {
 		justifyContent: "center",

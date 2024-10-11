@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
 	},
     btnBgItem: {
 		color: '#F5F5F5',
-		fontSize: 16,
+		fontSize: 17,
 		textAlign: 'center',
 		lineHeight: 42,
 	},
