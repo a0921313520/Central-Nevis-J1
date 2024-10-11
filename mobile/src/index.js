@@ -120,7 +120,7 @@ class Nevis extends React.Component {
                 border: none !important;
                 box-shadow: none !important;
                 background-color: white !important;
-                border-radius: 0rem !important;
+                border-radius: 4px !important;
                 min-width: ${languageType === 'M3' ? '2.7rem !important':'2.2rem !important'}
                 line-height: normal !important;
                 max-height: ${languageType === 'M2' ? '1rem !important':'3rem !important'};
