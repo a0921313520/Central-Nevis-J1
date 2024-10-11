@@ -70,7 +70,7 @@ class Setting extends React.Component {
     }
     //api获取appLinkUri，去注册开启nevis
     getEnroll = () => {
-        window.NevisRegistration(this.props.linkss || 'https://ogauth-852eea-app.mauth.nevis.cloud/open?dispatchTokenResponse=eyJubWFfZGF0YSI6eyJ0b2tlbiI6IjA0ZTBkODIxLWY4ODYtNGQwZC04ODlkLTlkYjI4MWExODMyOSIsInJlZGVlbV91cmwiOiJodHRwczovL29nYXV0aC04NTJlZWEubWF1dGgubmV2aXMuY2xvdWQvX2FwcC90b2tlbi9yZWRlZW0vcmVnaXN0cmF0aW9uIiwiY29ycmVsYXRpb25JZCI6Ijc4NDk5NjVmLTNhMWEtNGY1Mi1iMDcyLWJjYmViMmYxYzFkZSJ9LCJubWFfZGF0YV9jb250ZW50X3R5cGUiOiJhcHBsaWNhdGlvbi9qc29uIiwibm1hX2RhdGFfdmVyc2lvbiI6IjEifQ', this.onRegistration)
+        window.NevisRegistration(this.props.linkss || 'https://ogauth-852eea-app.mauth.nevis.cloud/open?dispatchTokenResponse=eyJubWFfZGF0YSI6eyJ0b2tlbiI6ImQ4M2RiZGIxLTZiNTUtNGU1OC04MTgxLWE4OGY1N2NlOGIwYiIsInJlZGVlbV91cmwiOiJodHRwczovL29nYXV0aC04NTJlZWEubWF1dGgubmV2aXMuY2xvdWQvX2FwcC90b2tlbi9yZWRlZW0vcmVnaXN0cmF0aW9uIiwiY29ycmVsYXRpb25JZCI6IjdmNGQ2N2M1LWQzODQtNGM4Mi1hMTE2LWI1OGZmZDRlYjk5OSJ9LCJubWFfZGF0YV9jb250ZW50X3R5cGUiOiJhcHBsaWNhdGlvbi9qc29uIiwibm1hX2RhdGFfdmVyc2lvbiI6IjEifQ', this.onRegistration)
         return
         const { get } = getConfig()
         NToast.loading(translate('Loading...'), 200)
