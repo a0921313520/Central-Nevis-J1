@@ -176,8 +176,8 @@ class Setting extends React.Component {
     //更换验证成功
     changeVerifySuccess = (res = {}) => {
         if(res.isSuccess) {
-            //成功后去添加新的，新的添加成功后删除旧的
-            this.getEnroll()
+            //成功后去添加新的
+            window.NevisSetMode()
         } else {
             NevisErrs(res, window.NevisModeType)
         }
@@ -189,7 +189,7 @@ class Setting extends React.Component {
     //更换验证前的再次簡易验证
     againVerify = () => {
         this.setState({changeVerifyModal:false}, () => {
-            window.PinCodeTitle = translate('账户信息验证')
+            window.PinCodeTitle = window.NevisModeType == 'Pin' ?translate('账户信息验证'): translate('PIN 码识别')
             window.NevisVerify(this.changeVerifySuccess, window.NevisModeType)
         })
     }
@@ -230,11 +230,6 @@ class Setting extends React.Component {
                 NevisRemove(() => {
                     this.setState({ activeOpen: '', otpRemove: false })
                 })
-                return
-            }
-            if(activeOpen != '') {
-                //切换不需要进入开启页面，直接call api设置
-                this.getEnroll()
                 return
             }
             //进入开启，添加或者更改

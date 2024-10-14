@@ -263,7 +263,7 @@ export const GetModeType = (res) => {
     //是否已经添加
     const actives = res.find((v) => { return (v.registration?.registeredAccounts?.length > 0) }) || false
 
-    if (actives) {
+    if (actives && window.NevisEnabled) {
         window.NevisRegistrationUserName = actives?.registration?.registeredAccounts[0]?.username || ''
 
         global.storage.load({

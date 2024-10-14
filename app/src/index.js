@@ -21,6 +21,7 @@ window.AuthenticatorId = []//已设置的id，可能出现多个，删除时候�
 window.NevisRegistrationUserName = ''//已设置的nevis参数userName
 window.SensorAvailable = true//指纹/face是否开启
 window.PinCodeTitle = ''
+window.NevisEnabled = true//nevis是否开启
 class Nevis extends React.Component {
     constructor(props) {
         super(props)
@@ -42,7 +43,7 @@ class Nevis extends React.Component {
         }
         this.config = getConfig()
         window.NToast = this.config.NevisToast
-        window.JBOVersion = '1.0.4.0'
+        window.JBOVersion = '1.0.4.2'
     }
 
     componentDidMount() {
@@ -63,6 +64,14 @@ class Nevis extends React.Component {
                     this.setState({
                         nevisConfigurations: res.result
                     })
+                } else {
+                    window.NevisEnabled = false
+                    window.NevisModeType = ''
+                    window.NevisUsername = ''
+                    window.NevisModeChange = ''
+                    window.AuthenticatorId = []
+                    window.NevisRegistrationUserName = ''
+                    window.LoginRefresh(false)
                 }
             })
             .catch((error) => { })
