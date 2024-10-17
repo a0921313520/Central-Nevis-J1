@@ -36,6 +36,7 @@ class Nevis extends React.Component {
 
     componentWillUnmount() {
         clearInterval(this.timerInterval); // Clean up the timer interval on unmount
+        clearInterval(this.verificationInterval); // Clear the verification interval
     }
 
     getNevisConfigurations = () => {
@@ -66,6 +67,12 @@ class Nevis extends React.Component {
 
     getNevisQRCode = () => {
         const { get, onGetQRCode, onSuccess } = getConfig();
+
+        // Clear existing intervals before starting new QR code session
+        if (this.verificationInterval) {
+            clearInterval(this.verificationInterval);
+        }
+
         Toast.loading('', 200);
 
         get(ApiLink.NevisQRCode)
@@ -92,6 +99,7 @@ class Nevis extends React.Component {
             this.setState((prevState) => {
                 if (prevState.timer <= 1) {
                     clearInterval(this.timerInterval);
+                    clearInterval(this.verificationInterval);
                     return { isExpired: true, timer: 0 };
                 }
                 return { timer: prevState.timer - 1 };
@@ -173,8 +181,13 @@ class Nevis extends React.Component {
 
     verifyLoginSession = (statusToken) => {
         const { post } = getConfig();
+
+        // Clear any existing interval before starting a new one
+        if (this.verificationInterval) {
+            clearInterval(this.verificationInterval);
+        }
         
-        const interval = setInterval(() => {
+        this.verificationInterval = setInterval(() => {
             const { isExpired } = this.state;  // Get the isExpired state
     
             // Stop if session is expired
@@ -197,11 +210,11 @@ class Nevis extends React.Component {
                             .then((memberData) => {
                                 localStorage.setItem('memberInfo', JSON.stringify(memberData.result));
                                 Router.push('/');
-                                clearInterval(interval);  // Clear the interval after successful login
+                                clearInterval(this.verificationInterval);  // Clear the interval after successful login
                             })
                             .catch((error) => {
                                 console.log('Error fetching member info:', error);
-                                clearInterval(interval);  // Stop the interval in case of error
+                                clearInterval(this.verificationInterval);  // Stop the interval in case of error
                             });
                     } else {
                         console.log('Login session verification failed, retrying...');
@@ -210,7 +223,7 @@ class Nevis extends React.Component {
                 })
                 .catch((error) => {
                     console.log('Error verifying login session:', error);
-                    clearInterval(interval);  // Clear interval in case of a request error
+                   // clearInterval(this.verificationInterval);   // Clear interval in case of a request error
                 });
         }, 3000);  // Call the API every 3 seconds
     };
@@ -218,6 +231,14 @@ class Nevis extends React.Component {
 
     backToLogin = () => {
         const { backToNormalLogin } = this.props;
+
+        // Clear intervals when going back to normal login
+        if (this.verificationInterval) {
+            clearInterval(this.verificationInterval);
+        }
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+        }
 
         this.setState({
             qrCodeImg: '',
