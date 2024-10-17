@@ -203,7 +203,7 @@ class Nevis extends React.Component {
                         const data = res.result;
     
                         // Store tokens and member info on success
-                        ApiPort.Token = res.tokenType + ' ' + res.accessToken; // 寫入用戶token  token要帶Bearer
+                        ApiPort.Token = data.tokenType + ' ' + data.accessToken; // 寫入用戶token  token要帶Bearer
                         localStorage.setItem('memberToken', JSON.stringify(data.tokenType + ' ' + data.accessToken));
                         localStorage.setItem('refreshToken', JSON.stringify(data.refreshToken));
                         sessionStorage.setItem("loginStatus", "1");
