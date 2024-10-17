@@ -43,6 +43,7 @@ class Pin extends React.Component {
         if (mode== 'verification' && prevProps.lastRecoverableError != lastRecoverableError) {
             //Pin错误
             this.verifyErr()
+            this.navigationTitle()
             Vibration.vibrate(300)
         }
     }

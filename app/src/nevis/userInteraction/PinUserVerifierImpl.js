@@ -23,7 +23,7 @@ export class PinUserVerifierImpl extends PinUserVerifier {
 				: 'Please start PIN user verification.'
 		);
 		if(window.ActivePin && context.lastRecoverableError) {
-			Actions.refresh({ lastRecoverableError: context.lastRecoverableError })
+			Actions.refresh({ lastRecoverableError: context.lastRecoverableError, title: window.PinCodeTitle })
 		}
 		if(!window.ActivePin) {
 			Actions.PinCode({
