@@ -203,10 +203,12 @@ class Nevis extends React.Component {
                         const data = res.result;
     
                         // Store tokens and member info on success
+                        ApiPort.Token = res.tokenType + ' ' + res.accessToken; // 寫入用戶token  token要帶Bearer
                         localStorage.setItem('memberToken', JSON.stringify(data.tokenType + ' ' + data.accessToken));
                         localStorage.setItem('refreshToken', JSON.stringify(data.refreshToken));
-    
-                        fetchRequest(ApiLink.Member, 'GET', '', false)
+                        sessionStorage.setItem("loginStatus", "1");
+                        if (ApiPort.Token) {
+                            fetchRequest(ApiLink.Member, 'GET', '', false)
                             .then((memberData) => {
                                 localStorage.setItem('memberInfo', JSON.stringify(memberData.result));
                                 Router.push('/');
@@ -216,6 +218,7 @@ class Nevis extends React.Component {
                                 console.log('Error fetching member info:', error);
                                 clearInterval(this.verificationInterval);  // Stop the interval in case of error
                             });
+                        }
                     } else {
                         console.log('Login session verification failed, retrying...');
                         // Continue retrying until `isExpired` becomes true or session is successful
