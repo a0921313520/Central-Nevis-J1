@@ -77,7 +77,7 @@ class Nevis extends React.Component {
                     localStorage.setItem('refresh_token', JSON.stringify(res.result?.refreshToken));
                     sessionStorage.setItem('isLogin', true);
                     getApi(ApiLink.Member).then((data) => {
-                        localStorage.setItem('UserName', data.result?.memberInfo.userName);
+                        localStorage.setItem('UserName', data.result?.memberInfo?.Username);
                         localStorage.setItem('memberInfoDB', JSON.stringify(data.result));
                         this.props.setLoginStatus();
                         this.setState({
