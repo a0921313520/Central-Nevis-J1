@@ -66,35 +66,40 @@ class Nevis extends React.Component {
 
     verifyLoginSession = (token) => {
         const { post, getApi } = getConfig()
-        this.refresh = setInterval(() => { 
-            if (this.state.loginVerified || this.state.countdown == 0) {
-                clearInterval(this.refresh);
-            }
-            post(ApiLink.VerifyLoginSession + `statusToken=${token}`)
-            .then((res) => {
-                if(res.isSuccess) {
-                    localStorage.setItem('access_token',JSON.stringify(res.result?.tokenType + ' ' + res.result?.accessToken));
-                    localStorage.setItem('refresh_token', JSON.stringify(res.result?.refreshToken));
-                    sessionStorage.setItem('isLogin', true);
-                    getApi(ApiLink.Member).then((data) => {
-                        localStorage.setItem('UserName', data.result?.memberInfo?.Username);
-                        localStorage.setItem('memberInfoDB', JSON.stringify(data.result));
-                        this.props.setLoginStatus();
-                        this.setState({
-                            loginVerified: true
-                        })
-                        window.location.reload();
-                    }).catch(() => {
-            
-                    })
+        let loading = false;
+        if (!loading) {
+            this.refresh = setInterval(() => { 
+                loading = true
+                if (this.state.loginVerified || this.state.countdown == 0) {
                     clearInterval(this.refresh);
                 }
-            })
-            .catch(() => {
+                post(ApiLink.VerifyLoginSession + `statusToken=${token}`)
+                .then((res) => {
+                    loading = false
+                    if(res.isSuccess) {
+                        clearInterval(this.refresh);
+                        localStorage.setItem('access_token',JSON.stringify(res.result?.tokenType + ' ' + res.result?.accessToken));
+                        localStorage.setItem('refresh_token', JSON.stringify(res.result?.refreshToken));
+                        sessionStorage.setItem('isLogin', true);
+                        getApi(ApiLink.Member).then((data) => {
+                            localStorage.setItem('UserName', data.result?.memberInfo?.Username);
+                            localStorage.setItem('memberInfoDB', JSON.stringify(data.result));
+                            this.props.setLoginStatus();
+                            this.setState({
+                                loginVerified: true
+                            })
+                            window.location.reload();
+                        }).catch(() => {
+                
+                        })
+                    }
+                })
+                .catch(() => {
+                })
     
-            })
+            }, 3000);
+        }
 
-        }, 3000);
 
     }
 
