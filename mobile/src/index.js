@@ -7,6 +7,7 @@ import { Toast, Modal } from 'antd-mobile-v2';
 import successCN from '$Nevis/styles/M1/imgs/icon_success.png';
 import successTH from '$Nevis/styles/M2/imgs/icon_success.png';
 import successVN from '$Nevis/styles/M3/imgs/icon_success.png';
+import Router from 'next/router'
 class Nevis extends React.Component {
     constructor(props) {
         super(props);
