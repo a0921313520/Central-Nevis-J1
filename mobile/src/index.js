@@ -200,6 +200,7 @@ class Nevis extends React.Component {
             post(ApiLink.VerifyLoginSession + `statusToken=${statusToken}&`)
                 .then((res) => {
                     if (res?.isSuccess) {
+                        clearInterval(this.verificationInterval);  // Clear the interval after successful
                         const data = res.result;
     
                         // Store tokens and member info on success
