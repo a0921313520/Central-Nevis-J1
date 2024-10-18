@@ -183,6 +183,9 @@ class Nevis extends React.Component {
     verifyLoginSession = (statusToken) => {
         const { post } = getConfig();
 
+        // Track whether a request is pending
+        let isRequestPending = false;  // Add a flag to track pending requests
+
         // Clear any existing interval before starting a new one
         if (this.verificationInterval) {
             clearInterval(this.verificationInterval);
@@ -193,10 +196,18 @@ class Nevis extends React.Component {
     
             // Stop if session is expired
             if (isExpired) {
-                clearInterval(interval);
+                clearInterval(this.verificationInterval);
                 console.log('Session expired, stopping verification.');
                 return;
             }
+
+            // If there's a pending request, don't send a new one
+            if (isRequestPending) {
+                return;
+            }
+
+            // Set the flag to indicate the request is pending
+            isRequestPending = true;
     
             post(ApiLink.VerifyLoginSession + `statusToken=${statusToken}&`)
                 .then((res) => {
@@ -227,6 +238,10 @@ class Nevis extends React.Component {
                                     memberInfo: memberData.result.memberInfo,
                                 };
                                 localStorage.setItem('memberInfo', JSON.stringify(combinedData));
+                                localStorage.setItem(
+                                    "memberInfoForLoginLogout",
+                                    JSON.stringify(combinedData)
+                                  );
                                 localStorage.setItem('username', JSON.stringify(memberData.result.memberInfo.Username))
                                 Router.push('/');
                                 clearInterval(this.verificationInterval);  // Clear the interval after successful login
@@ -238,11 +253,13 @@ class Nevis extends React.Component {
                         }
                     } else {
                         console.log('Login session verification failed, retrying...');
+                        isRequestPending = false;
                         // Continue retrying until `isExpired` becomes true or session is successful
                     }
                 })
                 .catch((error) => {
                     console.log('Error verifying login session:', error);
+                    isRequestPending = false;
                    // clearInterval(this.verificationInterval);   // Clear interval in case of a request error
                 });
         }, 3000);  // Call the API every 3 seconds
