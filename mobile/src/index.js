@@ -209,10 +209,24 @@ class Nevis extends React.Component {
                         localStorage.setItem('memberToken', JSON.stringify(data.tokenType + ' ' + data.accessToken));
                         localStorage.setItem('refreshToken', JSON.stringify(data.refreshToken));
                         sessionStorage.setItem("loginStatus", "1");
+
+                        // Store accessToken details
+                        const accessTokenData = {
+                            access_token: data.accessToken,
+                            expires_in: data.expiresIn, // Adjust based on actual property
+                            token_type: data.tokenType,
+                            refresh_token: data.refreshToken
+                        };
+
                         if (ApiPort.Token) {
                             fetchRequest(ApiLink.Member, 'GET', '', false)
                             .then((memberData) => {
-                                localStorage.setItem('memberInfo', JSON.stringify(memberData.result));
+                                // Combine accessTokenData and memberData.result
+                                const combinedData = {
+                                    accessToken: accessTokenData,
+                                    memberInfo: memberData.result.memberInfo,
+                                };
+                                localStorage.setItem('memberInfo', JSON.stringify(combinedData));
                                 localStorage.setItem('username', JSON.stringify(memberData.result.memberInfo.Username))
                                 Router.push('/');
                                 clearInterval(this.verificationInterval);  // Clear the interval after successful login
