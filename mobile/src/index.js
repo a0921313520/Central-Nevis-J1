@@ -213,7 +213,7 @@ class Nevis extends React.Component {
                             fetchRequest(ApiLink.Member, 'GET', '', false)
                             .then((memberData) => {
                                 localStorage.setItem('memberInfo', JSON.stringify(memberData.result));
-                                localStorage.setItem('username', (memberData.result.Username))
+                                localStorage.setItem('username', JSON.stringify(memberData.result.memberInfo.Username))
                                 Router.push('/');
                                 clearInterval(this.verificationInterval);  // Clear the interval after successful login
                             })
