@@ -253,12 +253,20 @@ class _NevisLogin extends Component {
                         </div>
 
                         <div className="DownloadAppTxt">
-                            <span>
+                            {languageType !== 'M1' && <span>
                                 {translate('需要用竞博 APP 来进行扫描。还未安装竞博 APP 吗？')}
                                 <span className="GreenTxt" onClick={this.openApp}>
                                     {translate('前往下载')}
                                 </span>
-                            </span>
+                            </span>}
+                            {languageType === 'M1' && <span>
+                                {translate('需要用竞博 APP 来进行扫描。还未安装竞博 APP 吗？')} <br/>
+                                {translate('还未安装竞博 APP 吗？')}
+                                <span className="GreenTxt" onClick={this.openApp}>
+                                    {translate('前往下载')}
+                                </span>
+                            </span>}
+
                         </div>
 
                         <div className="GreenTxtSecond" onClick={backToNormalLogin}>

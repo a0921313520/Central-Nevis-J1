@@ -7,6 +7,7 @@ import { Toast, Modal } from 'antd-mobile-v2';
 import successCN from '$Nevis/styles/M1/imgs/icon_success.png';
 import successTH from '$Nevis/styles/M2/imgs/icon_success.png';
 import successVN from '$Nevis/styles/M3/imgs/icon_success.png';
+import Router from 'next/router'
 class Nevis extends React.Component {
     constructor(props) {
         super(props);
@@ -36,6 +37,7 @@ class Nevis extends React.Component {
 
     componentWillUnmount() {
         clearInterval(this.timerInterval); // Clean up the timer interval on unmount
+        clearInterval(this.verificationInterval); // Clear the verification interval
     }
 
     getNevisConfigurations = () => {
@@ -66,6 +68,12 @@ class Nevis extends React.Component {
 
     getNevisQRCode = () => {
         const { get, onGetQRCode, onSuccess } = getConfig();
+
+        // Clear existing intervals before starting new QR code session
+        if (this.verificationInterval) {
+            clearInterval(this.verificationInterval);
+        }
+
         Toast.loading('', 200);
 
         get(ApiLink.NevisQRCode)
@@ -92,6 +100,7 @@ class Nevis extends React.Component {
             this.setState((prevState) => {
                 if (prevState.timer <= 1) {
                     clearInterval(this.timerInterval);
+                    clearInterval(this.verificationInterval);
                     return { isExpired: true, timer: 0 };
                 }
                 return { timer: prevState.timer - 1 };
@@ -120,14 +129,16 @@ class Nevis extends React.Component {
                 border: none !important;
                 box-shadow: none !important;
                 background-color: white !important;
-                border-radius: 0rem !important;
+                border-radius: 4px !important;
                 min-width: ${languageType === 'M3' ? '2.7rem !important':'2.2rem !important'}
                 line-height: normal !important;
                 max-height: ${languageType === 'M2' ? '1rem !important':'3rem !important'};
                 color: black !important;
-                height: 0.65rem !important;
-                font-size: 13px !important;
+                height:  ${languageType === 'M1' ? '44px !important':'0.65rem !important'};
+                font-size: ${languageType === 'M1' ? '16px !important':'13px !important'};
                 padding-top: 0.05rem;
+                padding-left:${languageType === 'M1' ? '10px !important':''};
+                padding-right:  ${languageType === 'M1' ? '10px !important':''};
             }
         `;
         const styleTag = document.createElement('style');
@@ -145,7 +156,7 @@ class Nevis extends React.Component {
     
         const alert = () => (
             <div>
-                <p>
+                <p style={{paddingTop: languageType === 'M1' ? '6px':''}}>
                     <img
                         style={{ bottom: '-5px', position: 'relative', paddingRight: '10px' }}
                         src={this.getSuccessImage(languageType)}
@@ -171,44 +182,85 @@ class Nevis extends React.Component {
 
     verifyLoginSession = (statusToken) => {
         const { post } = getConfig();
+
+        // Track whether a request is pending
+        let isRequestPending = false;  // Add a flag to track pending requests
+
+        // Clear any existing interval before starting a new one
+        if (this.verificationInterval) {
+            clearInterval(this.verificationInterval);
+        }
         
-        const interval = setInterval(() => {
+        this.verificationInterval = setInterval(() => {
             const { isExpired } = this.state;  // Get the isExpired state
     
             // Stop if session is expired
             if (isExpired) {
-                clearInterval(interval);
+                clearInterval(this.verificationInterval);
                 console.log('Session expired, stopping verification.');
                 return;
             }
+
+            // If there's a pending request, don't send a new one
+            if (isRequestPending) {
+                return;
+            }
+
+            // Set the flag to indicate the request is pending
+            isRequestPending = true;
     
             post(ApiLink.VerifyLoginSession + `statusToken=${statusToken}&`)
                 .then((res) => {
                     if (res?.isSuccess) {
+                        clearInterval(this.verificationInterval);  // Clear the interval after successful
                         const data = res.result;
     
                         // Store tokens and member info on success
+                        ApiPort.Token = data.tokenType + ' ' + data.accessToken; // 寫入用戶token  token要帶Bearer
                         localStorage.setItem('memberToken', JSON.stringify(data.tokenType + ' ' + data.accessToken));
                         localStorage.setItem('refreshToken', JSON.stringify(data.refreshToken));
-    
-                        fetchRequest(ApiLink.Member, 'GET', '', false)
+                        sessionStorage.setItem("loginStatus", "1");
+
+                        // Store accessToken details
+                        const accessTokenData = {
+                            access_token: data.accessToken,
+                            expires_in: data.expiresIn, // Adjust based on actual property
+                            token_type: data.tokenType,
+                            refresh_token: data.refreshToken
+                        };
+
+                        if (ApiPort.Token) {
+                            fetchRequest(ApiLink.Member, 'GET', '', false)
                             .then((memberData) => {
-                                localStorage.setItem('memberInfo', JSON.stringify(memberData.result));
+                                // Combine accessTokenData and memberData.result
+                                const combinedData = {
+                                    accessToken: accessTokenData,
+                                    memberInfo: memberData.result.memberInfo,
+                                };
+                                localStorage.setItem('memberInfo', JSON.stringify(combinedData));
+                                localStorage.setItem(
+                                    "memberInfoForLoginLogout",
+                                    JSON.stringify(combinedData)
+                                  );
+                                localStorage.setItem('username', JSON.stringify(memberData.result.memberInfo.Username))
                                 Router.push('/');
-                                clearInterval(interval);  // Clear the interval after successful login
+                                clearInterval(this.verificationInterval);  // Clear the interval after successful login
                             })
                             .catch((error) => {
                                 console.log('Error fetching member info:', error);
-                                clearInterval(interval);  // Stop the interval in case of error
+                                clearInterval(this.verificationInterval);  // Stop the interval in case of error
                             });
+                        }
                     } else {
                         console.log('Login session verification failed, retrying...');
+                        isRequestPending = false;
                         // Continue retrying until `isExpired` becomes true or session is successful
                     }
                 })
                 .catch((error) => {
                     console.log('Error verifying login session:', error);
-                    clearInterval(interval);  // Clear interval in case of a request error
+                    isRequestPending = false;
+                   // clearInterval(this.verificationInterval);   // Clear interval in case of a request error
                 });
         }, 3000);  // Call the API every 3 seconds
     };
@@ -216,6 +268,14 @@ class Nevis extends React.Component {
 
     backToLogin = () => {
         const { backToNormalLogin } = this.props;
+
+        // Clear intervals when going back to normal login
+        if (this.verificationInterval) {
+            clearInterval(this.verificationInterval);
+        }
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+        }
 
         this.setState({
             qrCodeImg: '',
