@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
     QRcode: {
         
     },
-    
 })
 
 export default styles

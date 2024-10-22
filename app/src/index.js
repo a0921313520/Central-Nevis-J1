@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, Platform } from "react-native";
 import Touch from 'react-native-touch-once';
 import { ApiLink } from './Api'
 import styles from '$NevisStyles/main'
@@ -7,20 +7,48 @@ import ImgIcon from '$NevisStyles/imgs/ImgIcon'
 import translate from '$Nevis/translate'
 import NevisModal from './NevisModal'
 import { getConfig } from '$Nevis/config'
+import InitClient, { PhoneSensorAvailable } from './InitClient'
+import { Actions } from "react-native-router-flux";
 
-window.WinModeType = ''//以设置mode，setting那边使用
+window.NevisModeType = ''//已设置mode，setting那边使用, Face/Pin/Fingerprint
+window.NevisModeChange = ''//选中的mode, Face/Pin/Fingerprint
+window.NevisAllModeType = []
+window.ActivePin = false//防止重复进入PIN
+window.ApiLink = ApiLink
+window.NevisUsername = ''//nevis缓存姓名
+window.NToast = ''
+window.AuthenticatorId = []//已设置的id，可能出现多个，删除时候要一起删除，不然无法再创建
+window.NevisRegistrationUserName = ''//已设置的nevis参数userName
+window.SensorAvailable = true//指纹/face是否开启
+window.PinCodeTitle = ''
+window.NevisEnabled = true//nevis是否开启
 class Nevis extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             authenticators: {},
             modeType: '',//Face/Pin/Fingerprint
+            nevisConfigurations: {},
+            accessToken: '',
+            refreshToken: '',
+            skynetUpdate: '',
+            isTokenValid: false,
+            tokenStatus: '',
+            tokenCreatedAt: '',
+            tokenUpdatedAt: '',
+            qrCode: {},
+            appLink: '',
+            statusToken: '',
+
         }
         this.config = getConfig()
+        window.NToast = this.config.NevisToast
+        window.JBOVersion = '1.0.4.5'
     }
 
     componentDidMount() {
         this.getNevisConfigurations()
+        PhoneSensorAvailable()
     }
 
     componentWillUnmount() {
@@ -28,65 +56,42 @@ class Nevis extends React.Component {
     }
     //是否开启无密码登录。以及设置提示时间
     getNevisConfigurations = () => {
+        window.NevisInitClient()
         const { get } = getConfig()
         get(ApiLink.NevisConfigurations)
             .then((res) => {
-                if (res?.isSuccess) {
-
+                if (res?.isSuccess && res?.result?.isNevisEnabled) {
+                    this.setState({
+                        nevisConfigurations: res.result
+                    })
+                } else {
+                    window.NevisEnabled = false
+                    window.NevisModeType = ''
+                    window.NevisUsername = ''
+                    window.NevisModeChange = ''
+                    window.AuthenticatorId = []
+                    window.NevisRegistrationUserName = ''
+                    window.LoginRefresh(false)
                 }
             })
-            .catch(() => {
-
-            })
-    }
-    //检查当前是否设置无密码登录，如果有设置过，找到modeType='Face/Pin/Fingerprint'
-    getModeType = () => {
-        window.WinModeType = 'Face'
-    }
-
-    //未设置无密码登录，call这只api，有authenticatorId表示已经设置过,这个手机不能再设置
-    getMemberAuthenticators = () => {
-        const { get } = getConfig()
-        if (!ApiPort.UserLogin) { return }
-        get(ApiLink.MemberAuthenticators)
-            .then((res) => {
-                if (res?.isSuccess && res?.result) {
-                    this.setState({ authenticators: res.result.authenticators || {} })
-                }
-            })
-            .catch(() => {
-
-            })
+            .catch((error) => { })
     }
 
 
     render() {
 
-        window.GetModeType = () => {
-            this.getModeType()
-        }
-
-        window.GetMemberAuthenticators = () => {
-            this.getMemberAuthenticators()
-        }
-
         const { } = this.props
         const {
             authenticators,
             modeType,
+            nevisConfigurations,
         } = this.state
 
         return (
             <View style={styles.nevis}>
-                <Text>{translate('QR code登录。')}</Text>
-                <Image
-                    resizeMode="stretch"
-                    source={ImgIcon['testIcon']}
-                    style={{ width: 65, height: 35, top: 3, }}
-                />
-                <NevisModal
-                    authenticators={authenticators}
-                />
+                <InitClient />
+
+                <NevisModal nevisConfigurations={nevisConfigurations} />
             </View>
         )
     }

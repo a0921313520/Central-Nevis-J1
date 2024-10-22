@@ -1,16 +1,18 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, Dimensions, Image } from "react-native";
 import styles from '$NevisStyles/Fingerprint'
 import translate from '$Nevis/translate'
-import Verify from '../verify/index'
 import Touch from 'react-native-touch-once';
-
+import ImgIcon from '$NevisStyles/imgs/ImgIcon';
+const { width, height } = Dimensions.get('window')
+import { Actions } from "react-native-router-flux";
+import { UserTerms } from './index'
 
 class Fingerprint extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            onVerify: false
+            
         }
     }
 
@@ -22,36 +24,63 @@ class Fingerprint extends React.Component {
 		
     }
 
-    onVerify = () => {
-        this.setState({onVerify: true})
-    }
-
-    onSuccess = () => {
-        this.setState({onVerify: false})
-    }
-
-    onError = () => {
-        this.setState({onVerify: false})
-    }
 
     render() {
 		
-        const { onVerify } = this.state
+        const { getEnroll, onSuccess, onSuccessBack, userName } = this.props
 
         return (
-            <View>
-				<Text>Fingerprint</Text>
-                <Touch onPress={() => { this.onVerify() }}>
-                    <Text>添加Fingerprint验证</Text>
-                </Touch>
-                {
-                    onVerify &&
-                    <Verify
-                        modeType={'Fingerprint'}
-                        onSuccess={() => { this.onSuccess() }}//验证/添加成功
-                        onError={() => { this.onError() }}//验证/添加失败
-                />
-                }
+            <View style={{ flex: 1, backgroundColor: "#000000" }}>
+                {!onSuccess &&<View style={styles.faceBG}>    
+                    <View style={styles.user}>
+                        <Image
+                            resizeMode="stretch"
+                            source={ImgIcon['fingerPrintIcon']}
+                            style={{ width: 120, height: 120 }}
+                        />
+                        <Text style={styles.nameStyle}>{userName}</Text>
+                    </View>          
+                    <View>
+                        <View style={styles.title}>                                  
+                            <Text style={[styles.modalTitle,{ textAlign:'center' }]}>{translate("在“我的”页面中完成指纹识别设置，以提升账号验证的便捷性与安全性。")}</Text>
+                        </View>
+                        <UserTerms />
+                        <View style={styles.touchStyle}>
+                            <Touch
+                                style={[styles.btnBg]}
+                                onPress={getEnroll}
+                            >
+                                <Text style={[styles.btnBgItem]}>{translate('启用')}</Text>
+                            </Touch>
+                        </View>
+                    </View>               
+                </View>}
+
+                {onSuccess &&<View style={styles.faceBG}>    
+                    <View style={styles.successUser}>
+                        <Image
+                            resizeMode="stretch"
+                            source={ImgIcon['successIcon']}
+                            style={{ width: 80, height: 80 }}
+                        />
+                    </View>          
+                    <View>
+                        <View style={styles.title}>                                  
+                            <Text style={[styles.successTitle,{ textAlign:'center' }]}>{translate("指纹识别设置成功")}</Text>
+                        </View>
+                        <Text style={[styles.successMsg]}>
+                            {translate('您已可以使用指纹识别进行登录和账号验证。')}
+                        </Text>
+                        <View style={styles.touchStyle}>
+                            <Touch
+                                style={[styles.btnBg]}
+                                onPress={onSuccessBack}
+                            >
+                                <Text style={[styles.btnBgItem]}>{translate('完成')}</Text>
+                            </Touch>
+                        </View>
+                    </View>               
+                </View>}
             </View>
         )
     }
