@@ -54,11 +54,13 @@ class Nevis extends React.Component {
                     this.getNevisQRCode();
                 } else {
                     this.setState({ showUnableModal: true });
+                    this.backToLogin();
                 }
             })
             .catch(() => {
                 Toast.hide();
                 onEnabled();
+                this.backToLogin();
             });
     };
 
