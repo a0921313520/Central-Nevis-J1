@@ -81,6 +81,11 @@ const ReadQrCodeScreen = () => {
     const scanChange = (value) => {
         if (value && qrCodeDate == '') {
             setQrCodeDate(value)
+            const invalidQR = ['http://', 'https://'].find((v) => { return value.includes(v) }) || false
+            if(invalidQR) {
+                setQrcodeInvalid(true)
+                return
+            }
             setValidCodeModal(true)
 
         }
