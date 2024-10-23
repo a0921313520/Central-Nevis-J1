@@ -54,7 +54,6 @@ class Nevis extends React.Component {
                     this.getNevisQRCode();
                 } else {
                     this.setState({ showUnableModal: true });
-                    this.backToLogin();
                 }
             })
             .catch(() => {
@@ -66,6 +65,7 @@ class Nevis extends React.Component {
 
     closeUnableModal = () => {
         this.setState({ showUnableModal: false });
+        this.backToLogin();
     };
 
     getNevisQRCode = () => {
