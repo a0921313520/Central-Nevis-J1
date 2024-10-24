@@ -64,16 +64,22 @@ class Nevis extends React.Component {
                         nevisConfigurations: res.result
                     })
                 } else {
-                    window.NevisEnabled = false
-                    window.NevisModeType = ''
-                    window.NevisUsername = ''
-                    window.NevisModeChange = ''
-                    window.AuthenticatorId = []
-                    window.NevisRegistrationUserName = ''
-                    window.LoginRefresh(false)
+                    this.isEnabled()
                 }
             })
-            .catch((error) => { })
+            .catch((error) => {
+                this.isEnabled()
+            })
+    }
+    
+    isEnabled = () => {
+        window.NevisEnabled = false
+        window.NevisModeType = ''
+        window.NevisUsername = ''
+        window.NevisModeChange = ''
+        window.AuthenticatorId = []
+        window.NevisRegistrationUserName = ''
+        window.LoginRefresh(false)
     }
 
 

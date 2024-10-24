@@ -76,7 +76,7 @@ class NevisModal extends React.Component {
                         }).then(res => { 
 
                         }).catch(err => {
-                            if(!window.NevisModeType) {
+                            if(!window.NevisModeType && window.NevisEnabled) {
                                 const { mode } = window.NevisAllModeType[0]
                                 let modes = mode
                                 if(!window.SensorAvailable) {
