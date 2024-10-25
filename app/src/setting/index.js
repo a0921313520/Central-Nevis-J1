@@ -63,17 +63,20 @@ class Setting extends React.Component {
     //api获取appLinkUri，去注册开启nevis
     getEnroll = () => {
         const { selectMode } = this.state
-        const allActive = window.NevisAllModeType.filter((v) => { return v?.registration?.length > 0 })
-        if(allActive.length > 1) {
-            //手机已经有两个方法了，不需要call api注册，验证成功后直接切换
-            if(selectMode == 'Pin') {
-                //pin是更改pin code
-                window.NevisChangePin(this.onRegistration)
-            } else {
-                window.NevisVerify(this.onRegistration, selectMode)
-            }
-            return
-        }
+        // const allActive = window.NevisAllModeType.filter((v) => { return v?.registration?.length > 0 })
+        // if(allActive.length > 1) {
+        //     //手机已经有两个方法了，不需要call api注册，验证成功后直接切换
+        //     if(selectMode == 'Pin') {
+        //         //pin是更改pin code
+        //         window.NevisChangePin(this.onRegistration)
+        //     } else {
+        //         window.NevisVerify(this.onRegistration, selectMode)
+        //     }
+        //     return
+        // }
+        NToast.loading(translate('加载中...'), 200)
+        this.removeVerifySuccess({isSuccess: true})
+        setTimeout(() => {
         const { get } = getConfig()
         NToast.loading(translate('加载中...'), 200)
         get(ApiLink.GETEnroll)
@@ -89,6 +92,7 @@ class Setting extends React.Component {
             .catch((error) => {
 
             })
+        }, 2000);
     }
     //开启成功
     onRegistration = (res = {}) => {
