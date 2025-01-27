@@ -80,7 +80,7 @@ class Nevis extends React.Component {
                 if (this.state.loginVerified || this.state.countdown == 0) {
                     clearInterval(this.refresh);
                 }
-                post(ApiLink.VerifyLoginSession + `statusToken=${token}&hostName=${hostEnd}&`)
+                post(ApiLink.VerifyLoginSession + `statusToken=${token}&hostName=${hostEnd}`)
                 .then((res) => {
                     loading = false
                     if(res.isSuccess) {
