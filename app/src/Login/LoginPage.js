@@ -23,6 +23,8 @@ class LoginPage extends React.Component {
             statusToken: '',//用于登录
             userName: window.NevisUsername || 'userName',
         }
+        this.config = getConfig()
+        window.common_url = this.config.common_url || ''
     }
 
     componentDidMount() {
@@ -72,7 +74,7 @@ class LoginPage extends React.Component {
         const { post, HomePage } = getConfig()
         const { userName } = this.state
         NToast.loading(translate('加载中...'), 200)
-        post(ApiLink.POSTVerifyLoginSession + 'statusToken=' + this.state.statusToken + '&')
+        post(ApiLink.POSTVerifyLoginSession + 'statusToken=' + this.state.statusToken + '&hostName=' + window.common_url + '&')
             .then((res) => {
                 NToast.removeAll()
                 const result = res?.result
