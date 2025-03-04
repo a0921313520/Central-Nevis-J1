@@ -22,6 +22,7 @@ window.NevisRegistrationUserName = ''//已设置的nevis参数userName
 window.SensorAvailable = true//指纹/face是否开启
 window.PinCodeTitle = ''
 window.NevisEnabled = true//nevis是否开启
+window.siteId = ''
 class Nevis extends React.Component {
     constructor(props) {
         super(props)

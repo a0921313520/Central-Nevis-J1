@@ -25,6 +25,7 @@ class LoginPage extends React.Component {
         }
         this.config = getConfig()
         window.common_url = this.config.common_url || ''
+        window.siteId = this.config.SiteId || ''
     }
 
     componentDidMount() {
@@ -74,7 +75,13 @@ class LoginPage extends React.Component {
         const { post, HomePage } = getConfig()
         const { userName } = this.state
         NToast.loading(translate('加载中...'), 200)
-        post(ApiLink.POSTVerifyLoginSession + 'statusToken=' + this.state.statusToken + '&hostName=' + window.common_url + '&')
+        post(
+            ApiLink.POSTVerifyLoginSession + 
+            'statusToken=' + this.state.statusToken + 
+            '&hostName=' + window.common_url + 
+            '&siteId=' + window.siteId +
+            '&'
+        )
             .then((res) => {
                 NToast.removeAll()
                 const result = res?.result
