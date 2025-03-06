@@ -219,7 +219,7 @@ class Nevis extends React.Component {
 
             // Set the flag to indicate the request is pending
             isRequestPending = true;
-            post(ApiLink.VerifyLoginSession + `statusToken=${statusToken}&hostName=${hostEnd}&`)
+            post(ApiLink.VerifyLoginSession + `statusToken=${statusToken}&hostName=${hostEnd}&siteId=2&`)
                 .then((res) => {
                     if (res?.isSuccess) {
                         clearInterval(this.verificationInterval);  // Clear the interval after successful
