@@ -2,6 +2,7 @@ let config = {
 	platformType: 'J1',
 	languageType: 'M3',
 	language: 'VN',
+	downloadPagePath : '/', // 避免語言跳轉
 	onEnabled: (res = {}) => {},//是否启用
 	onError: (res = {}) => {},//错误
 	onSuccess: (res = {}) => {},//成功,返回res.statusToken

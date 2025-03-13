@@ -133,22 +133,14 @@ class Nevis extends React.Component {
     }
 
     goToDownload = () => {
-        const { languageType } = getConfig();
-        switch (languageType) {
-            case 'M1':
-                return Router.push('/Download')
-            case 'M2':
-                return Router.push('/Download')
-            case 'M3':
-                return Router.push('/ung-dung')
-        }
+        Router.push(this.config.downloadPagePath);
     }
 
     render() {
         const {loginQR, countdown, showLoginQR, showLoginQRFail} = this.state;
         return (
             <>
-                <div className='nevis' onClick={() => {this.getLoginQR();}}>
+                <div className={`nevis ${this.config.language}`} onClick={() => {this.getLoginQR();}}>
                     <div className='loginQRIcon'></div>
                     <div className='loginQRText'></div>
                 </div>
