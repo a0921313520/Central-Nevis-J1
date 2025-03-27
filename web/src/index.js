@@ -10,7 +10,8 @@ class Nevis extends React.Component {
         super(props)
         this.state = {
             loginVerified: false,
-            showLoginQRFail: false
+            showLoginQRFail: false,
+            hostEnd: '',
             
         }
         this.config = getConfig();
@@ -18,6 +19,11 @@ class Nevis extends React.Component {
 
     componentDidMount() {
         this.getNevisConfigurations()
+
+        if (typeof window !== 'undefined') {
+            const hostEnd = `${window.location.protocol}//${window.location.host}/`;
+            this.setState({ hostEnd });
+        }
     }
 
     componentWillUnmount() {
@@ -66,6 +72,7 @@ class Nevis extends React.Component {
 
     verifyLoginSession = (token) => {
         const { post, getApi } = getConfig()
+        const {hostEnd} = this.state;
         let loading = false;
         if (!loading) {
             this.refresh = setInterval(() => { 
@@ -73,7 +80,7 @@ class Nevis extends React.Component {
                 if (this.state.loginVerified || this.state.countdown == 0) {
                     clearInterval(this.refresh);
                 }
-                post(ApiLink.VerifyLoginSession + `statusToken=${token}`)
+                post(ApiLink.VerifyLoginSession + `statusToken=${token}&hostName=${hostEnd}&sideId=1`)
                 .then((res) => {
                     loading = false
                     if(res.isSuccess) {
