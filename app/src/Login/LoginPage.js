@@ -23,6 +23,9 @@ class LoginPage extends React.Component {
             statusToken: '',//用于登录
             userName: window.NevisUsername || 'userName',
         }
+        this.config = getConfig()
+        window.common_url = this.config.common_url || ''
+        window.siteId = this.config.SiteId || ''
     }
 
     componentDidMount() {
@@ -72,27 +75,33 @@ class LoginPage extends React.Component {
         const { post, HomePage } = getConfig()
         const { userName } = this.state
         NToast.loading(translate('加载中...'), 200)
-        post(ApiLink.POSTVerifyLoginSession + 'statusToken=' + this.state.statusToken + '&')
-            .then((res) => {
-                NToast.removeAll()
-                const result = res?.result
-                if (res?.isSuccess && result) {
-                    const { accessToken, tokenType, refreshToken } = result
-                    ApiPort.Token = tokenType + ' ' + accessToken
-                    ApiPort.LogoutTokey = refreshToken
-                    ApiPort.access_token = accessToken
-                    ApiPort.UserLogin = true
-                    window.userNameDB = userName
-                    window.LoginRefresh()
-                    HomePage()
-                } else {
-                    const errMessage = res?.errors[0]?.description || res?.errors[0]?.message
-                    NToast.fail(errMessage)
-                }
-            })
-            .catch((error) => {
+        post(
+            ApiLink.POSTVerifyLoginSession + 
+            'statusToken=' + this.state.statusToken + 
+            '&hostName=' + window.common_url + 
+            '&siteId=' + window.siteId +
+            '&'
+        )
+        .then((res) => {
+            NToast.removeAll()
+            const result = res?.result
+            if (res?.isSuccess && result) {
+                const { accessToken, tokenType, refreshToken } = result
+                ApiPort.Token = tokenType + ' ' + accessToken
+                ApiPort.LogoutTokey = refreshToken
+                ApiPort.access_token = accessToken
+                ApiPort.UserLogin = true
+                window.userNameDB = userName
+                window.LoginRefresh()
+                HomePage()
+            } else {
+                const errMessage = res?.errors[0]?.description || res?.errors[0]?.message
+                NToast.fail(errMessage)
+            }
+        })
+        .catch((error) => {
 
-            })
+        })
     }
     getMember = () => {
 
