@@ -1,3 +1,22 @@
+import { getConfig } from '$Nevis/config'
+const images = {
+    CN: {
+        newWelcome: require('./newWelcomeCN.png'),
+    },
+    TH: {
+        newWelcome: require('./newWelcomeTH.png'),
+    },
+    VN: {
+        newWelcome: require('./newWelcomeVN.png'),
+    }
+};
+//有差异图片
+export const imageMap = () => {
+    const { language = 'CN' } = getConfig()
+    return images[language]
+}
+
+
 const ImgIcon = {
     'testIcon': require('./test-icon.png'),
     'scanIcon': require('./QRCodeScanner.png'),
@@ -12,7 +31,6 @@ const ImgIcon = {
     'usrPinIcon': require('./usrPinIcon.png'),
     'checkIcon': require('./checkIcon.png'),
     'uncheckIcon': require('./uncheckIcon.png'),
-    'newWelcome': require('./newWelcome.png'),
     'csIcon': require('./csIcon.png'),
     'newBG': require('./newBG.png'),
     'LoginFace': require('./LoginFace.png'),
@@ -24,3 +42,4 @@ const ImgIcon = {
     'icon-back': require('./icon-back.png'),
 }
 export default ImgIcon
+

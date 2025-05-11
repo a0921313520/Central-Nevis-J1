@@ -146,11 +146,12 @@ class Nevis extends React.Component {
 
     render() {
         const {loginQR, countdown, showLoginQR, showLoginQRFail} = this.state;
+        const { languageType } = getConfig();
         return (
             <>
                 <div className='nevis' onClick={() => {this.getLoginQR();}}>
                     <div className='loginQRIcon'></div>
-                    <div className='loginQRText'></div>
+                    <div className={'loginQRText ' + languageType == 'CN'? 'loginQRTextCN': languageType == 'TH'? 'loginQRTextTH': 'loginQRTextVN'}></div>
                 </div>
                 <Modal
                     title={translate('登录')}
