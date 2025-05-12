@@ -4,7 +4,7 @@ import { ApiLink } from './Api'
 import { getConfig } from '$Nevis/config'
 import { Modal, message } from 'antd';
 import Router from "next/router";
-import refreshIcon from '$Nevis/styles/M3/imgs/refreshIcon.png';
+import refreshIcon from '$Nevis/styles/imgs/refreshIcon.png';
 class Nevis extends React.Component {
     constructor(props) {
         super(props)

@@ -4,9 +4,7 @@ import { ApiLink } from './Api';
 import { getConfig } from '$Nevis/config';
 import LoginPage from './LoginPage';
 import { Toast, Modal } from 'antd-mobile-v2';
-import successCN from '$Nevis/styles/M1/imgs/icon_success.png';
-import successTH from '$Nevis/styles/M2/imgs/icon_success.png';
-import successVN from '$Nevis/styles/M3/imgs/icon_success.png';
+import successIcon from '$Nevis/styles/imgs/icon_success.png';
 import Router from 'next/router'
 class Nevis extends React.Component {
     constructor(props) {
@@ -118,18 +116,6 @@ class Nevis extends React.Component {
         }, 1000);
     };
 
-    getSuccessImage = (languageType) => {
-        switch (languageType) {
-            case 'M2':
-                return successTH;
-            case 'M3':
-                return successVN;
-            case 'M1':
-            default:
-                return successCN;
-        }
-    };
-
     saveQRCodeShowSuccess = (qrCodeImg) => {
         const { languageType } = getConfig();
     
@@ -169,7 +155,7 @@ class Nevis extends React.Component {
                 <p style={{paddingTop: languageType === 'M1' ? '6px':''}}>
                     <img
                         style={{ bottom: '-5px', position: 'relative', paddingRight: '10px' }}
-                        src={this.getSuccessImage(languageType)}
+                        src={successIcon}
                         alt="error"
                     />
                     {translate('保存成功')}

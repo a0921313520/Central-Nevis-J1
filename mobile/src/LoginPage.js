@@ -5,17 +5,13 @@ import { Flex, Modal } from 'antd-mobile-v2';
 import { setConfig } from '$Nevis/config';
 import translate from '$Nevis/translate';
 import { getConfig } from '$Nevis/config';
-import liveChatImageCN from '$Nevis/styles/M1/imgs/liveChat.png';
-import liveChatImageTH from '$Nevis/styles/M2/imgs/liveChat.png';
-import liveChatImageVN from '$Nevis/styles/M3/imgs/liveChat.png';
-import backImageCN from '$Nevis/styles/M1/imgs/icon-back.webp';
-import backImageTH from '$Nevis/styles/M2/imgs/icon-back.webp';
-import backImageVN from '$Nevis/styles/M3/imgs/icon-back.webp';
-import JBOIconCN from '$Nevis/styles/M1/imgs/JBOLogoCN.png';
-import JBOIconTH from '$Nevis/styles/M2/imgs/JBOLogoTH.png';
-import JBOIconVN from '$Nevis/styles/M3/imgs/JBOLogoVN.png';
-import refreshQR from '$Nevis/styles/M3/imgs/refreshQR.png';
-import dummyQRCode from '$Nevis/styles/M1/imgs/QRTesting.png';
+import liveChat from '$Nevis/styles/imgs/liveChat.png';
+import backImageIcon from '$Nevis/styles/imgs/icon-back.webp';
+import JBOIconCN from '$Nevis/styles//imgs/JBOLogoCN.png';
+import JBOIconTH from '$Nevis/styles//imgs/JBOLogoTH.png';
+import JBOIconVN from '$Nevis/styles//imgs/JBOLogoVN.png';
+import refreshIcon from '$Nevis/styles/imgs/refreshQR.png';
+import dummyQRCode from '$Nevis/styles/imgs/QRTesting.png';
 import { checkAffQueryString, Cookie } from '$DATA/Helper';
 
 class _NevisLogin extends Component {
@@ -144,30 +140,6 @@ class _NevisLogin extends Component {
             });
     };
 
-    getLiveChatImage = (languageType) => {
-        switch (languageType) {
-            case 'M2':
-                return liveChatImageTH;
-            case 'M3':
-                return liveChatImageVN;
-            case 'M1':
-            default:
-                return liveChatImageCN;
-        }
-    };
-
-    getBackImage = (languageType) => {
-        switch (languageType) {
-            case 'M2':
-                return backImageTH;
-            case 'M3':
-                return backImageVN;
-            case 'M1':
-            default:
-                return backImageCN;
-        }
-    };
-
     getJBOIcon = (languageType) => {
         switch (languageType) {
             case 'M2':
@@ -193,12 +165,12 @@ class _NevisLogin extends Component {
             <div className="LoginSetNevis">
                 <Flex className="registered-header">
                     <Flex.Item className="goLogin">
-                        <img src={this.getBackImage(languageType)} onClick={backToNormalLogin} />
+                        <img src={backImageIcon} onClick={backToNormalLogin} />
                     </Flex.Item>
                     <Flex.Item className="title">{translate('登录')}</Flex.Item>
                     <Flex.Item className="goCustomerServiceNevis">
                         <img
-                            src={this.getLiveChatImage(languageType)}
+                            src={liveChat}
                             onClick={() => {
                                 global.globalGtag &&
                                     global.globalGtag('Login', 'Contact CS', 'Login_C_CS', false, [
@@ -235,7 +207,7 @@ class _NevisLogin extends Component {
                                     }}
                                 >
                                     <img
-                                        src={refreshQR}
+                                        src={refreshIcon}
                                         alt="Refresh QR Code"
                                         onClick={this.refreshQRCode}
                                         style={{ cursor: 'pointer', opacity: 1, width: '1.6rem', height: '1.6rem' }}
