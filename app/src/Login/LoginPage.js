@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Image, Dimensions, Platform, ImageBackgro
 import styles from '$NevisStyles/LoginPage'
 import translate from '$Nevis/translate'
 import Touch from 'react-native-touch-once';
-import ImgIcon, { imageMap } from '$NevisStyles/imgs/ImgIcon'
+import ImgIcon, { ImageMap } from '$NevisStyles/imgs/ImgIcon'
 import { Actions } from 'react-native-router-flux';
 import { ScanQRCode } from './LoginComponent'
 import { getConfig } from '$Nevis/config'
@@ -154,7 +154,7 @@ class LoginPage extends React.Component {
                     >
                         <Image
                             resizeMode='stretch'
-                            source={imageMap['newWelcome']}
+                            source={ImageMap('newWelcome')}
                             style={styles.iconImage}
                         />
                     </View>

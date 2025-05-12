@@ -11,9 +11,9 @@ const images = {
     }
 };
 //有差异图片
-export const imageMap = () => {
+export const ImageMap = (img = '') => {
     const { language = 'CN' } = getConfig()
-    return images[language]
+    return img && images[language][img] || ''
 }
 
 
