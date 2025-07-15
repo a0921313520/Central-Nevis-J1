@@ -254,8 +254,8 @@ class _NevisLogin extends Component {
                                 <a className="jboth" href="/th/" onClick={() => global.globalGtag && global.globalGtag('th_login')}>
                                     <i className="TH"></i>TH
                                 </a>
-                                <a href="javascript:void(0);">
-                                    <i className="VND" href="/vn/" onClick={() => global.globalGtag && global.globalGtag('Vietnam_login')}></i>Việt Nam
+                                <a href="/vn/">
+                                    <i className="VND" onClick={() => global.globalGtag && global.globalGtag('Vietnam_login')}></i>Việt Nam
                                 </a>
                             </div>
                         </div>
