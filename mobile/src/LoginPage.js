@@ -248,14 +248,14 @@ class _NevisLogin extends Component {
                         <div className="language-wrapNevis">
                             <div className="language-line">{translate('选择语言')}</div>
                             <div className="language-box">
-                                <a className="curr" href="/cn/mobile/" onClick={() => global.globalGtag && global.globalGtag('China_login')}>
+                                <a className="curr" href="/cn/" onClick={() => global.globalGtag && global.globalGtag('China_login')}>
                                     <i className="CNY"></i>中文
                                 </a>
-                                <a className="jboth" href="/th/mobile/" onClick={() => global.globalGtag && global.globalGtag('th_login')}>
+                                <a className="jboth" href="/th/" onClick={() => global.globalGtag && global.globalGtag('th_login')}>
                                     <i className="TH"></i>TH
                                 </a>
                                 <a href="javascript:void(0);">
-                                    <i className="VND" onClick={() => global.globalGtag && global.globalGtag('Vietnam_login')}></i>Việt Nam
+                                    <i className="VND" href="/vn/" onClick={() => global.globalGtag && global.globalGtag('Vietnam_login')}></i>Việt Nam
                                 </a>
                             </div>
                         </div>
